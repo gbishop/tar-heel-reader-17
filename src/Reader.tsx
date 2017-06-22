@@ -4,27 +4,25 @@ import KeyHandler from 'react-key-handler';
 import Modal = require('react-modal');
 const NextArrow = require('./NextArrow.png');
 const BackArrow = require('./BackArrow.png');
-import BookStore from './BookStore';
-import ViewStore from './ViewStore';
+import Store from './Store';
 
 // import SharedBook from './SharedBook';
 import './Reader.css';
 
-const Reader = observer(function Reader(props: {stores: [ BookStore, ViewStore ]}) {
-  const [ bookstore, viewstore ] = props.stores;
+const Reader = observer(function Reader(props: {store: Store}) {
   let page;
-  if (bookstore.pageno === 1) {
-    page = <TitlePage stores={props.stores} />;
-  } else if (bookstore.pageno <= bookstore.npages) {
-    page = <TextPage stores={props.stores} />;
+  if (props.store.pageno === 1) {
+    page = <TitlePage store={props.store} />;
+  } else if (props.store.pageno <= props.store.npages) {
+    page = <TextPage store={props.store} />;
   } else {
-    page = <ChoicePage stores={props.stores} />;
+    page = <ChoicePage store={props.store} />;
   }
   return page;
 });
 
 interface PageProps {
-  stores: [ BookStore, ViewStore ];
+  store: Store;
 }
 
 const TitlePage = observer(function TitlePage(props: PageProps) {
@@ -32,31 +30,31 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
 });
 
 const TextPage = observer(function TextPage(props: PageProps) {
-  const [ bookstore, viewstore ] = props.stores;
-  const page = bookstore.book.pages[bookstore.pageno - 1];
+  const store = props.store;
+  const page = store.book.pages[store.pageno - 1];
   return (
     <div
       id="book-page"
-      className={'buttons-' + viewstore.pageTurnSize}
-      style={{fontSize: viewstore.textFontSize}}
+      className={'buttons-' + store.pageTurnSize}
+      style={{fontSize: store.textFontSize}}
     >
-      <div id="page-number">{bookstore.pageno}</div>
+      <div id="page-number">{store.pageno}</div>
       <div id="button-positioner" />
       <img id="picture" src={'https://tarheelreader.org' + page.url} />
       <button
         id="back"
-        onClick={bookstore.backPage}
+        onClick={store.backPage}
       >
         <img src={BackArrow} />Back
       </button>
       <button
         id="next"
-        onClick={bookstore.nextPage}
+        onClick={store.nextPage}
       >
         <img src={NextArrow} />Next
       </button>
       <span id="text">{page.text}</span>
-      <Controls stores={props.stores} />
+      <Controls store={props.store} />
     </div>
   );
 });
@@ -65,12 +63,8 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
   return <p>Choice Page</p>;
 });
 
-interface ControlsProps {
-  stores: [ BookStore, ViewStore ];
-}
-
-const Controls = observer(function Controls(props: ControlsProps) {
-  const [ bookstore, viewstore ] = props.stores;
+const Controls = observer(function Controls(props: PageProps) {
+  const store = props.store;
   const customStyles = {
     content : {
       top                   : '50%',
@@ -89,18 +83,18 @@ const Controls = observer(function Controls(props: ControlsProps) {
     <div>
       <NRKeyHandler
         keyValue={'ArrowRight'}
-        onKeyHandle={bookstore.nextPage}
+        onKeyHandle={store.nextPage}
       />
       <NRKeyHandler
         keyValue={'ArrowLeft'}
-        onKeyHandle={bookstore.backPage}
+        onKeyHandle={store.backPage}
       />
       <NRKeyHandler
         keyValue="Escape"
-        onKeyHandle={viewstore.toggleControlsVisible}
+        onKeyHandle={store.toggleControlsVisible}
       />
       <Modal 
-        isOpen={viewstore.controlsVisible}
+        isOpen={store.controlsVisible}
         contentLabel="Reading controls"
         style={customStyles}
       >
@@ -110,15 +104,15 @@ const Controls = observer(function Controls(props: ControlsProps) {
             <input
               type="range"
               min="0"
-              max={viewstore.textFontSizeSteps - 1}
-              value={viewstore.fontScale}
-              onChange={e => viewstore.setFontScale(+e.target.value)}
+              max={store.textFontSizeSteps - 1}
+              value={store.fontScale}
+              onChange={e => store.setFontScale(+e.target.value)}
             />
           </label>
           <label>Page Turn Size:&nbsp;
             <select
-              value={viewstore.pageTurnSize}
-              onChange={e => viewstore.setPageTurnSize(e.target.value)}
+              value={store.pageTurnSize}
+              onChange={e => store.setPageTurnSize(e.target.value)}
             >
               <option value="normal">Normal</option>
               <option value="medium">Medium</option>
@@ -127,7 +121,7 @@ const Controls = observer(function Controls(props: ControlsProps) {
             </select>
           </label>
 
-          <button onClick={viewstore.toggleControlsVisible}>
+          <button onClick={store.toggleControlsVisible}>
             Done
           </button>
         </div>
