@@ -1,17 +1,14 @@
 import { observable, computed, action, reaction } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
-import { SharedBook, fetchBook } from './SharedBook';
+import { Book, fetchBook } from './Book';
 
-// sides of the display to include responses
-type Layout = {
-  left: boolean, right: boolean, top: boolean, bottom: boolean;
-};
+type PageTurnSize = 'normal' | 'medium' | 'large' | 'extra';
 
 class Store {
   // the id of the book to read or '' for the landing page
   @observable bookid: string = '';
   // an observable promise for the book associated with bookid
-  @observable bookP: IPromiseBasedObservable<SharedBook>;
+  @observable bookP: IPromiseBasedObservable<Book>;
   // get the book without having to say bookP.value all the time
   // these computed are cached so this function only runs once after a change
   @computed get book() { return this.bookP.value; }
@@ -46,58 +43,26 @@ class Store {
   @action.bound setPage(i: number) {
     this.pageno = i;
   }
-  // index to the readings array
-  @observable reading: number = 0;
-  @action.bound setReading(n: number) {
-    this.reading = n;
-    this.responseIndex = 0;
+  // font size of book text
+  @observable fontScale: number = 1;
+  @action.bound setFontScale(s: number) {
+    this.fontScale = s;
   }
-  @computed get nreadings() { return this.book.readings.length; }
-  // get comment for page and reading
-  @computed get comment() {
-    if (this.pageno <= this.npages) {
-      return this.book.readings[this.reading].comments[this.pageno - 1];
-    } else {
-      return '';
-    }
+  @computed get fontBase() {
+    return Math.min(this.screen.width, this.screen.height) * 0.02;
   }
-  // get responses for this reading
-  @computed get responses() { return this.book.readings[this.reading].responses; }
-
-  // placement of the response symbols
-  @observable layout: Layout = {
-    left: true, right: true, top: false, bottom: false };
-  @action.bound setLayout(side: string, value: boolean) {
-    this.layout[side] = value;
+  @computed get fontSize() {
+    return this.fontScale * this.fontBase * 2.5;
   }
-
-  // size of the response symbols
-  @observable responseSize: number = 30;
-  @action.bound setResponseSize(i: number) {
-    this.responseSize = i;
+  // size of page turn buttons
+  @observable pageTurnSize: PageTurnSize = 'normal';
+  @action.bound setPageTurnSize(value: string) {
+    this.pageTurnSize = value as PageTurnSize;
   }
-
-  // currently selected response symbol
-  @observable responseIndex: number = 0;
-  @computed get nresponses() { return this.book.readings[this.reading].responses.length; }
-  @action.bound nextResponseIndex() {
-    this.responseIndex = (this.responseIndex + 1) % this.nresponses;
-  }
-  @action.bound setResponseIndex(i: number) {
-    this.responseIndex = i;
-  }
-  // current response
-  @computed get word() { return this.responses[this.responseIndex]; }
-
   // visibility of the controls modal
   @observable controlsVisible: boolean = false;
   @action.bound toggleControlsVisible() {
     this.controlsVisible = !this.controlsVisible;
-  }
-  // visibility of page turn buttons on book page
-  @observable pageTurnVisible: boolean = false;
-  @action.bound togglePageTurnVisible() {
-    this.pageTurnVisible = !this.pageTurnVisible;
   }
   // screen dimensions updated on resize
   @observable screen = {
@@ -111,17 +76,11 @@ class Store {
   // json string to persist the state
   @computed get persist(): string {
     return JSON.stringify({
-      layout: this.layout,
-      responseSize: this.responseSize,
-      pageTurnVisible: this.pageTurnVisible
     });
   }
   // restore the state from json
   @action.bound setPersist(js: string) {
-    var v = JSON.parse(js);
-    this.layout = v.layout;
-    this.responseSize = v.responseSize;
-    this.pageTurnVisible = v.pageTurnVisible;
+    // var v = JSON.parse(js);
   }
   // handle updating the book when the id changes
   fetchHandler: {};
@@ -133,8 +92,8 @@ class Store {
       () => this.bookid,
       (bookid) => {
         if (this.bookid.length > 0) {
-          this.bookP = fromPromise(fetchBook(`/api/sharedbooks/${this.bookid}.json`)) as
-            IPromiseBasedObservable<SharedBook>;
+          this.bookP = fromPromise(fetchBook(`/api/book/${this.bookid}`)) as
+            IPromiseBasedObservable<Book>;
         }
       });
   }
