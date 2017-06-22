@@ -2,24 +2,25 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 import './App.css';
-import Store from './Store';
+import BookStore from './BookStore';
+import ViewStore from './ViewStore';
 import Reader from './Reader';
 
 @observer
-class App extends React.Component<{store: Store}, void> {
+class App extends React.Component<{stores: [ BookStore, ViewStore ]}, void> {
   render() {
-    const {store} = this.props;
-    if (store.bookid.length === 0) {
+    const [bookstore, viewstore] = this.props.stores;
+    if (bookstore.bookid.length === 0) {
       return <h1>Landing Page</h1>;
 
-    } else if (store.bookP.state === 'pending') {
+    } else if (bookstore.bookP.state === 'pending') {
       return <h1>Loading</h1>;
 
-    } else if (store.bookP.state === 'rejected') {
-      console.log('store', store);
+    } else if (bookstore.bookP.state === 'rejected') {
+      console.log('bookstore', bookstore);
       return (
         <div>
-          <ErrorMsg error={store.bookP.reason} />
+          <ErrorMsg error={bookstore.bookP.reason} />
           <p> /1 is the only functioning url right now</p>
         </div>
       );
@@ -27,7 +28,7 @@ class App extends React.Component<{store: Store}, void> {
     } else {
       return (
         <div className="App">
-          <Reader store={store} />
+          <Reader stores={this.props.stores} />
           <DevTools />
         </div>
       );

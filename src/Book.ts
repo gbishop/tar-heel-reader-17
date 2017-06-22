@@ -8,39 +8,23 @@ const Page = Record({
   height: Number
 });
 
-const Reading = Record({
-  responses: Array(String),
-  comments: Array(String),
-});
-
-const SharedBookValidator = Record({
+const BookValidator = Record({
   title: String,
   slug: String,
   author: String,
   pages: Array(Page),
-  readings: Array(Reading)
-}).withConstraint(validateLengths);
-
-function validateLengths(sb: SharedBook) {
-  var npages = sb.pages.length;
-  var nreadings = sb.readings.length;
-  for (var i = 0; i < nreadings; i++) {
-    if (sb.readings[i].comments.length === npages) {
-      return 'Array lengths do not match';
-    }
-  }
-  return true;
-}
+});
 
 // construct the typescript type
-export type SharedBook = Static<typeof SharedBookValidator>;
+export type Book = Static<typeof BookValidator>;
 
-export function fetchBook(url: string): Promise<SharedBook> {
+export function fetchBook(url: string): Promise<Book> {
   return new Promise((resolve, reject) => {
+    console.log('url', url);
     window.fetch(url)
       .then(res => {
         if (res.ok) {
-          res.json().then(obj => resolve(SharedBookValidator.check(obj))).catch(reject);
+          res.json().then(obj => resolve(BookValidator.check(obj))).catch(reject);
         } else {
           reject(res);
         }
@@ -49,4 +33,4 @@ export function fetchBook(url: string): Promise<SharedBook> {
   });
 }
 
-export default SharedBook;
+export default Book;

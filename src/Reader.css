@@ -8,10 +8,13 @@
 
 .book-page {
   text-align: center;
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   position: absolute;
-  background-color: #ddd;
+  top: 0;
+  left: 0;
+  background-color: #eef;
 }
 
 .caption-box {
@@ -21,66 +24,30 @@
 }
 
 .caption {
-  font-size: 1.8em;
   line-height: 1.2em;
   word-break: break-word;
   margin: 0;
 }
 
-.comment {
-  height: 20px;
-  font-size: 16px;
-  color: #333;
-  padding: 5px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.response-container {
-  position: absolute;
-}
-
-.response-container button {
-  display: inline-block;
-  background: solid;
-  text-align: center;
-  padding: 0;
-}
-
-.response-container button.selected {
-  background-color: #99badd;
-}
-
-.response-container button figure {
-  margin: 0;
-  padding: 0;
-}
-
-.response-container button figure figcaption {
-  margin: 0;
-  padding: 0;
-}
-
-.next-link,.back-link {
-  position: absolute;
-  bottom: 0.5em;
-  width: 6em;
-  height: 4em;
+.page-turn {
+  font-size: 1.6vmin;
   border-radius: 0.5em;
   border: 1px solid black;
+  width: 6em;
+  height: 4em;
 }
-.next-link img, .back-link img {
+.page-turn img {
   display: block;
   width: 1.5em;
-  height: 1.5em;
-  margin: 0.5em auto 0.25em auto;
+  margin: 5% auto 5% auto;
 }
-.next-link {
-  right: 0.5em;
+
+.page-back {
+  float: left;
 }
-.back-link {
-  left: 0.5em;
+
+.page-next {
+  float: right;
 }
 
 .controls label {

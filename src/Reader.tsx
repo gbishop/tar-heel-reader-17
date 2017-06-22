@@ -4,273 +4,74 @@ import KeyHandler from 'react-key-handler';
 import Modal = require('react-modal');
 const NextArrow = require('./NextArrow.png');
 const BackArrow = require('./BackArrow.png');
-import Store from './Store';
-import SharedBook from './SharedBook';
+import BookStore from './BookStore';
+import ViewStore from './ViewStore';
+// import SharedBook from './SharedBook';
 import './Reader.css';
 
-const Reader = observer(function Reader(props: {store: Store}) {
-  const { store } = props;
-  const book = store.book;
-  const commentHeight = 30;
-  const containerHeight = store.screen.height - commentHeight;
-  const sc = store.screen;
-  const rs = Math.hypot(sc.width, sc.height) * (0.04 + 0.1 * store.responseSize / 100);
-  var cbox: Box = {
-    width: sc.width,
-    height: containerHeight,
-    left: 0,
-    top: 0,
-    align: 'v'
+const Reader = observer(function Reader(props: {stores: [ BookStore, ViewStore ]}) {
+  const [ bookstore, viewstore ] = props.stores;
+  let page;
+  if (bookstore.pageno === 1) {
+    page = <TitlePage stores={props.stores} />;
+  } else if (bookstore.pageno <= bookstore.npages) {
+    page = <TextPage stores={props.stores} />;
+  } else {
+    page = <ChoicePage stores={props.stores} />;
+  }
+  return page;
+});
+
+interface PageProps {
+  stores: [ BookStore, ViewStore ];
+}
+
+const TitlePage = observer(function TitlePage(props: PageProps) {
+  return <p>Title Page</p>;
+});
+
+const TextPage = observer(function TextPage(props: PageProps) {
+  const [ bookstore, viewstore ] = props.stores;
+  const page = bookstore.book.pages[bookstore.pageno - 1];
+  let textHeight = 3 * viewstore.textLineHeight;
+  let imgStyle = {
+    width: viewstore.screen.width,
+    height: viewstore.screen.height - textHeight,
+    objectFit: 'contain'
   };
-
-  var rboxes: Array<Box> = []; // boxes for responses
-  if (store.layout.left && rboxes.length < store.nresponses) {
-    cbox.width -= rs;
-    cbox.left = rs;
-    rboxes.push({ top: 0, left: 0, height: cbox.height, width: rs, align: 'v' });
-  }
-  if (store.layout.right && rboxes.length < store.nresponses) {
-    cbox.width -= rs;
-    rboxes.push({ top: 0, left: sc.width - rs, height: cbox.height, width: rs, align: 'v'});
-  }
-  if (store.layout.top && rboxes.length < store.nresponses) {
-    cbox.height -= rs;
-    cbox.top = rs;
-    rboxes.push({ top: 0, left: cbox.left, height: rs, width: cbox.width, align: 'h'});
-  }
-  if (store.layout.bottom && rboxes.length < store.nresponses) {
-    cbox.height -= rs;
-    rboxes.push({ top: containerHeight - rs, left: cbox.left, height: rs, width: cbox.width,
-                  align: 'h'});
-  }
-
-  const containerStyle = {
-    width: store.screen.width,
-    height: store.screen.height - 30,
-    position: 'absolute' as 'absolute',
-    overflow: 'hidden' as 'hidden',
-    left: 0,
-    top: commentHeight
-  };
-
-  function sayWord() {
-    var msg = new SpeechSynthesisUtterance(store.word);
-    msg.lang = 'en-US';
-    speechSynthesis.speak(msg);
-  }
-
+  console.log('iS', imgStyle);
   return (
-    <div>
-      <div className="comment" >{store.comment}</div>
-      <div style={containerStyle}>
-        <ReaderContent box={cbox} book={book} pageno={store.pageno} store={store} />
-        <Responses boxes={rboxes} responses={store.responses} store={store} doResponse={sayWord} />
-        <Controls store={store} doResponse={sayWord}/>
-      </div>
+    <div className="book-page">
+      <img src={'https://tarheelreader.org' + page.url} style={imgStyle} />
+      <p className="caption" style={{fontSize: viewstore.textFontSize}} >{page.text}
+      <button
+        className="page-turn page-back"
+        onClick={bookstore.backPage}
+      >
+        <img src={BackArrow} />Back
+      </button>
+      <button
+        className="page-turn page-next"
+        onClick={bookstore.nextPage}
+      >
+        <img src={NextArrow} />Next
+      </button>
+      </p>
+      <Controls stores={props.stores} />
     </div>
   );
 });
 
-// Reader component
-interface Box {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-  align: string;
-}
-
-interface ReaderContentProps {
-  book: SharedBook;
-  box: Box;
-  pageno: number;
-  store: Store;
-}
-
-const ReaderContent = observer(function ReaderContent(props: ReaderContentProps) {
-  const {book, box, pageno, store} = props;
-  const {width, height, top, left} = box; 
-  const fontSize = width / height < 4 / 3 ? width / 36 : height / 36;
-  let pageStyle = {
-    width, height, top, left, fontSize
-  };
-  if (pageno > store.npages) {
-    // past the end
-    return (
-      <div className="book-page" style={pageStyle}>
-        <h1 className="title">What would you like to do now?</h1>
-        <div className="choices">
-          <button onClick={e => store.setPage(1)}>Read this book again</button>
-          <button>Read another book</button>
-          <button>Go to Tar Heel Reader</button>
-        </div>
-      </div>
-    );
-  }
-  const page = book.pages[pageno - 1];
-  const textHeight = pageno === 1 ? 4 * fontSize + 8 : 6.5 * fontSize;
-  const maxPicHeight = height - textHeight;
-  const maxPicWidth = width;
-  const verticalScale = maxPicHeight / page.height;
-  const horizontalScale = maxPicWidth / page.width;
-  let picStyle = {};
-  if (verticalScale < horizontalScale) {
-    picStyle = {
-      height: maxPicHeight
-    };
-  } else {
-    picStyle = {
-      width: maxPicWidth,
-      marginTop: pageno === 1 ? 0 : (maxPicHeight - horizontalScale * page.height)
-    };
-  }
-
-  if (pageno === 1) {
-    let titleStyle = {
-      height: 4 * fontSize,
-      fontSize: 2 * fontSize,
-      padding: 0,
-      margin: 0,
-      display: 'block'
-    };
-    return (
-      <div className="book-page" style={pageStyle}>
-        <h1 className="title" style={titleStyle}>{book.title}</h1>
-        <img 
-         src={'https://tarheelreader.org' + book.pages[0].url} 
-         className="pic" 
-         style={picStyle}
-         alt=""
-        />
-        <PageNavButtons store={store}/>
-      </div>
-    );
-  } else {
-    return (
-      <div className="book-page" style={pageStyle}>
-        <p className="page-number">{pageno}</p>
-        <img
-          src={'https://tarheelreader.org' + page.url}
-          className="pic"
-          style={picStyle}
-          alt=""
-        />
-        <div className="caption-box">
-          <p className="caption">{page.text}</p>
-        </div>
-        <PageNavButtons store={store}/>
-      </div>
-    );
-  }
-});
-
-const PageNavButtons = observer(function PageNavButtons(props: {store: Store}) {
-  if (props.store.pageTurnVisible) {
-    return (
-      <div>
-        <button className="next-link" onClick={props.store.nextPage}>
-          <img src={NextArrow} alt="next"/>Next
-        </button>
-        <button className="back-link" onClick={props.store.backPage}>
-          <img src={BackArrow} alt="back"/>Back
-        </button>
-      </div>
-    );
-  } else {
-    // This strange return value is keeping typescript happy 
-    // https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#non-null-assertion-operator
-    // We're asking it to ignore the possibility of returning null
-    return null!;
-  }
-});
-
-interface ResponsesProps {
-  store: Store;
-  boxes: Array<Box>;
-  responses: Array<string>;
-  doResponse: () => void;
-}
-
-const Responses = observer(function Responses(props: ResponsesProps) {
-  const {store, boxes, responses, doResponse } = props;
-  var words = responses;
-  var index = 0;
-  const responseGroups = boxes.map((box, i) => {
-    const nchunk = Math.max(1, Math.floor(words.length / (boxes.length - i)));
-    const chunk = words.slice(0, nchunk);
-    words = words.slice(nchunk);
-    const { pax, sax } = {'v': { pax: 'height', sax: 'width' },
-                          'h': { pax: 'width', sax: 'height' }}[box.align];
-    var bstyle = {};
-    bstyle[pax] = box[pax] / nchunk;
-    bstyle[sax] = box[sax];
-    const dstyle = { top: box.top, left: box.left, width: box.width, height: box.height };
-    const responseGroup = chunk.map((w, j) => (
-      <ResponseButton
-        key={w}
-        word={w}
-        index={index++}
-        style={bstyle}
-        store={store}
-        doResponse={doResponse}
-      />
-    ));
-    return (
-      <div key={i} style={dstyle} className="response-container">
-        {responseGroup}
-      </div>
-    );
-  });
-  return <div>{responseGroups}</div>;
-});
-
-interface ResponseButtonProps {
-  word: string;
-  index: number;
-  style: React.CSSProperties;
-  store: Store;
-  doResponse: () => void;
-}
-
-const ResponseButton = observer(function ResponseButton(props: ResponseButtonProps) {
-  const { word, index, style, store, doResponse } = props;
-  const maxSize = Math.min(style.width, style.height);
-  const fontSize = maxSize / 5;
-  const iconSize = maxSize - fontSize - 10;
-  const iStyle = {
-    width: iconSize
-  };
-  const cStyle = {
-    fontSize,
-    marginTop: -fontSize / 4
-  };
-  const isFocused = store.responseIndex === index;
-  return (
-    <button
-      className={`${isFocused ? 'selected' : ''}`}
-      onClick={() => doResponse()}
-      style={style}
-      onFocus={(e) => store.setResponseIndex(index)}
-    >
-      <figure>
-        <img
-          src={process.env.PUBLIC_URL + '/symbols/' + word + '.png'}
-          alt={word}
-          style={iStyle}
-        />
-        <figcaption style={cStyle}>{word}</figcaption>
-      </figure>
-    </button>
-  );
+const ChoicePage = observer(function ChoicePage(props: PageProps) {
+  return <p>Choice Page</p>;
 });
 
 interface ControlsProps {
-  store: Store;
-  doResponse: () => void;
+  stores: [ BookStore, ViewStore ];
 }
 
 const Controls = observer(function Controls(props: ControlsProps) {
-  const { store, doResponse } = props;
+  const [ bookstore, viewstore ] = props.stores;
   const customStyles = {
     content : {
       top                   : '50%',
@@ -289,57 +90,46 @@ const Controls = observer(function Controls(props: ControlsProps) {
     <div>
       <NRKeyHandler
         keyValue={'ArrowRight'}
-        onKeyHandle={store.nextPage}
+        onKeyHandle={bookstore.nextPage}
       />
       <NRKeyHandler
         keyValue={'ArrowLeft'}
-        onKeyHandle={store.backPage}
-      />
-      <NRKeyHandler
-        keyValue={' '}
-        onKeyHandle={store.nextResponseIndex}
-      />
-      <NRKeyHandler
-        keyValue={'Enter'}
-        onKeyHandle={doResponse}
+        onKeyHandle={bookstore.backPage}
       />
       <NRKeyHandler
         keyValue="Escape"
-        onKeyHandle={store.toggleControlsVisible}
+        onKeyHandle={viewstore.toggleControlsVisible}
       />
       <Modal 
-        isOpen={store.controlsVisible}
+        isOpen={viewstore.controlsVisible}
         contentLabel="Reading controls"
         style={customStyles}
       >
         <div className="controls">
           <h1>Reading controls</h1>
-          <label>Reading:&nbsp; 
-            <ReadingSelector
-              value={store.reading}
-              max={store.nreadings}
-              set={store.setReading}
-            />
-          </label>
-          <Layout store={store} />
-          <label>Size:&nbsp;
+          <label>Font Size:&nbsp;
             <input
               type="range"
-              min="0"
-              max="100"
-              value={store.responseSize}
-              onChange={e => store.setResponseSize(+e.target.value)}
+              min="1"
+              max="4"
+              step="0.5"
+              value={viewstore.fontScale}
+              onChange={e => viewstore.setFontScale(+e.target.value)}
             />
           </label>
-          <label>Page Navigation:&nbsp;
-            <input
-              type="checkbox"
-              checked={store.pageTurnVisible}
-              onChange={store.togglePageTurnVisible}
-            />
+          <label>Page Turn Size:&nbsp;
+            <select
+              value={viewstore.pageTurnSize}
+              onChange={e => viewstore.setPageTurnSize(e.target.value)}
+            >
+              <option value="normal">Normal</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+              <option value="extra">Extra Large</option>
+            </select>
           </label>
 
-          <button onClick={store.toggleControlsVisible}>
+          <button onClick={viewstore.toggleControlsVisible}>
             Done
           </button>
         </div>
@@ -384,50 +174,5 @@ class NRKeyHandler extends React.Component<NRKeyHandlerProps, void> {
     );
   }
 }
-
-interface ReadingSelectProps {
-  value: number;
-  max: number;
-  set: (value: number) => void;
-}
-
-const ReadingSelector = observer(function ReadingSelector(props: ReadingSelectProps) {
-  const { value, max, set } = props;
-  const spelled = [ 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth',
-                    'eleventh', 'twelth' ];
-  const options = spelled.slice(0, max).map((option, i) => (
-    <option key={option} value={i} >{option}</option>));
-  return (
-    <select value={value} onChange={(e) => set(+e.target.value)}>
-      {options}
-    </select>
-  );
-});
-  
-function capitalize(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-const Layout = observer(function Layout(props: {store: Store}) {
-  const store = props.store;
-  const sides = ['left', 'right', 'top', 'bottom'];
-  const onCheck = (e: React.FormEvent<HTMLInputElement>) =>
-    store.setLayout(e.currentTarget.name, e.currentTarget.checked);
-  return (
-    <fieldset>
-      <legend>Layout</legend>
-      {
-        sides.map(side => (
-          <label key={side}>{capitalize(side)}:
-            <input
-              name={side}
-              type="checkbox"
-              checked={store.layout[side]}
-              onChange={onCheck}
-            />
-          </label>))
-      }
-    </fieldset>);
-});
 
 export default Reader;

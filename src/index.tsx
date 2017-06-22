@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-import Store from './Store';
+import BookStore from './BookStore';
+import ViewStore from './ViewStore';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
@@ -11,7 +12,7 @@ import { Router } from 'director/build/director';
 import { autorun, useStrict } from 'mobx';
 useStrict(true);
 
-function startRouter(store: Store) {
+function startRouter(store: BookStore) {
 
   const baseUrl = process.env.PUBLIC_URL;
 
@@ -37,7 +38,7 @@ function startRouter(store: Store) {
 
 }
 
-function startPersist(store: Store) {
+function startPersist(store: ViewStore) {
   var persist = window.localStorage.getItem('settings');
   if (persist) {
     store.setPersist(persist);
@@ -47,13 +48,15 @@ function startPersist(store: Store) {
   });
 }
 
-const store = new Store();
-startRouter(store);
-startPersist(store);
-window.addEventListener('resize', store.resize);
+const bookstore = new BookStore();
+const viewstore = new ViewStore();
+
+startRouter(bookstore);
+startPersist(viewstore);
+window.addEventListener('resize', viewstore.resize);
 
 ReactDOM.render(
-  <App store={store} />,
+  <App stores={[bookstore, viewstore]} />,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
