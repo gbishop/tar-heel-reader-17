@@ -6,7 +6,6 @@ const NextArrow = require('./NextArrow.png');
 const BackArrow = require('./BackArrow.png');
 import BookStore from './BookStore';
 import ViewStore from './ViewStore';
-import { textFontSizeSteps } from './ViewStore';
 
 // import SharedBook from './SharedBook';
 import './Reader.css';
@@ -111,7 +110,7 @@ const Controls = observer(function Controls(props: ControlsProps) {
             <input
               type="range"
               min="0"
-              max={textFontSizeSteps - 1}
+              max={viewstore.textFontSizeSteps - 1}
               value={viewstore.fontScale}
               onChange={e => viewstore.setFontScale(+e.target.value)}
             />

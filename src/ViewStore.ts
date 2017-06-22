@@ -4,9 +4,6 @@ import { Book, fetchBook } from './Book';
 
 type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
 
-export const fontScaleMax = 4;
-export const textFontSizeSteps = 8;
-
 class ViewStore {
   // base font size for the page, 2% of smaller screen dimension
   @computed get baseFontSize() {
@@ -17,9 +14,13 @@ class ViewStore {
   @action.bound setFontScale(s: number) {
     this.fontScale = s;
   }
+  // number of steps of font size
+  readonly textFontSizeSteps = 8;
+  // largest text font
+  readonly fontScaleMax = 4;
   // font size of book text
   @computed get textFontSize() {
-    return Math.pow(fontScaleMax, this.fontScale / (textFontSizeSteps - 1))
+    return Math.pow(this.fontScaleMax, this.fontScale / (this.textFontSizeSteps - 1))
       * this.baseFontSize * 2.5;
   }
   // line height of book text
