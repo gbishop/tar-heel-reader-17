@@ -1,71 +1,121 @@
-.page-number {
-  position: absolute;
-  top: 0.5em;
-  right: 0.5em;
-  font-size: 1em;
-  margin: 0;
-}
-
-.book-page {
-  text-align: center;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: #eef;
-}
-
-.caption-box {
-  width: 36em;
-  overflow: hidden;
-  margin: 0 auto;
-}
-
-.caption {
+#book-page {
+  font-size: calc(1*5vmin);
   line-height: 1.2em;
-  word-break: break-word;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   margin: 0;
+  padding: 0;
+  background-color: #ddf;
+  text-align: center;
 }
-
-.page-turn {
-  font-size: 1.6vmin;
-  border-radius: 0.5em;
-  border: 1px solid black;
-  width: 6em;
-  height: 4em;
+#book-page.picture-only {
+  font-size: 0;
 }
-.page-turn img {
-  display: block;
-  width: 1.5em;
-  margin: 5% auto 5% auto;
-}
-
-.page-back {
+#button-positioner {
+  width: 0;
   float: left;
 }
+.buttons-normal #button-positioner {
+  height: calc(100vh - 7vmin);
+}
+.buttons-medium #button-positioner {
+  height: 0;
+}
+.buttons-large #button-positioner {
+  height: 0;
+}
+button {
+  border-radius: 0.5em;
+  font-size: 1.6vmin;
+}
+.buttons-normal button {
+  margin: 0 0.5em;
+  height: 6.4vmin;
+  width: 9.6vmin;
+}
 
-.page-next {
+.buttons-medium button {
+  height: 100vh;
+  width: 6vmin;
+}
+
+.buttons-large button {
+  height: 100vh;
+  width: 9.6vmin;
+}
+.buttons-none button {
+  display: none;
+}
+
+button#back {
+  float: left;
+  clear: left;
+}
+
+button#next {
   float: right;
 }
 
+button img {
+  display: block;
+  width: 1.5em;
+  margin: auto;
+}
+
+.buttons-large button img {
+  width: 8vmin;
+}
+
+#picture {
+  width: 100vw;
+  height: calc(100vh - 3 * 1.2em - 0.5em);
+  object-fit: contain;
+  margin: 0;
+}
+.buttons-normal #picture,.buttons-none #picture {
+  width: 100vw;
+}
+.buttons-medium #picture {
+  width: calc(100vw - 12vmin);
+}
+.buttons-large #picture {
+  width: calc(100vw - 2*9.6vmin);
+}
+.text-only #picture {
+  display: none;
+}
+.picture-only #picture {
+  height: 100vh;
+}
+.picture-only.buttons-normal #picture {
+  height: calc(100vh - 10vmin);
+}
+
+#text {
+  padding-left: 0.1em;
+  overflow: hidden;
+}
+.picture-only #text {
+  display: none;
+}
+
+#page-number {
+  position: absolute;
+  font-size: 4vmin;
+  line-height: 1em;
+  top: 0.5em;
+}
+.buttons-normal #page-number,.buttons-none #page-number {
+  right: 0.5em;
+}
+.buttons-medium #page-number {
+  right: 12vmin;
+}
+.buttons-large #page-number {
+  right: 10vmin;
+}
 .controls label {
   display: block;
   padding: 0.5em;
-}
-
-fieldset label {
-  display: inline-block !important;
-  padding: 0.1em !important;
-}
-
-.book-page .choices button {
-  font-size: 1.5em;
-  width: 12em;
-  padding: 2em;
-  border-radius: 0.5em;
-  display: block;
-  margin: 10px auto;
-  background: white;
 }

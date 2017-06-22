@@ -6,6 +6,8 @@ const NextArrow = require('./NextArrow.png');
 const BackArrow = require('./BackArrow.png');
 import BookStore from './BookStore';
 import ViewStore from './ViewStore';
+import { textFontSizeSteps } from './ViewStore';
+
 // import SharedBook from './SharedBook';
 import './Reader.css';
 
@@ -33,30 +35,28 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
 const TextPage = observer(function TextPage(props: PageProps) {
   const [ bookstore, viewstore ] = props.stores;
   const page = bookstore.book.pages[bookstore.pageno - 1];
-  let textHeight = 3 * viewstore.textLineHeight;
-  let imgStyle = {
-    width: viewstore.screen.width,
-    height: viewstore.screen.height - textHeight,
-    objectFit: 'contain'
-  };
-  console.log('iS', imgStyle);
   return (
-    <div className="book-page">
-      <img src={'https://tarheelreader.org' + page.url} style={imgStyle} />
-      <p className="caption" style={{fontSize: viewstore.textFontSize}} >{page.text}
+    <div
+      id="book-page"
+      className={'buttons-' + viewstore.pageTurnSize}
+      style={{fontSize: viewstore.textFontSize}}
+    >
+      <div id="page-number">{bookstore.pageno}</div>
+      <div id="button-positioner" />
+      <img id="picture" src={'https://tarheelreader.org' + page.url} />
       <button
-        className="page-turn page-back"
+        id="back"
         onClick={bookstore.backPage}
       >
         <img src={BackArrow} />Back
       </button>
       <button
-        className="page-turn page-next"
+        id="next"
         onClick={bookstore.nextPage}
       >
         <img src={NextArrow} />Next
       </button>
-      </p>
+      <span id="text">{page.text}</span>
       <Controls stores={props.stores} />
     </div>
   );
@@ -110,9 +110,8 @@ const Controls = observer(function Controls(props: ControlsProps) {
           <label>Font Size:&nbsp;
             <input
               type="range"
-              min="1"
-              max="4"
-              step="0.5"
+              min="0"
+              max={textFontSizeSteps - 1}
               value={viewstore.fontScale}
               onChange={e => viewstore.setFontScale(+e.target.value)}
             />
@@ -125,7 +124,7 @@ const Controls = observer(function Controls(props: ControlsProps) {
               <option value="normal">Normal</option>
               <option value="medium">Medium</option>
               <option value="large">Large</option>
-              <option value="extra">Extra Large</option>
+              <option value="none">None</option>
             </select>
           </label>
 

@@ -2,7 +2,10 @@ import { observable, computed, action, reaction } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 
-type PageTurnSize = 'normal' | 'medium' | 'large' | 'extra';
+type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
+
+export const fontScaleMax = 4;
+export const textFontSizeSteps = 8;
 
 class ViewStore {
   // base font size for the page, 2% of smaller screen dimension
@@ -10,13 +13,14 @@ class ViewStore {
     return Math.min(this.screen.width, this.screen.height) * 0.02;
   }
   // scale for book text
-  @observable fontScale: number = 1;
+  @observable fontScale: number = 0;
   @action.bound setFontScale(s: number) {
     this.fontScale = s;
   }
   // font size of book text
   @computed get textFontSize() {
-    return this.fontScale * this.baseFontSize * 2.5;
+    return Math.pow(fontScaleMax, this.fontScale / (textFontSizeSteps - 1))
+      * this.baseFontSize * 2.5;
   }
   // line height of book text
   @computed get textLineHeight() {
