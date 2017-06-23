@@ -26,21 +26,15 @@ interface PageProps {
 }
 
 const TitlePage = observer(function TitlePage(props: PageProps) {
-  return <p>Title Page</p>;
-});
-
-const TextPage = observer(function TextPage(props: PageProps) {
   const store = props.store;
   const page = store.book.pages[store.pageno - 1];
   return (
     <div
       id="book-page"
-      className={'buttons-' + store.pageTurnSize}
+      className={'title-page ' + 'buttons-' + store.pageTurnSize}
       style={{fontSize: store.textFontSize}}
     >
-      <div id="page-number">{store.pageno}</div>
       <div id="button-positioner" />
-      <img id="picture" src={'https://tarheelreader.org' + page.url} />
       <button
         id="back"
         onClick={store.backPage}
@@ -53,7 +47,53 @@ const TextPage = observer(function TextPage(props: PageProps) {
       >
         <img src={NextArrow} />Next
       </button>
-      <span id="text">{page.text}</span>
+      <h1 id="title">{store.book.title}</h1>
+      <p id="author">{store.book.author}</p>
+      <img
+        id="picture"
+        src={'https://tarheelreader.org' + page.url}
+      />
+      <Controls store={props.store} />
+    </div>
+  );
+});
+
+const TextPage = observer(function TextPage(props: PageProps) {
+  const store = props.store;
+  const page = store.book.pages[store.pageno - 1];
+  let pt = '';
+  if (store.pictureTextMode === 'alternate') {
+    pt = ' ' + store.pictureTextToggle + '-only';
+  }
+  return (
+    <div
+      id="book-page"
+      className={'buttons-' + store.pageTurnSize + pt}
+      style={{fontSize: store.textFontSize}}
+    >
+      <div id="page-number">{store.pageno}</div>
+      <div id="button-positioner" />
+      <img
+        id="picture"
+        src={'https://tarheelreader.org' + page.url}
+      />
+      <button
+        id="back"
+        onClick={store.backPage}
+      >
+        <img src={BackArrow} />Back
+      </button>
+      <button
+        id="next"
+        onClick={store.nextPage}
+      >
+        <img src={NextArrow} />Next
+      </button>
+      <span
+        id="text"
+      >
+        {page.text}
+      </span>
       <Controls store={props.store} />
     </div>
   );
@@ -107,6 +147,13 @@ const Controls = observer(function Controls(props: PageProps) {
               max={store.textFontSizeSteps - 1}
               value={store.fontScale}
               onChange={e => store.setFontScale(+e.target.value)}
+            />
+          </label>
+          <label>Alternate Picture and Text:&nbsp;
+            <input
+              type="checkbox"
+              checked={store.pictureTextMode === 'alternate'}
+              onChange={e => store.setAlternatePictureText(e.target.checked)}
             />
           </label>
           <label>Page Turn Size:&nbsp;

@@ -18,9 +18,9 @@ const BookValidator = Record({
 // construct the typescript type
 export type Book = Static<typeof BookValidator>;
 
-export function fetchBook(url: string): Promise<Book> {
+export function fetchBook(slug: string): Promise<Book> {
   return new Promise((resolve, reject) => {
-    console.log('url', url);
+    const url = `/THR/api/book-as-json/?slug=${slug}`;
     window.fetch(url)
       .then(res => {
         if (res.ok) {

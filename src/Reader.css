@@ -6,7 +6,7 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background-color: #ddf;
+  background-color: #fff;
   text-align: center;
 }
 #book-page.picture-only {
@@ -69,10 +69,21 @@ button img {
 
 #picture {
   width: 100vw;
-  height: calc(100vh - 3 * 1.2em - 0.5em);
+  height: calc(100vh - 3.1em);
   object-fit: contain;
   margin: 0;
 }
+.title-page #picture {
+  height: calc(100vh - 5em);
+}
+.title-page.buttons-normal #picture {
+  width: calc(100vw - 23vmin);
+}
+.title-page.buttons-medium #picture {
+  width: calc(100vw - 13vmin);
+  height: calc(100vh - 4em);
+}
+
 .buttons-normal #picture,.buttons-none #picture {
   width: 100vw;
 }
@@ -85,11 +96,29 @@ button img {
 .text-only #picture {
   display: none;
 }
+.picture-only {
+  font-size: 0;
+  line-height: 0;
+}
+
 .picture-only #picture {
   height: 100vh;
 }
 .picture-only.buttons-normal #picture {
   height: calc(100vh - 10vmin);
+}
+
+.title-page #title {
+  font-size: 2em;
+  line-height: 1.2em;
+  margin: 0.1em auto;
+  height: 1.2em;
+  overflow: hidden;
+}
+.title-page #author {
+  font-size: 1em;
+  line-height: 1.2em;
+  margin: 0.1em auto;
 }
 
 #text {

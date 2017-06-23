@@ -25,23 +25,61 @@ class Store {
   @computed get currentPath() {
     return `/${this.bookid}` + (this.pageno > 1 ? `/${this.pageno}` : '');
   }
+  // alternate picture and text
+  @observable pictureTextMode: 'combined' | 'alternate' = 'combined';
+  @action.bound setAlternatePictureText(mode: boolean) {
+    if (!mode) {
+      this.pictureTextMode = 'combined';
+    } else {
+      this.pictureTextMode = 'alternate';
+    }
+    if (this.pageno === 1) {
+      this.pictureTextToggle = 'text';
+    } else {
+      this.pictureTextToggle = 'picture';
+    }
+  }
+  @observable pictureTextToggle: 'picture' | 'text' = 'picture';
+
   // step to the next page
   @action.bound nextPage() {
-    if (this.pageno <= this.npages) {
+    if (this.pictureTextMode === 'combined' && this.pageno <= this.npages) {
       this.pageno += 1;
+    } else if (this.pictureTextMode === 'alternate' && this.pictureTextToggle === 'text') {
+      this.pageno += 1;
+      this.pictureTextToggle = 'picture';
+    } else if (this.pictureTextMode === 'alternate' && this.pictureTextToggle === 'picture') {
+      this.pictureTextToggle = 'text';
     }
   }
   // step back to previous page
   @action.bound backPage() {
-    if (this.pageno > 1) {
+    if (this.pictureTextMode === 'combined') {
+      if (this.pageno > 1) {
+        this.pageno -= 1;
+      } else {
+        this.pageno = this.npages + 1;
+      }
+    } else if (this.pictureTextMode === 'alternate' && this.pictureTextToggle === 'text') {
+      if (this.pageno > 1) {
+        this.pictureTextToggle = 'picture';
+      } else {
+        this.pictureTextToggle = 'text';
+        this.pageno = this.npages + 1;
+      }
+    } else if (this.pictureTextMode === 'alternate' && this.pictureTextToggle === 'picture') {
       this.pageno -= 1;
-    } else {
-      this.pageno = this.npages + 1;
+      this.pictureTextToggle = 'text';
     }
   }
   // set the page number
   @action.bound setPage(i: number) {
     this.pageno = i;
+    if (this.pageno === 1 && this.pictureTextMode === 'alternate') {
+      this.pictureTextToggle = 'text';
+    } else if (this.pictureTextMode === 'alternate') {
+      this.pictureTextToggle = 'picture';
+    }
   }
 
   // base font size for the page, 2% of smaller screen dimension
@@ -108,7 +146,7 @@ class Store {
       () => this.bookid,
       (bookid) => {
         if (this.bookid.length > 0) {
-          this.bookP = fromPromise(fetchBook(`/api/book/${this.bookid}`)) as
+          this.bookP = fromPromise(fetchBook(this.bookid)) as
             IPromiseBasedObservable<Book>;
         }
       });
