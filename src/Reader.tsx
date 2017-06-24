@@ -27,14 +27,19 @@ interface PageProps {
 
 const TitlePage = observer(function TitlePage(props: PageProps) {
   const store = props.store;
-  const page = store.book.pages[store.pageno - 1];
+  const page = store.book.pages[1];
   return (
     <div
       id="book-page"
       className={'title-page ' + 'buttons-' + store.pageTurnSize}
       style={{fontSize: store.textFontSize}}
     >
-      <div id="button-positioner" />
+      <h1 id="title">{store.book.title}</h1>
+      <p id="author">{store.book.author}</p>
+      <img
+        id="picture"
+        src={'https://tarheelreader.org' + page.url}
+      />
       <button
         id="back"
         onClick={store.backPage}
@@ -47,12 +52,6 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
       >
         <img src={NextArrow} />Next
       </button>
-      <h1 id="title">{store.book.title}</h1>
-      <p id="author">{store.book.author}</p>
-      <img
-        id="picture"
-        src={'https://tarheelreader.org' + page.url}
-      />
       <Controls store={props.store} />
     </div>
   );
@@ -71,12 +70,13 @@ const TextPage = observer(function TextPage(props: PageProps) {
       className={'buttons-' + store.pageTurnSize + pt}
       style={{fontSize: store.textFontSize}}
     >
-      <div id="page-number">{store.pageno}</div>
-      <div id="button-positioner" />
       <img
         id="picture"
         src={'https://tarheelreader.org' + page.url}
       />
+      <div id="text" >
+        {page.text}
+      </div>
       <button
         id="back"
         onClick={store.backPage}
@@ -89,11 +89,7 @@ const TextPage = observer(function TextPage(props: PageProps) {
       >
         <img src={NextArrow} />Next
       </button>
-      <span
-        id="text"
-      >
-        {page.text}
-      </span>
+      <div id="page-number">{store.pageno}</div>
       <Controls store={props.store} />
     </div>
   );
@@ -178,7 +174,7 @@ const Controls = observer(function Controls(props: PageProps) {
 });
 
 interface NRKeyHandlerProps {
-  keyValue: string;
+  keyValue: string | string[];
   onKeyHandle: (e: Event) => void;
 }
 
@@ -196,9 +192,10 @@ class NRKeyHandler extends React.Component<NRKeyHandlerProps, void> {
     this.isDown = false;
   }
   render() {
-    const keyValue = this.props.keyValue;
-    return (
-      <div>
+    let keyValues: string[] = [];
+    keyValues = keyValues.concat(this.props.keyValue);
+    const handlers = keyValues.map(keyValue => (
+      <div key={keyValue} >
         <KeyHandler
           keyEventName={'keydown'}
           keyValue={keyValue}
@@ -209,8 +206,9 @@ class NRKeyHandler extends React.Component<NRKeyHandlerProps, void> {
           keyValue={keyValue}
           onKeyHandle={this.keyUp}
         />
-      </div>
+      </div>)
     );
+    return <div>{handlers}</div>;
   }
 }
 

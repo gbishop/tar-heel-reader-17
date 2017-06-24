@@ -6,55 +6,39 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background-color: #fff;
   text-align: center;
 }
+.text-only #book-page {
+}
 #book-page.picture-only {
-  font-size: 0;
-}
-#button-positioner {
-  width: 0;
-  float: left;
-}
-.buttons-normal #button-positioner {
-  height: calc(100vh - 7vmin);
-}
-.buttons-medium #button-positioner {
-  height: 0;
-}
-.buttons-large #button-positioner {
-  height: 0;
 }
 button {
-  border-radius: 0.5em;
-  font-size: 1.6vmin;
+  font-size: 2.2vmin;
+  bottom: 0.5vmin;
+  position: absolute;
 }
 .buttons-normal button {
-  margin: 0 0.5em;
-  height: 6.4vmin;
-  width: 9.6vmin;
+  height: 8vmin;;
+  width: 12vmin;
 }
-
 .buttons-medium button {
   height: 100vh;
   width: 6vmin;
 }
-
 .buttons-large button {
   height: 100vh;
-  width: 9.6vmin;
+  width: 12vmin;
 }
 .buttons-none button {
   display: none;
 }
 
 button#back {
-  float: left;
-  clear: left;
+  left: 0.5vmin;
 }
 
 button#next {
-  float: right;
+  right: 0.5vmin;
 }
 
 button img {
@@ -69,70 +53,91 @@ button img {
 
 #picture {
   width: 100vw;
-  height: calc(100vh - 3.1em);
+  height: calc(100vh - 3 * 1.2em);
   object-fit: contain;
   margin: 0;
 }
 .title-page #picture {
-  height: calc(100vh - 5em);
+  height: calc(100vh - 2.4em) !important;
 }
 .title-page.buttons-normal #picture {
-  width: calc(100vw - 23vmin);
+  width: calc(100vw);
 }
 .title-page.buttons-medium #picture {
   width: calc(100vw - 13vmin);
   height: calc(100vh - 4em);
 }
 
-.buttons-normal #picture,.buttons-none #picture {
+.buttons-normal #picture {
+  height: calc(100vh - 3 * 1.2em - 8vmin);
+}e
+
+.buttons-none #picture {
   width: 100vw;
 }
 .buttons-medium #picture {
   width: calc(100vw - 12vmin);
 }
 .buttons-large #picture {
-  width: calc(100vw - 2*9.6vmin);
+  width: calc(100vw - 24vmin);
 }
 .text-only #picture {
   display: none;
-}
-.picture-only {
-  font-size: 0;
-  line-height: 0;
 }
 
 .picture-only #picture {
   height: 100vh;
 }
 .picture-only.buttons-normal #picture {
-  height: calc(100vh - 10vmin);
+  height: calc(100vh - 8vmin);
 }
 
 .title-page #title {
-  font-size: 2em;
+  font-size: 1em;
   line-height: 1.2em;
   margin: 0.1em auto;
   height: 1.2em;
   overflow: hidden;
 }
 .title-page #author {
-  font-size: 1em;
+  font-size: 0.6em;
   line-height: 1.2em;
+  height: 1.2em;
+  overflow: hidden;
   margin: 0.1em auto;
 }
 
 #text {
-  padding-left: 0.1em;
+  text-align: center;
   overflow: hidden;
+  height: calc(3*1.2em);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
+.buttons-normal #text {
+  bottom: calc(8vmin - 0.2em);
+}
+.buttons-medium #text {
+  width: calc(100vw - 2*6vmin);
+  left: 6vmin;
+}
+.buttons-large #text {
+  width: calc(100vw - 24vmin);
+  left: 12vmin;
+}
+
 .picture-only #text {
   display: none;
+}
+.text-only #text {
 }
 
 #page-number {
   position: absolute;
   font-size: 4vmin;
-  line-height: 1em;
+  line-height: 1.2em;
   top: 0.5em;
 }
 .buttons-normal #page-number,.buttons-none #page-number {

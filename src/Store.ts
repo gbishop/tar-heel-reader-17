@@ -127,14 +127,25 @@ class Store {
     this.screen.width = window.innerWidth;
     this.screen.height = window.innerHeight;
   }
+  // persistence version
+  readonly persistVersion = 1;
   // json string to persist the state
   @computed get persist(): string {
     return JSON.stringify({
+      version: this.persistVersion,
+      pictureTextMode: this.pictureTextMode,
+      fontScale: this.fontScale,
+      pageTurnSize: this.pageTurnSize
     });
   }
   // restore the state from json
   @action.bound setPersist(js: string) {
-    // var v = JSON.parse(js);
+    var v = JSON.parse(js);
+    if (v.version === this.persistVersion) {
+      this.pictureTextMode = v.pictureTextMode;
+      this.fontScale = v.fontScale;
+      this.pageTurnSize = v.pageTurnSize;
+    }
   }
   // handle updating the book when the id changes
   fetchHandler: {};
