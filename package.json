@@ -30,6 +30,18 @@
       "secure": false,
       "changeOrigin": true,
       "host": "tarheelreader.org"
+    },
+    "/cache": {
+      "target": "http://gbserver3.cs.unc.edu",
+      "host": "gbserver3.cs.unc.edu",
+      "changeOrigin": true,
+      "secure": false
+    },
+    "/uploads": {
+      "target": "https://tarheelreader.org",
+      "host": "tarheelreader.org",
+      "changeOrigin": true,
+      "secure": false
     }
   },
   "scripts": {

@@ -14,14 +14,15 @@ useStrict(true);
 function startRouter(store: Store) {
 
   const baseUrl = process.env.PUBLIC_URL;
+  console.log('baseUrl', baseUrl);
 
   // update state on url change
   let router = new Router();
-  router.on(baseUrl + '/([-a-z0-9]*)', id => store.setIdPage(id, 1));
-  router.on(baseUrl + '/([-a-z0-9]+)/(\\d+)',
-    (id, pageno) => store.setIdPage(id, +pageno));
+  router.on(baseUrl + '/\\d+/\\d+/\\d+/([-a-z0-9]*)/(\\d+)?',
+    (id, pageno) => store.setBookView(id, +pageno || 1));
+  router.on(baseUrl + '/find/(.*)', store.setFindView);
   router.configure({
-    notfound: () => store.setIdPage('', 1),
+    notfound: () => store.setErrorView(),
     html5history: true
   });
   router.init();
@@ -29,7 +30,7 @@ function startRouter(store: Store) {
   // update url on state changes
   autorun(() => {
     const path = baseUrl + store.currentPath;
-    if (path !== window.location.pathname) {
+    if (store.currentPath && path !== window.location.pathname) {
       console.log('push', path, window.location.pathname);
       window.history.pushState(null, '', path);
     }

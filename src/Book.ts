@@ -1,6 +1,6 @@
 import { Number, String, Array, Record, Static } from 'runtypes';
 
-// construct the validator for shared books
+// construct the validator for books
 const Page = Record({
   text: String,
   url: String,
@@ -13,6 +13,7 @@ const BookValidator = Record({
   slug: String,
   author: String,
   pages: Array(Page),
+  link: String
 });
 
 // construct the typescript type

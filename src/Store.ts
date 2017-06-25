@@ -1,6 +1,7 @@
 import { observable, computed, action, reaction } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
+import { FindResult, fetchFind } from './FindResult';
 
 type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
 
@@ -16,14 +17,38 @@ class Store {
   @observable pageno: number = 1;
   // number of pages in the book
   @computed get npages() { return this.book.pages.length; }
+
   // update the state typically from a URL
-  @action.bound setIdPage(id: string, page: number) {
+  @observable currentView: 'landing' | 'book' | 'find' | 'error' = 'landing';
+  @action.bound setBookView(id: string, page: number) {
+    this.currentView = 'book';
     this.bookid = id;
     this.pageno = page;
   }
+  @action.bound setLandingView() {
+    this.currentView = 'landing';
+  }
+  @action.bound setFindView() {
+    console.log('setFindView', window.location.search);
+    this.currentView = 'find';
+    this.findQuery = window.location.search;
+  }
+  @action.bound setErrorView() {
+    this.currentView = 'error';
+  }
   // map the state to a url
   @computed get currentPath() {
-    return `/${this.bookid}` + (this.pageno > 1 ? `/${this.pageno}` : '');
+    if (this.currentView === 'book') {
+      if (this.bookid && this.book) {
+        return `${this.book.link}` + (this.pageno > 1 ? `${this.pageno}` : '');
+      } else {
+        return '';
+      }
+    } else if (this.currentView === 'find') {
+      return '/find/';
+    } else {
+      return '';
+    }
   }
   // alternate picture and text
   @observable pictureTextMode: 'combined' | 'alternate' = 'combined';
@@ -118,6 +143,14 @@ class Store {
   @action.bound toggleControlsVisible() {
     this.controlsVisible = !this.controlsVisible;
   }
+  // Find related variables
+  @observable findQuery: string = 'foo';
+  // an observable promise for the find result associated with the findQuery
+  @observable findP: IPromiseBasedObservable<FindResult>;
+  // get the find result without having to say findP.value all the time
+  // these computed are cached so this function only runs once after a change
+  @computed get find() { return this.findP.value; }
+
   // screen dimensions updated on resize
   @observable screen = {
     width: window.innerWidth,
@@ -149,6 +182,8 @@ class Store {
   }
   // handle updating the book when the id changes
   fetchHandler: {};
+  // handle updating the find result
+  findHandler: {};
 
   constructor() {
     // fetch the book when the id changes
@@ -156,10 +191,17 @@ class Store {
     this.fetchHandler = reaction(
       () => this.bookid,
       (bookid) => {
-        if (this.bookid.length > 0) {
-          this.bookP = fromPromise(fetchBook(this.bookid)) as
+        if (bookid.length > 0) {
+          this.bookP = fromPromise(fetchBook(bookid)) as
             IPromiseBasedObservable<Book>;
         }
+      });
+    this.findHandler = reaction(
+      () => this.findQuery,
+      (query) => {
+        console.log('reaction', query);
+        this.findP = fromPromise(fetchFind(this.findQuery)) as
+          IPromiseBasedObservable<FindResult>;
       });
   }
 }
