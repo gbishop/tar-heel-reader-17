@@ -8,8 +8,17 @@
   padding: 0;
   text-align: center;
 }
-.text-only #book-page {
+.text-only#book-page {
+display: table-cel;
 }
+.text-only #text {
+  vertical-align: middle;
+  display: table-cell;
+  position: inherit;
+  width: 100vw;
+  height: 100vh;
+}
+
 #book-page.picture-only {
 }
 button {
@@ -131,9 +140,6 @@ button img {
 .picture-only #text {
   display: none;
 }
-.text-only #text {
-}
-
 #page-number {
   position: absolute;
   font-size: 4vmin;
