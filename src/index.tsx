@@ -20,7 +20,8 @@ function startRouter(store: Store) {
   let router = new Router();
   router.on(baseUrl + '/\\d+/\\d+/\\d+/([-a-z0-9]*)/(\\d+)?',
     (id, pageno) => store.setBookView(id, +pageno || 1));
-  router.on(baseUrl + '/find/(.*)', store.setFindView);
+  router.on(baseUrl + '/find/?', store.setFindView);
+  router.on(baseUrl + '/', store.setLandingView);
   router.configure({
     notfound: () => store.setErrorView(),
     html5history: true

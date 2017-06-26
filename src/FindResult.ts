@@ -21,7 +21,8 @@ export type FindResult = Static<typeof FindValidator>;
 
 export function fetchFind(query: string): Promise<FindResult> {
   return new Promise((resolve, reject) => {
-    const url = `/THR/api/find/${query}&json=1`;
+    const op = query.slice(0, 1) === '?' ? '&' : '?';
+    const url = `/THR/api/find/${query}${op}json=1`;
     window.fetch(url)
       .then(res => {
         if (res.ok) {
