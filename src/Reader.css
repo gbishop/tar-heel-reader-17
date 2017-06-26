@@ -130,9 +130,15 @@ display: table;
   width: calc(100vw - 2*6vmin);
   left: 6vmin;
 }
+#Reader.buttons-medium.text-only #text {
+  padding-left: 6vmin;
+}
 #Reader.buttons-large #text {
   width: calc(100vw - 24vmin);
   left: 12vmin;
+}
+#Reader.buttons-large.text-only #text {
+  padding-left: 12vmin;
 }
 #Reader.picture-only #text {
   display: none;
