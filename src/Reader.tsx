@@ -30,7 +30,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
   const page = store.book.pages[1];
   return (
     <div
-      id="book-page"
+      id="Reader"
       className={'title-page ' + 'buttons-' + store.pageTurnSize}
       style={{fontSize: store.textFontSize}}
     >
@@ -41,12 +41,14 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
         src={'https://tarheelreader.org' + page.url}
       />
       <button
+        className="nav"
         id="back"
         onClick={store.backPage}
       >
         <img src={BackArrow} />Back
       </button>
       <button
+        className="nav"
         id="next"
         onClick={store.nextPage}
       >
@@ -66,8 +68,8 @@ const TextPage = observer(function TextPage(props: PageProps) {
   }
   return (
     <div
-      id="book-page"
-      className={'buttons-' + store.pageTurnSize + pt}
+      id="Reader"
+      className={'book-page ' + 'buttons-' + store.pageTurnSize + pt}
       style={{fontSize: store.textFontSize}}
     >
       <img
@@ -78,12 +80,14 @@ const TextPage = observer(function TextPage(props: PageProps) {
         {page.text}
       </div>
       <button
+        className="nav"
         id="back"
         onClick={store.backPage}
       >
         <img src={BackArrow} />Back
       </button>
       <button
+        className="nav"
         id="next"
         onClick={store.nextPage}
       >

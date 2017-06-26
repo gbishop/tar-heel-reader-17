@@ -1,4 +1,4 @@
-#book-page {
+#Reader {
   font-size: calc(1*5vmin);
   line-height: 1.2em;
   height: 100vh;
@@ -8,107 +8,98 @@
   padding: 0;
   text-align: center;
 }
-.text-only#book-page {
-display: table-cel;
-}
-.text-only #text {
-  vertical-align: middle;
-  display: table-cell;
-  position: inherit;
-  width: 100vw;
-  height: 100vh;
+#Reader.text-only {
+display: table;
 }
 
-#book-page.picture-only {
-}
-button {
+#Reader button.nav {
   font-size: 2.2vmin;
   bottom: 0.5vmin;
   position: absolute;
 }
-.buttons-normal button {
+#Reader.buttons-normal button.nav {
   height: 8vmin;;
   width: 12vmin;
 }
-.buttons-medium button {
+#Reader.buttons-medium button.nav {
   height: 100vh;
   width: 6vmin;
 }
-.buttons-large button {
+#Reader.buttons-large button.nav {
   height: 100vh;
   width: 12vmin;
 }
-.buttons-none button {
+#Reader.buttons-none button.nav {
   display: none;
 }
 
-button#back {
+#Reader button#back {
   left: 0.5vmin;
 }
 
-button#next {
+#Reader button#next {
   right: 0.5vmin;
 }
 
-button img {
+#Reader button.nav img {
   display: block;
   width: 1.5em;
   margin: auto;
 }
 
-.buttons-large button img {
+#Reader.buttons-large button.nav img {
   width: 8vmin;
 }
 
-#picture {
+#Reader #picture {
   width: 100vw;
   height: calc(100vh - 3 * 1.2em);
   object-fit: contain;
   margin: 0;
 }
-.title-page #picture {
+#Reader.title-page #picture {
   height: calc(100vh - 2.4em) !important;
 }
-.title-page.buttons-normal #picture {
+#Reader.title-page.buttons-normal #picture {
   width: calc(100vw);
 }
-.title-page.buttons-medium #picture {
+#Reader.title-page.buttons-medium #picture {
   width: calc(100vw - 13vmin);
   height: calc(100vh - 4em);
 }
 
-.buttons-normal #picture {
+#Reader.buttons-normal #picture {
   height: calc(100vh - 3 * 1.2em - 8vmin);
 }e
 
-.buttons-none #picture {
+#Reader.buttons-none #picture {
   width: 100vw;
 }
-.buttons-medium #picture {
+#Reader.buttons-medium #picture {
   width: calc(100vw - 12vmin);
 }
-.buttons-large #picture {
+#Reader.buttons-large #picture {
   width: calc(100vw - 24vmin);
 }
-.text-only #picture {
+#Reader.text-only #picture {
   display: none;
 }
 
-.picture-only #picture {
+#Reader.picture-only #picture {
   height: 100vh;
 }
-.picture-only.buttons-normal #picture {
+#Reader.picture-only.buttons-normal #picture {
   height: calc(100vh - 8vmin);
 }
 
-.title-page #title {
+#Reader.title-page #title {
   font-size: 1em;
   line-height: 1.2em;
   margin: 0.1em auto;
   height: 1.2em;
   overflow: hidden;
 }
-.title-page #author {
+#Reader.title-page #author {
   font-size: 0.6em;
   line-height: 1.2em;
   height: 1.2em;
@@ -116,7 +107,7 @@ button img {
   margin: 0.1em auto;
 }
 
-#text {
+#Reader #text {
   text-align: center;
   overflow: hidden;
   height: calc(3*1.2em);
@@ -125,36 +116,36 @@ button img {
   bottom: 0;
   left: 0;
 }
-.buttons-normal #text {
+#Reader.text-only #text {
+  vertical-align: middle;
+  display: table-cell;
+  position: inherit;
+  width: 100vw;
+  height: 100vh;
+}
+#Reader.buttons-normal #text {
   bottom: calc(8vmin - 0.2em);
 }
-.buttons-medium #text {
+#Reader.buttons-medium #text {
   width: calc(100vw - 2*6vmin);
   left: 6vmin;
 }
-.buttons-large #text {
+#Reader.buttons-large #text {
   width: calc(100vw - 24vmin);
   left: 12vmin;
 }
-
-.picture-only #text {
+#Reader.picture-only #text {
   display: none;
 }
-#page-number {
+
+#Reader #page-number {
   position: absolute;
   font-size: 4vmin;
   line-height: 1.2em;
   top: 0.5em;
-}
-.buttons-normal #page-number,.buttons-none #page-number {
   right: 0.5em;
 }
-.buttons-medium #page-number {
-  right: 12vmin;
-}
-.buttons-large #page-number {
-  right: 10vmin;
-}
+
 .controls label {
   display: block;
   padding: 0.5em;
