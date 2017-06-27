@@ -68,6 +68,14 @@
   vertical-align: middle;
 }
 
+#Find-results img.caution {
+  width: 1em;
+  height: 1em;
+  max-width: 6vmin;
+  max-height: 6vmin;
+  vertical-align: middle;
+}
+
 #Find-results p.pages {
   font-size: 0.7em;
   margin: 0;

@@ -16,6 +16,7 @@ const stars = {
 };
 
 const reviewed = require('./icons/reviewed.png');
+const caution = require('./icons/caution.png');
 
 import './Find.css';
 
@@ -34,6 +35,7 @@ const Find = observer(function Find(props: {store: Store}) {
           <p className="author">{b.author}</p>
           <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
           {b.reviewed && (<img src={reviewed} className="reviewed" />)}
+          {b.caution && (<img src={caution} className="caution" />)}
           <p className="pages">{b.pages} pages</p>
         </button>
       </li>));
