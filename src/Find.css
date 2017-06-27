@@ -3,43 +3,43 @@
 
 #Find-results { 
   list-style: none;
+  padding-left: 0.0em;
+  margin: 0 auto;
+  text-align: center;
 }
 
 #Find-results li {
-  float: left;
-  width: 11em;
-  height: 11em;
-  overflow: hidden;
-  margin: 0.2em;
-  text-align: center;
+  max-width: calc(100vw - 0.4em);
+  width: 22em;
+  margin: 0.1em;
   line-height: 1em;
-  border-radius: 0.25em;
-  border: 1px solid black;
-  position: relative;
-  box-shadow: 0.1em 0.1em 0.1em #aaa;
+  display: inline-block;
 }
 
 #Find-results button {
   width: 100%;
-  height: 100%;
   background: transparent;
   font-size: 1em;
+  text-align: left;
+  padding: 0.1em;
 }
 
 #Find-results h1 {
-  height: 2.2em;
-  font-size: 1.0em;
-  line-height: 1.1em;
+  font-size: 1em;
+  line-height: 1.2em;
+  height: 2.4em;
   overflow: hidden;
   margin: 0.2em 0 0 0;
 }
 
 #Find-results img.cover {
   width: 6.25em;
+  max-width: 25vw;
   height: 6.25em;
   display: block;
-  margin: auto;
+  margin-right: 0.2em;
   object-fit: contain;
+  float: left;
 }
 
 #Find-results p.author {
@@ -52,20 +52,16 @@
 #Find-results img.stars {
   width: 3em;
   height: 1em;
+  margin-right: 0.5em;
 }
 
 #Find-results img.reviewed {
   width: 1em;
   height: 1em;
-  position: absolute;
-  left: 0.5em;
-  bottom: 0.5em;
 }
 
 #Find-results p.pages {
-  position: absolute;
-  bottom: 0.25em;
-  right: 0.625em;
   font-size: 0.7em;
+  margin: 0;
 }
 

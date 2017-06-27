@@ -10,6 +10,9 @@ const FindBookValidator = Record({
   cover: Record({
     url: String,
   }),
+  preview: Record({
+    url: String,
+  }),
   pages: Number,
   rating: Record({
     icon: String,

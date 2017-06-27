@@ -29,12 +29,12 @@ const Find = observer(function Find(props: {store: Store}) {
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
         <button onClick={e => store.setBookView(b.slug, 1)} >
+          <img className="cover" src={store.fontScale <= 2 ? b.cover.url : b.preview.url} />
           <h1>{b.title}</h1>
           <p className="author">{b.author}</p>
           <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
-          <img className="cover" src={b.cover.url} />
           {b.reviewed && (<img src={reviewed} className="reviewed" />)}
-          <p className="pages">{b.pages}</p>
+          <p className="pages">{b.pages} pages</p>
         </button>
       </li>));
     return (
@@ -47,6 +47,7 @@ const Find = observer(function Find(props: {store: Store}) {
         </div>
         <ul id="Find-results">
           {findResults}
+          <li style={{clear: 'both'}} />
         </ul>
         <Controls store={store} />
       </div>);
