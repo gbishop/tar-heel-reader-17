@@ -24,6 +24,7 @@ class Store {
     this.currentView = 'book';
     this.bookid = id;
     this.pageno = page;
+    console.log('set book view', this.bookid);
   }
   @action.bound setLandingView() {
     this.currentView = 'landing';
@@ -38,7 +39,14 @@ class Store {
   }
   // map the state to a url
   @computed get currentPath() {
+    console.log('currentView', this.currentView);
     if (this.currentView === 'book') {
+      console.log('this.bookid', this.bookid);
+      console.log('this.bookP', this.bookP);
+      if (!this.bookP) { 
+        // trying to avoid a race condition
+        return '';
+      }
       if (this.bookid && this.book) {
         return `${this.book.link}` + (this.pageno > 1 ? `${this.pageno}` : '');
       } else {
@@ -142,6 +150,7 @@ class Store {
   @observable controlsVisible: boolean = false;
   @action.bound toggleControlsVisible() {
     this.controlsVisible = !this.controlsVisible;
+    console.log('controls', this.controlsVisible);
   }
   // Find related variables
   @observable findQuery: string = 'foo';
@@ -191,6 +200,7 @@ class Store {
     this.fetchHandler = reaction(
       () => this.bookid,
       (bookid) => {
+        console.log('book reaction', bookid);
         if (bookid.length > 0) {
           this.bookP = fromPromise(fetchBook(bookid)) as
             IPromiseBasedObservable<Book>;
@@ -199,7 +209,7 @@ class Store {
     this.findHandler = reaction(
       () => this.findQuery,
       (query) => {
-        console.log('reaction', query);
+        console.log('find reaction', query);
         this.findP = fromPromise(fetchFind(this.findQuery)) as
           IPromiseBasedObservable<FindResult>;
       });

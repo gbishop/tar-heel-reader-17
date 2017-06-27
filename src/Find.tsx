@@ -6,6 +6,17 @@ import Store from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
 
+const stars = {
+  '0 stars': require('./icons/0stars.png'),
+  '1 stars': require('./icons/1stars.png'),
+  '1.5 stars': require('./icons/1.5stars.png'),
+  '2 stars': require('./icons/2stars.png'),
+  '2.5 stars': require('./icons/2.5stars.png'),
+  '3 stars': require('./icons/3stars.png')
+};
+
+const reviewed = require('./icons/reviewed.png');
+
 import './Find.css';
 
 const Find = observer(function Find(props: {store: Store}) {
@@ -17,17 +28,26 @@ const Find = observer(function Find(props: {store: Store}) {
   } else {
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
-        <img src={b.cover.url} />
-        {b.title}
+        <button onClick={e => store.setBookView(b.slug, 1)} >
+          <h1>{b.title}</h1>
+          <p className="author">{b.author}</p>
+          <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
+          <img className="cover" src={b.cover.url} />
+          {b.reviewed && (<img src={reviewed} className="reviewed" />)}
+          <p className="pages">{b.pages}</p>
+        </button>
       </li>));
     return (
-      <div id="find-page">
+      <div
+        id="Find"
+        style={{fontSize: store.textFontSize / 1.8}}
+      >
         <div id="find-form">
           Form goes here.
         </div>
-        <div id="find-results">
+        <ul id="Find-results">
           {findResults}
-        </div>
+        </ul>
         <Controls store={store} />
       </div>);
   }
