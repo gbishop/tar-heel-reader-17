@@ -49,10 +49,6 @@ class Store {
     if (this.currentView === 'book') {
       console.log('this.bookid', this.bookid);
       console.log('this.bookP', this.bookP);
-      if (!this.bookP) { 
-        // trying to avoid a race condition
-        return '';
-      }
       if (this.bookid && this.book) {
         return `${this.book.link}` + (this.pageno > 1 ? `${this.pageno}` : '');
       } else {

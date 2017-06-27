@@ -32,7 +32,7 @@ function startRouter(store: Store) {
   autorun(() => {
     const path = baseUrl + store.currentPath;
     console.log('autorun', path, store.currentPath);
-    if (store.currentPath && path !== window.location.pathname) {
+    if (path !== window.location.pathname) {
       console.log('push', path, window.location.pathname);
       window.history.pushState(null, '', path);
     }
