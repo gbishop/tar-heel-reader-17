@@ -22,7 +22,10 @@ class Store {
   @observable currentView: 'landing' | 'book' | 'find' | 'error' = 'landing';
   @action.bound setBookView(id: string, page: number) {
     this.currentView = 'book';
-    this.bookid = id;
+    if (id !== this.bookid) {
+      this.bookid = id;
+      this.bookP = fromPromise(fetchBook(id)) as IPromiseBasedObservable<Book>;
+    }
     this.pageno = page;
     console.log('set book view', this.bookid);
   }
@@ -32,7 +35,10 @@ class Store {
   @action.bound setFindView() {
     console.log('setFindView', window.location.search);
     this.currentView = 'find';
-    this.findQuery = window.location.search;
+    if (window.location.search !== this.findQuery) {
+      this.findQuery = window.location.search;
+      this.findP = fromPromise(fetchFind(this.findQuery)) as IPromiseBasedObservable<FindResult>;
+    }
   }
   @action.bound setErrorView() {
     this.currentView = 'error';
@@ -188,31 +194,6 @@ class Store {
       this.fontScale = v.fontScale;
       this.pageTurnSize = v.pageTurnSize;
     }
-  }
-  // handle updating the book when the id changes
-  fetchHandler: {};
-  // handle updating the find result
-  findHandler: {};
-
-  constructor() {
-    // fetch the book when the id changes
-    // figure out when to dispose of this
-    this.fetchHandler = reaction(
-      () => this.bookid,
-      (bookid) => {
-        console.log('book reaction', bookid);
-        if (bookid.length > 0) {
-          this.bookP = fromPromise(fetchBook(bookid)) as
-            IPromiseBasedObservable<Book>;
-        }
-      });
-    this.findHandler = reaction(
-      () => this.findQuery,
-      (query) => {
-        console.log('find reaction', query);
-        this.findP = fromPromise(fetchFind(this.findQuery)) as
-          IPromiseBasedObservable<FindResult>;
-      });
   }
 }
 
