@@ -6,14 +6,13 @@
   padding-left: 0.0em;
   margin: 0 auto;
   text-align: center;
+  max-width: calc(100vw - 0.4em);
+  width: 42em;
 }
 
 #Find-results li {
-  max-width: calc(100vw - 0.4em);
-  width: 22em;
   margin: 0.1em;
   line-height: 1em;
-  display: inline-block;
 }
 
 #Find-results button {
@@ -25,11 +24,11 @@
 }
 
 #Find-results h1 {
-  font-size: 1em;
+  font-size: 1.8em;
   line-height: 1.2em;
-  height: 2.4em;
+  height: 2.2em;
   overflow: hidden;
-  margin: 0.2em 0 0 0;
+  margin: 0.0em 0 0 0;
 }
 
 #Find-results img.cover {
@@ -45,19 +44,28 @@
 #Find-results p.author {
   font-size: 0.8em;
   overflow: hidden;
-  height: 1.3em;
+  height: 1.1em;
   margin: 0;
+  display: inline-block;
+  width: 10em;
+  vertical-align: middle;
 }
 
 #Find-results img.stars {
   width: 3em;
   height: 1em;
-  margin-right: 0.5em;
+  margin-right: 0.2em;
+  max-width: 18vmin;
+  max-height: 6vmin;
+  vertical-align: middle;
 }
 
 #Find-results img.reviewed {
   width: 1em;
   height: 1em;
+  max-width: 6vmin;
+  max-height: 6vmin;
+  vertical-align: middle;
 }
 
 #Find-results p.pages {
