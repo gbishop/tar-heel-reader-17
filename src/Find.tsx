@@ -4,6 +4,7 @@ import KeyHandler from 'react-key-handler';
 import Modal = require('react-modal');
 import Store from './Store';
 import ErrorMsg from './ErrorMsg';
+import Controls from './Controls';
 
 import './Find.css';
 
@@ -27,6 +28,7 @@ const Find = observer(function Find(props: {store: Store}) {
         <div id="find-results">
           {findResults}
         </div>
+        <Controls store={store} />
       </div>);
   }
 });

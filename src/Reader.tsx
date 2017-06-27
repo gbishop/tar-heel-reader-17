@@ -5,6 +5,8 @@ import Modal = require('react-modal');
 const NextArrow = require('./NextArrow.png');
 const BackArrow = require('./BackArrow.png');
 import Store from './Store';
+import Controls from './Controls';
+import NRKeyHandler from './NRKeyHandler';
 
 // import SharedBook from './SharedBook';
 import './Reader.css';
@@ -54,6 +56,14 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
       >
         <img src={NextArrow} />Next
       </button>
+      <NRKeyHandler
+        keyValue={'ArrowRight'}
+        onKeyHandle={store.nextPage}
+      />
+      <NRKeyHandler
+        keyValue={'ArrowLeft'}
+        onKeyHandle={store.backPage}
+      />
       <Controls store={props.store} />
     </div>
   );
@@ -94,33 +104,6 @@ const TextPage = observer(function TextPage(props: PageProps) {
         <img src={NextArrow} />Next
       </button>
       <div id="page-number">{store.pageno}</div>
-      <Controls store={props.store} />
-    </div>
-  );
-});
-
-const ChoicePage = observer(function ChoicePage(props: PageProps) {
-  return <p>Choice Page</p>;
-});
-
-const Controls = observer(function Controls(props: PageProps) {
-  const store = props.store;
-  const customStyles = {
-    content : {
-      top                   : '50%',
-      left                  : '50%',
-      right                 : 'auto',
-      bottom                : 'auto',
-      marginRight           : '-50%',
-      transform             : 'translate(-50%, -50%)'
-    },
-    overlay: {
-      backgroundColor   : 'rgba(255, 255, 255, 0.0)'
-    }
-  };
-
-  return (
-    <div>
       <NRKeyHandler
         keyValue={'ArrowRight'}
         onKeyHandle={store.nextPage}
@@ -129,91 +112,13 @@ const Controls = observer(function Controls(props: PageProps) {
         keyValue={'ArrowLeft'}
         onKeyHandle={store.backPage}
       />
-      <NRKeyHandler
-        keyValue="Escape"
-        onKeyHandle={store.toggleControlsVisible}
-      />
-      <Modal 
-        isOpen={store.controlsVisible}
-        contentLabel="Reading controls"
-        style={customStyles}
-      >
-        <div className="controls">
-          <h1>Reading controls</h1>
-          <label>Font Size:&nbsp;
-            <input
-              type="range"
-              min="0"
-              max={store.textFontSizeSteps - 1}
-              value={store.fontScale}
-              onChange={e => store.setFontScale(+e.target.value)}
-            />
-          </label>
-          <label>Alternate Picture and Text:&nbsp;
-            <input
-              type="checkbox"
-              checked={store.pictureTextMode === 'alternate'}
-              onChange={e => store.setAlternatePictureText(e.target.checked)}
-            />
-          </label>
-          <label>Page Turn Size:&nbsp;
-            <select
-              value={store.pageTurnSize}
-              onChange={e => store.setPageTurnSize(e.target.value)}
-            >
-              <option value="normal">Normal</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-              <option value="none">None</option>
-            </select>
-          </label>
-
-          <button onClick={store.toggleControlsVisible}>
-            Done
-          </button>
-        </div>
-      </Modal>
+      <Controls store={props.store} />
     </div>
   );
 });
 
-interface NRKeyHandlerProps {
-  keyValue: string | string[];
-  onKeyHandle: (e: Event) => void;
-}
-
-@observer
-class NRKeyHandler extends React.Component<NRKeyHandlerProps, void> {
-  isDown = false;
-  keyDown = (e: Event) => {
-    e.preventDefault();
-    if (!this.isDown) {
-      this.isDown = true;
-      this.props.onKeyHandle(e);
-    }
-  }
-  keyUp = (e: Event) => {
-    this.isDown = false;
-  }
-  render() {
-    let keyValues: string[] = [];
-    keyValues = keyValues.concat(this.props.keyValue);
-    const handlers = keyValues.map(keyValue => (
-      <div key={keyValue} >
-        <KeyHandler
-          keyEventName={'keydown'}
-          keyValue={keyValue}
-          onKeyHandle={this.keyDown}
-        />
-        <KeyHandler
-          keyEventName={'keyup'}
-          keyValue={keyValue}
-          onKeyHandle={this.keyUp}
-        />
-      </div>)
-    );
-    return <div>{handlers}</div>;
-  }
-}
+const ChoicePage = observer(function ChoicePage(props: PageProps) {
+  return <p>Choice Page</p>;
+});
 
 export default Reader;
