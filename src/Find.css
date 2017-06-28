@@ -81,3 +81,40 @@
   margin: 0;
 }
 
+#Find-form {
+  font-size: 2vmin;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#Find-form input, #Find-form select {
+  font-size: 2vmin;
+  margin: 0.15em 0.25em;
+}
+
+#Find-form label {
+  clip-path: inset(100%);
+  clip: rect(1px 1px 1px 1px); /* IE 6/7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap; /* added line */
+  width: 1px;
+}
+
+#Find-form input[type='search'] {
+  border: 0.1em solid #B2B2B2;
+  border-radius: 0.5em;
+  display: inline-block;
+  color: #333;
+  padding: 0.15em 0.3em;
+  height: 1.5em;
+  width: 16em;
+  transition: all 0.25s ease-in;
+}
+
+#Find-form select {
+  margin: 0.15em 0.25em;
+}
+

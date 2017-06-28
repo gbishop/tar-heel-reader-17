@@ -9,7 +9,7 @@ import './index.css';
 // why I need the strange path.
 import { Router } from 'director/build/director';
 import { autorun, useStrict } from 'mobx';
-useStrict(true);
+// useStrict(true);
 
 function startRouter(store: Store) {
 
@@ -52,8 +52,8 @@ function startPersist(store: Store) {
 
 const store = new Store();
 
-startRouter(store);
 startPersist(store);
+startRouter(store);
 window.addEventListener('resize', store.resize);
 
 ReactDOM.render(

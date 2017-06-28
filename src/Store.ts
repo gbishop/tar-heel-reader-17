@@ -35,10 +35,23 @@ class Store {
   @action.bound setFindView() {
     console.log('setFindView', window.location.search);
     this.currentView = 'find';
-    if (window.location.search !== this.findQuery) {
-      this.findQuery = window.location.search;
-      this.findP = fromPromise(fetchFind(this.findQuery)) as IPromiseBasedObservable<FindResult>;
+    const search = window.location.search.substring(1);
+    if (search.length > 0) {
+      const o = JSON.parse('{"' +
+        decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
+        '"}');
+      console.log('setFindView', o);
+      for (var p in o) {
+        if (this.findQuery.hasOwnProperty(p)) {
+          this.findQuery[p] = o[p];
+        }
+      }
     }
+    this.startFind();
+  }
+
+  @action.bound startFind() {
+    this.findP = fromPromise(fetchFind(this.findQueryString)) as IPromiseBasedObservable<FindResult>;
   }
   @action.bound setErrorView() {
     this.currentView = 'error';
@@ -55,7 +68,7 @@ class Store {
         return '';
       }
     } else if (this.currentView === 'find') {
-      return '/find/';
+      return '/find/?' + this.findQueryString;
     } else {
       return '';
     }
@@ -155,7 +168,24 @@ class Store {
     console.log('controls', this.controlsVisible);
   }
   // Find related variables
-  @observable findQuery: string = 'foo';
+  @observable findQuery = {
+    search: '',
+    category: '',
+    reviewed: 'R',
+    audience: 'E',
+    language: 'en',
+    page: 1
+  };
+  @computed get findQueryString() {
+    let parts = [];
+    const q = this.findQuery;
+    for (var p in q) {
+      if (q.hasOwnProperty(p)) {
+        parts.push(encodeURIComponent(p) + '=' + encodeURIComponent(this.findQuery[p]));
+      }
+    }
+    return parts.join('&');
+  }
   // an observable promise for the find result associated with the findQuery
   @observable findP: IPromiseBasedObservable<FindResult>;
   // get the find result without having to say findP.value all the time
@@ -172,23 +202,31 @@ class Store {
     this.screen.height = window.innerHeight;
   }
   // persistence version
-  readonly persistVersion = 1;
+  readonly persistVersion = 2;
   // json string to persist the state
   @computed get persist(): string {
     return JSON.stringify({
       version: this.persistVersion,
       pictureTextMode: this.pictureTextMode,
       fontScale: this.fontScale,
-      pageTurnSize: this.pageTurnSize
+      pageTurnSize: this.pageTurnSize,
+      query: this.findQuery
     });
   }
   // restore the state from json
   @action.bound setPersist(js: string) {
     var v = JSON.parse(js);
+    console.log('setPersist', v);
     if (v.version === this.persistVersion) {
       this.pictureTextMode = v.pictureTextMode;
       this.fontScale = v.fontScale;
       this.pageTurnSize = v.pageTurnSize;
+      this.findQuery.search = v.query.search;
+      this.findQuery.category = v.query.category;
+      this.findQuery.reviewed = v.query.reviewed;
+      this.findQuery.audience = v.query.audience;
+      this.findQuery.language = v.query.language;
+      this.findQuery.page = v.query.page;
     }
   }
 }
