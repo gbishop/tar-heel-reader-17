@@ -15,11 +15,13 @@ function startRouter(store: Store) {
 
   const baseUrl = process.env.PUBLIC_URL;
   console.log('baseUrl', baseUrl);
+  console.log('pathname', window.location.pathname);
 
   // update state on url change
   let router = new Router();
-  router.on(baseUrl + '/\\d+/\\d+/\\d+/([-a-z0-9]*)/(\\d+)?',
-    (id, pageno) => store.setBookView(id, +pageno || 1));
+  router.on(baseUrl + '/:year/:month/:day/:slug/(\\d+)?',
+    (year, month, day, slug, page) =>
+      store.setBookView(`/${year}/${month}/${day}/${slug}/`, page ? +page : 1));
   router.on(baseUrl + '/find/?', store.setFindView);
   router.on(baseUrl + '/', store.setLandingView);
   router.configure({

@@ -19,18 +19,22 @@ const BookValidator = Record({
 // construct the typescript type
 export type Book = Static<typeof BookValidator>;
 
-export function fetchBook(slug: string): Promise<Book> {
+export function fetchBook(link: string): Promise<Book> {
   return new Promise((resolve, reject) => {
-    const url = `/THR/api/book-as-json/?slug=${slug}`;
-    window.fetch(url)
-      .then(res => {
-        if (res.ok) {
-          res.json().then(obj => resolve(BookValidator.check(obj))).catch(reject);
-        } else {
-          reject(res);
-        }
-      })
-      .catch(reject);
+    const slugMatch = /(?:\/\d+){3}\/([^/]+)\//.exec(link);
+    if (slugMatch) {
+      const slug = slugMatch[1];
+      const url = `/THR/api/book-as-json/?slug=${slug}`;
+      window.fetch(url)
+        .then(res => {
+          if (res.ok) {
+            res.json().then(obj => resolve(BookValidator.check(obj))).catch(reject);
+          } else {
+            reject(res);
+          }
+        })
+        .catch(reject);
+    }
   });
 }
 

@@ -6,13 +6,17 @@ import { FindResult, fetchFind } from './FindResult';
 type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
 
 class Store {
-  // the id of the book to read or '' for the landing page
-  @observable bookid: string = '';
+  // the link of the book to read or '' for the landing page
+  @observable booklink: string = '';
   // an observable promise for the book associated with bookid
   @observable bookP: IPromiseBasedObservable<Book>;
   // get the book without having to say bookP.value all the time
   // these computed are cached so this function only runs once after a change
   @computed get book() { return this.bookP.value; }
+  // update the bookP from the bookid
+  @action updateBookP() {
+      this.bookP = fromPromise(fetchBook(this.booklink)) as IPromiseBasedObservable<Book>;
+  }
   // the page number we're reading
   @observable pageno: number = 1;
   // number of pages in the book
@@ -20,14 +24,11 @@ class Store {
 
   // update the state typically from a URL
   @observable currentView: 'landing' | 'book' | 'find' | 'error' = 'landing';
-  @action.bound setBookView(id: string, page: number) {
+  @action.bound setBookView(link: string, page: number) {
     this.currentView = 'book';
-    if (id !== this.bookid) {
-      this.bookid = id;
-      this.bookP = fromPromise(fetchBook(id)) as IPromiseBasedObservable<Book>;
-    }
+    this.booklink = link;
     this.pageno = page;
-    console.log('set book view', this.bookid);
+    console.log('set book view', this.booklink, this.pageno);
   }
   @action.bound setLandingView() {
     this.currentView = 'landing';
@@ -47,7 +48,6 @@ class Store {
         }
       }
     }
-    this.startFind();
   }
 
   @action.bound startFind() {
@@ -60,13 +60,9 @@ class Store {
   @computed get currentPath() {
     console.log('currentView', this.currentView);
     if (this.currentView === 'book') {
-      console.log('this.bookid', this.bookid);
+      console.log('this.bookid', this.booklink);
       console.log('this.bookP', this.bookP);
-      if (this.bookid && this.book) {
-        return `${this.book.link}` + (this.pageno > 1 ? `${this.pageno}` : '');
-      } else {
-        return '';
-      }
+      return `${this.booklink}` + (this.pageno > 1 ? `${this.pageno}` : '');
     } else if (this.currentView === 'find') {
       return '/find/?' + this.findQueryString;
     } else {
@@ -228,6 +224,30 @@ class Store {
       this.findQuery.language = v.query.language;
       this.findQuery.page = v.query.page;
     }
+  }
+  // handle updating the book when the id changes
+  fetchHandler: {};
+  // handle updating the find result
+  findHandler: {};
+
+  constructor() {
+    // fetch the book when the id changes
+    // figure out when to dispose of this
+    this.fetchHandler = reaction(
+      () => this.booklink,
+      (booklink) => {
+        console.log('book reaction', booklink);
+        this.updateBookP();
+      });
+    this.findHandler = reaction(
+      () => [ this.findQueryString, this.currentView ],
+      ([ query, view ]) => {
+        console.log('find reaction');
+        if (view === 'find') {
+          console.log('find query launched', query);
+          this.startFind();
+        }
+      });
   }
 }
 

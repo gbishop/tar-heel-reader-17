@@ -7,18 +7,36 @@ const BackArrow = require('./BackArrow.png');
 import Store from './Store';
 import Controls from './Controls';
 import NRKeyHandler from './NRKeyHandler';
+import ErrorMsg from './ErrorMsg';
 
 // import SharedBook from './SharedBook';
 import './Reader.css';
 
 const Reader = observer(function Reader(props: {store: Store}) {
+  const store = props.store;
   let page;
-  if (props.store.pageno === 1) {
-    page = <TitlePage store={props.store} />;
-  } else if (props.store.pageno <= props.store.npages) {
-    page = <TextPage store={props.store} />;
+
+  if (store.bookP.state === 'pending') {
+    return <h1>Loading</h1>;
+
+  } else if (store.bookP.state === 'rejected') {
+    console.log('store', store);
+    return (
+      <div>
+        <ErrorMsg error={store.bookP.reason} />
+        <p> /1 is the only functioning url right now</p>
+      </div>
+    );
+
+  } else if (store.bookP.value.link !== store.booklink) {
+    return <h1>Waiting</h1>;
+  }
+  if (store.pageno === 1) {
+    page = <TitlePage store={store} />;
+  } else if (store.pageno <= store.npages) {
+    page = <TextPage store={store} />;
   } else {
-    page = <ChoicePage store={props.store} />;
+    page = <ChoicePage store={store} />;
   }
   return page;
 });
@@ -45,7 +63,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
       <button
         className="nav"
         id="back"
-        onClick={store.backPage}
+        onClick={store.setFindView}
       >
         <img src={BackArrow} />Back
       </button>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observable, computed, action, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import KeyHandler from 'react-key-handler';
+import NRKeyHandler from './NRKeyHandler';
 import Modal = require('react-modal');
 import Store from './Store';
 import ErrorMsg from './ErrorMsg';
@@ -133,14 +133,14 @@ class SearchForm extends React.Component<{store: Store}, void> {
 
 const Find = observer(function Find(props: {store: Store}) {
   const store = props.store;
-  if (store.findP.state === 'pending') {
+  if (!store.findP || store.findP.state === 'pending') {
     return <h1>Find loading</h1>;
   } else if (store.findP.state === 'rejected') {
     return <ErrorMsg error={store.findP.reason} />;
   } else {
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
-        <button onClick={e => store.setBookView(b.slug, 1)} >
+        <button onClick={e => store.setBookView(b.link, 1)} >
           <img className="cover" src={store.fontScale <= 2 ? b.cover.url : b.preview.url} />
           <h1>{b.title}</h1>
           <p className="author">{b.author}</p>
@@ -163,6 +163,10 @@ const Find = observer(function Find(props: {store: Store}) {
           <li style={{clear: 'both'}} />
         </ul>
         <Controls store={store} />
+        <NRKeyHandler
+          keyValue={'ArrowRight'}
+          onKeyHandle={(e) => store.findQuery.page++}
+        />
       </div>);
   }
 });

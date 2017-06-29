@@ -12,29 +12,13 @@ class App extends React.Component<{store: Store}, void> {
   render() {
     const store = this.props.store;
     switch (store.currentView) {
+
       case 'landing':
-        return <h1>Landing Page</h1>;
+        return <h1><a href="find/">Find a book</a></h1>;
+        
       case 'book':
-        if (store.bookP.state === 'pending') {
-          return <h1>Loading</h1>;
+        return <Reader store={store} />;
 
-        } else if (store.bookP.state === 'rejected') {
-          console.log('store', store);
-          return (
-            <div>
-              <ErrorMsg error={store.bookP.reason} />
-              <p> /1 is the only functioning url right now</p>
-            </div>
-          );
-
-        } else {
-          return (
-            <div className="App">
-              <Reader store={store} />
-              <DevTools />
-            </div>
-          );
-        }
       case 'find':
         return <Find store={store} />;
 
