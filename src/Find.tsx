@@ -32,7 +32,6 @@ class SearchForm extends React.Component<{store: Store}, void> {
     store.findQuery.reviewed = this.form.reviewed.value;
     store.findQuery.language = this.form.language.value;
     store.findQuery.page = +this.form.page.value;
-    store.startFind();
   }
   render() {
     const store = this.props.store;
