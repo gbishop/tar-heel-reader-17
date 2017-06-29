@@ -13,10 +13,6 @@ class Store {
   // get the book without having to say bookP.value all the time
   // these computed are cached so this function only runs once after a change
   @computed get book() { return this.bookP.value; }
-  // update the bookP from the bookid
-  @action updateBookP() {
-      this.bookP = fromPromise(fetchBook(this.booklink)) as IPromiseBasedObservable<Book>;
-  }
   // the page number we're reading
   @observable pageno: number = 1;
   // number of pages in the book
@@ -37,6 +33,7 @@ class Store {
     console.log('setFindView', window.location.search);
     this.currentView = 'find';
     const search = window.location.search.substring(1);
+    this.findQueryWatch = true;
     if (search.length > 0) {
       const o = JSON.parse('{"' +
         decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
@@ -50,9 +47,6 @@ class Store {
     }
   }
 
-  @action.bound startFind() {
-    this.findP = fromPromise(fetchFind(this.findQueryString)) as IPromiseBasedObservable<FindResult>;
-  }
   @action.bound setErrorView() {
     this.currentView = 'error';
   }
@@ -66,7 +60,7 @@ class Store {
     } else if (this.currentView === 'find') {
       return '/find/?' + this.findQueryString;
     } else {
-      return '';
+      return '/';
     }
   }
   // alternate picture and text
@@ -229,6 +223,7 @@ class Store {
   fetchHandler: {};
   // handle updating the find result
   findHandler: {};
+  findQueryWatch = false;
 
   constructor() {
     // fetch the book when the id changes
@@ -237,16 +232,14 @@ class Store {
       () => this.booklink,
       (booklink) => {
         console.log('book reaction', booklink);
-        this.updateBookP();
+        this.bookP = fromPromise(fetchBook(this.booklink)) as IPromiseBasedObservable<Book>;
       });
     this.findHandler = reaction(
-      () => [ this.findQueryString, this.currentView ],
-      ([ query, view ]) => {
+      () => [ this.findQueryString, this.findQueryWatch ],
+      ([query, watch]) => {
         console.log('find reaction');
-        if (view === 'find') {
-          console.log('find query launched', query);
-          this.startFind();
-        }
+        this.findP = fromPromise(fetchFind(this.findQueryString)) as
+          IPromiseBasedObservable<FindResult>;
       });
   }
 }

@@ -34,10 +34,15 @@ function startRouter(store: Store) {
   // update url on state changes
   autorun(() => {
     const path = baseUrl + store.currentPath;
-    console.log('autorun', path, store.currentPath);
-    if (path !== window.location.pathname) {
-      console.log('push', path, window.location.pathname);
-      window.history.pushState(null, '', path);
+    console.log('autorun', '|' + path + '|', '|' + window.location.pathname + '|');
+    if (path !== window.location.pathname + window.location.search) {
+      if (window.location.pathname === '/find/' && window.location.search.length === 0) {
+        console.log('replace', path, window.location.pathname + window.location.search);
+        window.history.replaceState(null, '', path);
+      } else {
+        console.log('push', path, window.location.pathname + window.location.search);
+        window.history.pushState(null, '', path);
+      }
     }
   });
 
