@@ -80,7 +80,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
       />
       <NRKeyHandler
         keyValue={'ArrowLeft'}
-        onKeyHandle={store.backPage}
+        onKeyHandle={store.setFindView}
       />
       <Controls store={props.store} />
     </div>
