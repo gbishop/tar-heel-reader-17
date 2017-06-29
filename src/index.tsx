@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import DevTools from 'mobx-react-devtools';
 import App from './App';
 import Store from './Store';
 // import registerServiceWorker from './registerServiceWorker';
@@ -59,7 +60,10 @@ startRouter(store);
 window.addEventListener('resize', store.resize);
 
 ReactDOM.render(
-  <App store={store} />,
+  <div>
+    <App store={store} />
+    <DevTools />
+  </div>,
   document.getElementById('root') as HTMLElement
 );
 // registerServiceWorker();
