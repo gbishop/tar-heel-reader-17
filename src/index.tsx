@@ -34,7 +34,8 @@ function startRouter(store: Store) {
   // update url on state changes
   autorun(() => {
     const path = baseUrl + store.currentPath;
-    console.log('autorun', '|' + path + '|', '|' + window.location.pathname + '|');
+    console.log('autorun', '|' + path + '|',
+      '|' + window.location.pathname + window.location.search + '|');
     if (path !== window.location.pathname + window.location.search) {
       if (window.location.pathname === '/find/' && window.location.search.length === 0) {
         console.log('replace', path, window.location.pathname + window.location.search);
@@ -67,7 +68,7 @@ window.addEventListener('resize', store.resize);
 ReactDOM.render(
   <div>
     <App store={store} />
-    <DevTools />
+    {/*<DevTools />*/}
   </div>,
   document.getElementById('root') as HTMLElement
 );
