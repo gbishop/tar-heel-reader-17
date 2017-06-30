@@ -146,7 +146,7 @@ const Find = observer(function Find(props: {store: Store}) {
           <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
           {b.reviewed && (<img src={reviewed} className="reviewed" />)}
           {b.caution && (<img src={caution} className="caution" />)}
-          <p className="pages">{b.pages} pages</p>
+          <p className="pages">{b.pages}<span> pages</span></p>
         </button>
       </li>));
     return (
@@ -157,7 +157,7 @@ const Find = observer(function Find(props: {store: Store}) {
         <div id="Find-form">
           <SearchForm store={store} />
         </div>
-        <ul id="Find-results">
+        <ul id="Find-results" className="single">
           {findResults}
           <li style={{clear: 'both'}} />
         </ul>
