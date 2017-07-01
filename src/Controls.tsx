@@ -36,7 +36,6 @@ const Controls = observer(function Controls(props: {store: Store}) {
       >
         <div className="controls">
           <h1>Reading controls</h1>
-          {/*
           <label>Font Size:&nbsp;
             <input
               type="range"
@@ -68,7 +67,6 @@ const Controls = observer(function Controls(props: {store: Store}) {
           <button onClick={store.toggleControlsVisible}>
             Done
           </button>
-            */}
         </div>
       </Modal>
     </div>
