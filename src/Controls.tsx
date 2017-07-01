@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
-import Modal = require('react-modal');
+import Modal from 'react-modal';
 import NRKeyHandler from './NRKeyHandler';
+
+console.log('modal', Modal);
+console.log('kh', NRKeyHandler);
 
 const Controls = observer(function Controls(props: {store: Store}) {
   const store = props.store;
@@ -26,13 +29,14 @@ const Controls = observer(function Controls(props: {store: Store}) {
         keyValue="Escape"
         onKeyHandle={store.toggleControlsVisible}
       />
-      <Modal 
+      <Modal
         isOpen={store.controlsVisible}
         contentLabel="Reading controls"
         style={customStyles}
       >
         <div className="controls">
           <h1>Reading controls</h1>
+          {/*
           <label>Font Size:&nbsp;
             <input
               type="range"
@@ -64,6 +68,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
           <button onClick={store.toggleControlsVisible}>
             Done
           </button>
+            */}
         </div>
       </Modal>
     </div>

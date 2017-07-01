@@ -7,7 +7,7 @@ import Find from './Find';
 import ErrorMsg from './ErrorMsg';
 
 @observer
-class App extends React.Component<{store: Store}, void> {
+class App extends React.Component<{store: Store}, {}> {
   render() {
     const store = this.props.store;
     switch (store.currentView) {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import KeyHandler from 'react-key-handler';
-import Modal = require('react-modal');
 const NextArrow = require('./NextArrow.png');
 const BackArrow = require('./BackArrow.png');
 import Store from './Store';

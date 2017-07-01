@@ -1,0 +1,59 @@
+{
+  "_from": "@types/react-modal",
+  "_id": "@types/react-modal@1.6.7",
+  "_inBundle": false,
+  "_integrity": "sha512-00bm8KYnaJ+c3fVZ8fNhknvKdCuIUvj+DvpYS9LM7pl2Ra+WB6Wl1N+M44gH/jC895DsS5xAbFoCa7r2fiD8gg==",
+  "_location": "/@types/react-modal",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@types/react-modal",
+    "name": "@types/react-modal",
+    "escapedName": "@types%2freact-modal",
+    "scope": "@types",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@types/react-modal/-/react-modal-1.6.7.tgz",
+  "_shasum": "e65d26c0decd89e1d3f5c4185fd89a2346a90312",
+  "_spec": "@types/react-modal",
+  "_where": "/home/gb/Projects/THR/rewrite",
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Rajab Shakirov",
+      "url": "https://github.com/radziksh"
+    },
+    {
+      "name": "Drew Noakes",
+      "url": "https://github.com/drewnoakes"
+    },
+    {
+      "name": "Thomas B Homburg",
+      "url": "https://github.com/homburg"
+    }
+  ],
+  "dependencies": {
+    "@types/react": "*"
+  },
+  "deprecated": false,
+  "description": "TypeScript definitions for react-modal",
+  "license": "MIT",
+  "main": "",
+  "name": "@types/react-modal",
+  "peerDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+  },
+  "scripts": {},
+  "typeScriptVersion": "2.3",
+  "typesPublisherContentHash": "fa8867aa5a3bdbf72d9b6acc5bf8e70f2ac5a9e2513ce78b8da22745146934c7",
+  "version": "1.6.7"
+}

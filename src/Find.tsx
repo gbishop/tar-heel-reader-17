@@ -2,7 +2,6 @@ import * as React from 'react';
 import { observable, computed, action, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import NRKeyHandler from './NRKeyHandler';
-import Modal = require('react-modal');
 import Store from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
@@ -21,10 +20,13 @@ const caution = require('./icons/caution.png');
 
 import './Find.css';
 
-class SearchForm extends React.Component<{store: Store}, void> {
-  form: HTMLFormElement;
+class SearchForm extends React.Component<{store: Store}, {}> {
+  form: HTMLFormElement | null;
   onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!this.form) {
+      return;
+    }
     console.log('submit', e, this.form, this.form.search.value, this.form.category.value);
     const store = this.props.store;
     store.findQuery.search = this.form.search.value;

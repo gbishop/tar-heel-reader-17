@@ -8,7 +8,7 @@ interface NRKeyHandlerProps {
 }
 
 @observer
-class NRKeyHandler extends React.Component<NRKeyHandlerProps, void> {
+class NRKeyHandler extends React.Component<NRKeyHandlerProps, {}> {
   isDown = false;
   keyDown = (e: Event) => {
     e.preventDefault();
