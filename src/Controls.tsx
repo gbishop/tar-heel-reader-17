@@ -4,8 +4,7 @@ import Store from './Store';
 import Modal from 'react-modal';
 import NRKeyHandler from './NRKeyHandler';
 
-console.log('modal', Modal);
-console.log('kh', NRKeyHandler);
+import './Controls.css';
 
 const Controls = observer(function Controls(props: {store: Store}) {
   const store = props.store;
@@ -34,7 +33,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
         contentLabel="Reading controls"
         style={customStyles}
       >
-        <div className="controls">
+        <div id="Controls">
           <h1>Reading controls</h1>
           <label>Font Size:&nbsp;
             <input
@@ -61,6 +60,15 @@ const Controls = observer(function Controls(props: {store: Store}) {
               <option value="medium">Medium</option>
               <option value="large">Large</option>
               <option value="none">None</option>
+            </select>
+          </label>
+          <label>Find page format:&nbsp;
+            <select
+              value={store.findFormat}
+              onChange={e => store.setFindFormat(e.target.value)}
+            >
+              <option value="single">Single</option>
+              <option value="boxes">Boxes</option>
             </select>
           </label>
 

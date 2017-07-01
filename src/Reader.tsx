@@ -47,17 +47,18 @@ interface PageProps {
 const TitlePage = observer(function TitlePage(props: PageProps) {
   const store = props.store;
   const page = store.book.pages[1];
+  const baseUrl = process.env.PUBLIC_URL;
   return (
     <div
       id="Reader"
       className={'title-page ' + 'buttons-' + store.pageTurnSize}
-      style={{fontSize: store.textFontSize}}
+      style={{fontSize: 2.5 * store.textFontSize}}
     >
       <h1 id="title">{store.book.title}</h1>
       <p id="author">{store.book.author}</p>
       <img
         id="picture"
-        src={'https://tarheelreader.org' + page.url}
+        src={baseUrl + page.url}
       />
       <button
         className="nav"
@@ -93,15 +94,16 @@ const TextPage = observer(function TextPage(props: PageProps) {
   if (store.pictureTextMode === 'alternate') {
     pt = ' ' + store.pictureTextToggle + '-only';
   }
+  const baseUrl = process.env.PUBLIC_URL;
   return (
     <div
       id="Reader"
       className={'book-page ' + 'buttons-' + store.pageTurnSize + pt}
-      style={{fontSize: store.textFontSize}}
+      style={{fontSize: 2.5 * store.textFontSize}}
     >
       <img
         id="picture"
-        src={'https://tarheelreader.org' + page.url}
+        src={baseUrl + page.url}
       />
       <div id="text" >
         {page.text}

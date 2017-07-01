@@ -136,11 +136,7 @@ class Store {
   // font size of book text
   @computed get textFontSize() {
     return Math.pow(this.fontScaleMax, this.fontScale / (this.textFontSizeSteps - 1))
-      * this.baseFontSize * 2.5;
-  }
-  // line height of book text
-  @computed get textLineHeight() {
-    return this.textFontSize * 1.2;
+      * this.baseFontSize;
   }
   // size of page turn buttons
   @observable pageTurnSize: PageTurnSize = 'normal';
@@ -181,6 +177,13 @@ class Store {
   // get the find result without having to say findP.value all the time
   // these computed are cached so this function only runs once after a change
   @computed get find() { return this.findP.value; }
+  // format of find page books
+  @observable findFormat: 'boxes' | 'single' = 'boxes';
+  @action.bound setFindFormat(format: string) {
+    if (format === 'boxes' || format === 'single') {
+      this.findFormat = format;
+    }
+  }
 
   // screen dimensions updated on resize
   @observable screen = {
@@ -223,7 +226,7 @@ class Store {
   fetchHandler: {};
   // handle updating the find result
   findHandler: {};
-  findQueryWatch = false;
+  @observable findQueryWatch = false;
 
   constructor() {
     // fetch the book when the id changes
@@ -237,7 +240,7 @@ class Store {
     this.findHandler = reaction(
       () => [ this.findQueryString, this.findQueryWatch ],
       ([query, watch]) => {
-        console.log('find reaction');
+        console.log('find reaction', query, watch);
         this.findP = fromPromise(fetchFind(this.findQueryString)) as
           IPromiseBasedObservable<FindResult>;
       });

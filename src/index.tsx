@@ -26,7 +26,7 @@ function startRouter(store: Store) {
   router.on(baseUrl + '/find/?', store.setFindView);
   router.on(baseUrl + '/', store.setLandingView);
   router.configure({
-    notfound: () => store.setErrorView(),
+    notfound: () => store.setLandingView(),
     html5history: true
   });
   router.init();

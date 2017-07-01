@@ -139,10 +139,11 @@ const Find = observer(function Find(props: {store: Store}) {
   } else if (store.findP.state === 'rejected') {
     return <ErrorMsg error={store.findP.reason} />;
   } else {
+    const baseUrl = process.env.PUBLIC_URL;
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
         <button onClick={e => store.setBookView(b.link, 1)} >
-          <img className="cover" src={store.fontScale <= 2 ? b.cover.url : b.preview.url} />
+          <img className="cover" src={baseUrl + (store.fontScale <= 2 ? b.cover.url : b.preview.url)} />
           <h1>{b.title}</h1>
           <p className="author">{b.author}</p>
           <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
@@ -154,14 +155,12 @@ const Find = observer(function Find(props: {store: Store}) {
     return (
       <div
         id="Find"
-        style={{fontSize: store.textFontSize / 1.8}}
       >
         <div id="Find-form">
           <SearchForm store={store} />
         </div>
-        <ul id="Find-results" className="single">
+        <ul id="Find-results" className={store.findFormat} style={{fontSize: store.textFontSize}}>
           {findResults}
-          <li style={{clear: 'both'}} />
         </ul>
         <Controls store={store} />
         <NRKeyHandler

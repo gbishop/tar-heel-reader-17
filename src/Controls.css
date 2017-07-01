@@ -1,0 +1,19 @@
+#Controls {
+  font-size: 2vmin;
+}
+
+#Controls h1 {
+  font-size: 1em;
+}
+
+#Controls label {
+  font-size: 2vmin;
+  display: block;
+  padding: 0.5em;
+  vertical-align: middle;
+}
+
+#Controls input, #Controls select, #Controls button {
+  vertical-align: middle;
+  font-size: 2vmin;
+}
