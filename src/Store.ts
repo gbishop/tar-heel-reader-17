@@ -122,7 +122,7 @@ class Store {
 
   // base font size for the page, 2% of smaller screen dimension
   @computed get baseFontSize() {
-    return Math.min(this.screen.width, this.screen.height) * 0.02;
+    return Math.max(this.screen.width, this.screen.height) * 0.02;
   }
   // scale for book text
   @observable fontScale: number = 0;

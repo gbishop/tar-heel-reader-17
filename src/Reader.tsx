@@ -52,7 +52,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
     <div
       id="Reader"
       className={'title-page ' + 'buttons-' + store.pageTurnSize}
-      style={{fontSize: 2.5 * store.textFontSize}}
+      style={{fontSize: 1.8 * store.textFontSize}}
     >
       <h1 id="title">{store.book.title}</h1>
       <p id="author">{store.book.author}</p>
@@ -99,7 +99,7 @@ const TextPage = observer(function TextPage(props: PageProps) {
     <div
       id="Reader"
       className={'book-page ' + 'buttons-' + store.pageTurnSize + pt}
-      style={{fontSize: 2.5 * store.textFontSize}}
+      style={{fontSize: 1.8 * store.textFontSize}}
     >
       <img
         id="picture"
