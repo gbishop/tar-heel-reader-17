@@ -23,23 +23,23 @@
   },
   "proxy": {
     "/api": {
-      "target": "https://tarheelreader.org",
+      "target": "https://dev.tarheelreader.org",
       "pathRewrite": {
         "^/THR/api/": ""
       },
       "secure": false,
       "changeOrigin": true,
-      "host": "tarheelreader.org"
+      "host": "dev.tarheelreader.org"
     },
     "/cache": {
-      "target": "http://gbserver3.cs.unc.edu",
-      "host": "gbserver3.cs.unc.edu",
+      "target": "https://dev.tarheelreader.org",
+      "host": "dev.tarheelreader.org",
       "changeOrigin": true,
       "secure": false
     },
     "/uploads": {
-      "target": "https://tarheelreader.org",
-      "host": "tarheelreader.org",
+      "target": "https://dev.tarheelreader.org",
+      "host": "dev.tarheelreader.org",
       "changeOrigin": true,
       "secure": false
     }
