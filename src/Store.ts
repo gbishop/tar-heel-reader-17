@@ -160,7 +160,8 @@ class Store {
     reviewed: 'R',
     audience: 'E',
     language: 'en',
-    page: 1
+    page: 1,
+    count: 6
   };
   @computed get findQueryString() {
     let parts = [];
