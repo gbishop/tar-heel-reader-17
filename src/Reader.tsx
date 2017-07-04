@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import KeyHandler from 'react-key-handler';
-const NextArrow = require('./NextArrow.png');
-const BackArrow = require('./BackArrow.png');
+const NextArrow = require('./icons/NextArrow.png');
+const BackArrow = require('./icons/BackArrow.png');
 import Store from './Store';
 import Controls from './Controls';
 import NRKeyHandler from './NRKeyHandler';
