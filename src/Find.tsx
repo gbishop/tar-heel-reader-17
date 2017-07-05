@@ -143,14 +143,15 @@ const Find = observer(function Find(props: {store: Store}) {
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
         <button onClick={e => store.setBookView(b.link, 1)} >
-          <img className="cover" src={baseUrl + (store.fontScale <= 2 ? b.cover.url : b.preview.url)} />
-          <h1>{b.title}</h1>
-          <p className="author">{b.author}</p>
-          <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
-          {b.reviewed && (<img src={reviewed} className="reviewed" />)}
-          {b.caution && (<img src={caution} className="caution" />)}
-          <p className="pages">{b.pages}<span> pages</span></p>
+          <img className="cover" src={baseUrl + b.cover.url} alt={b.title} />
         </button>
+        <h1>{b.title}</h1>
+        <p className="author">{b.author}</p>
+        <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
+        {b.reviewed && (<img src={reviewed} className="reviewed" alt="reviewed" />)}
+        {b.caution && (<img src={caution} className="caution" alt="caution" />)}
+        <p className="pages">{`${b.pages} pages.`}</p>
+        <div style={{clear: 'both'}} />
       </li>));
     return (
       <div
@@ -159,14 +160,10 @@ const Find = observer(function Find(props: {store: Store}) {
         <div id="Find-form">
           <SearchForm store={store} />
         </div>
-        <ul id="Find-results" className={store.findFormat} style={{fontSize: store.textFontSize}}>
+        <ul id="Find-results" className={store.findFormat} >
           {findResults}
         </ul>
         <Controls store={store} />
-        <NRKeyHandler
-          keyValue={'ArrowRight'}
-          onKeyHandle={(e) => store.findQuery.page++}
-        />
       </div>);
   }
 });

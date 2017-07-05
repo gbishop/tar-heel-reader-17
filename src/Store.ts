@@ -161,7 +161,7 @@ class Store {
     audience: 'E',
     language: 'en',
     page: 1,
-    count: 6
+    count: 24
   };
   @computed get findQueryString() {
     let parts = [];
