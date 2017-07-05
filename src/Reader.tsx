@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { observer } from 'mobx-react';
 import KeyHandler from 'react-key-handler';
 const NextArrow = require('./icons/NextArrow.png');
@@ -101,10 +102,17 @@ const TextPage = observer(function TextPage(props: PageProps) {
       className={'book-page ' + 'buttons-' + store.pageTurnSize + pt}
       style={{fontSize: 1.8 * store.textFontSize}}
     >
-      <img
-        id="picture"
-        src={baseUrl + page.url}
-      />
+      <CSSTransitionGroup
+        transitionName="example"
+        transitionEnterTimeout={500}
+        transitionLeave={false}
+      >
+        <img
+          key={page.url}
+          id="picture"
+          src={baseUrl + page.url}
+        />
+      </CSSTransitionGroup>
       <div id="text" >
         {page.text}
       </div>
