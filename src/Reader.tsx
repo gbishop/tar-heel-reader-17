@@ -64,7 +64,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
       <button
         className="nav"
         id="back"
-        onClick={store.setFindView}
+        onClick={store.setPreBookView}
       >
         <img src={BackArrow} />Back
       </button>
@@ -81,7 +81,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
       />
       <NRKeyHandler
         keyValue={'ArrowLeft'}
-        onKeyHandle={store.setFindView}
+        onKeyHandle={store.setPreBookView}
       />
       <Controls store={props.store} />
     </div>

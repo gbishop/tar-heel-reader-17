@@ -4,6 +4,7 @@ import './App.css';
 import Store from './Store';
 import Reader from './Reader';
 import Find from './Find';
+import Choose from './Choose';
 import ErrorMsg from './ErrorMsg';
 
 @observer
@@ -20,6 +21,9 @@ class App extends React.Component<{store: Store}, {}> {
 
       case 'find':
         return <Find store={store} />;
+
+      case 'choose':
+        return <Choose store={store} />;
 
       case 'error':
       default:

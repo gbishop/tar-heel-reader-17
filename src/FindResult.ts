@@ -46,4 +46,20 @@ export function fetchFind(query: string): Promise<FindResult> {
   });
 }
 
+export function fetchChoose(ids: number[]): Promise<FindResult> {
+  return new Promise((resolve, reject) => {
+    const sids = ids.join(',');
+    const url = `/THR/api/favorites/?favorites=${sids}&json=1`;
+    window.fetch(url)
+      .then(res => {
+        if (res.ok) {
+          res.json().then(obj => resolve(FindValidator.check(obj))).catch(reject);
+        } else {
+          reject(res);
+        }
+      })
+      .catch(reject);
+  });
+}
+
 export default FindResult;

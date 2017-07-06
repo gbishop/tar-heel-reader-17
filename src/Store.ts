@@ -1,7 +1,7 @@
 import { observable, computed, action, reaction } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
-import { FindResult, fetchFind } from './FindResult';
+import { FindResult, fetchFind, fetchChoose } from './FindResult';
 
 type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
 
@@ -19,8 +19,13 @@ class Store {
   @computed get npages() { return this.book.pages.length; }
 
   // update the state typically from a URL
-  @observable currentView: 'landing' | 'book' | 'find' | 'error' = 'landing';
+  @observable currentView: 'landing' | 'book' | 'find' | 'choose' | 'error' = 'landing';
   @action.bound setBookView(link: string, page: number) {
+    if (this.currentView === 'choose') {
+      this.preBookView = 'choose';
+    } else {
+      this.preBookView = 'find';
+    }
     this.currentView = 'book';
     this.booklink = link;
     this.pageno = page;
@@ -46,6 +51,23 @@ class Store {
       }
     }
   }
+  @action.bound setChooseView(ids: number[]) {
+    console.log('setChooseView', ids);
+    this.currentView = 'choose';
+    this.chooseList = ids;
+    this.chooseIndex = 0;
+  }
+  // set either Find or Choose view depending on where you were last
+  // on going back to Choose bump the index
+  @observable preBookView: 'find' | 'choose' = 'find';
+  @action.bound setPreBookView() {
+    if (this.preBookView === 'find') {
+      this.setFindView();
+    } else if (this.preBookView === 'choose') {
+      this.currentView = 'choose';
+      this.nextChooseIndex();
+    }
+  }
 
   @action.bound setErrorView() {
     this.currentView = 'error';
@@ -59,6 +81,8 @@ class Store {
       return `${this.booklink}` + (this.pageno > 1 ? `${this.pageno}` : '');
     } else if (this.currentView === 'find') {
       return '/find/?' + this.findQueryString;
+    } else if (this.currentView === 'choose') {
+      return `/choose/${this.chooseList.join(',')}`;
     } else {
       return '/';
     }
@@ -186,6 +210,17 @@ class Store {
     }
   }
 
+  @observable chooseList: number[] = [];
+  @observable chooseIndex: number = 0;
+
+  // an observable promise for the choose result
+  @observable chooseP: IPromiseBasedObservable<FindResult>;
+  @computed get choose() { return this.chooseP.value; }
+
+  @action.bound nextChooseIndex() {
+    this.chooseIndex = (this.chooseIndex + 1) % this.choose.books.length;
+  }
+
   // screen dimensions updated on resize
   @observable screen = {
     width: window.innerWidth,
@@ -228,6 +263,8 @@ class Store {
   // handle updating the find result
   findHandler: {};
   @observable findQueryWatch = false;
+  // handle updating choose result
+  chooseHandler: {};
 
   constructor() {
     // fetch the book when the id changes
@@ -243,6 +280,13 @@ class Store {
       ([query, watch]) => {
         console.log('find reaction', query, watch);
         this.findP = fromPromise(fetchFind(this.findQueryString)) as
+          IPromiseBasedObservable<FindResult>;
+      });
+    this.chooseHandler = reaction(
+      () => this.chooseList,
+      (list) => {
+        console.log('choose reaction', list);
+        this.chooseP = fromPromise(fetchChoose(this.chooseList)) as
           IPromiseBasedObservable<FindResult>;
       });
   }

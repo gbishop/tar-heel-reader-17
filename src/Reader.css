@@ -159,3 +159,8 @@ display: table;
   opacity: 1;
   transition: opacity 500ms ease-in;
 }
+
+#Reader #question {
+  font-size: 1em;
+  margin: 0 0 1em 0;
+}

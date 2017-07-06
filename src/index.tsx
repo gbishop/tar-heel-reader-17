@@ -24,6 +24,8 @@ function startRouter(store: Store) {
     (year, month, day, slug, page) =>
       store.setBookView(`/${year}/${month}/${day}/${slug}/`, page ? +page : 1));
   router.on(baseUrl + '/find/?', store.setFindView);
+  router.on(baseUrl + '/choose/([0-9,]+)',
+    (idlist) => store.setChooseView(idlist.split(',').map(i => +i)));
   router.on(baseUrl + '/', store.setLandingView);
   router.configure({
     notfound: () => store.setLandingView(),
