@@ -141,7 +141,13 @@ const Find = observer(function Find(props: {store: Store}) {
     const baseUrl = process.env.PUBLIC_URL;
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
-        <button onClick={e => store.setBookView(b.link, 1)} >
+        <button 
+          onClick={e => store.setCurrentView({
+            view: 'book',
+            link: b.link, 
+            page: 1})
+          } 
+        >
           <img className="cover" src={baseUrl + b.cover.url} alt={b.title} />
         </button>
         <h1>{b.title}</h1>

@@ -5,6 +5,34 @@ import { FindResult, fetchFind, fetchChoose } from './FindResult';
 
 type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
 
+type ViewName = 'landing' | 'book' | 'find' | 'choose' | 'error';
+
+interface LandingView {
+  view: 'landing';
+}
+
+interface BookView {
+  view: 'book';
+  link: string;
+  page: number;
+}
+
+interface FindView {
+  view: 'find';
+  query: string;
+}
+
+interface ChooseView {
+  view: 'choose';
+  ids: string;
+}
+
+interface ErrorView {
+  view: 'error';
+}
+
+type View = LandingView | BookView | FindView | ChooseView | ErrorView;
+
 class Store {
   // the link of the book to read or '' for the landing page
   @observable booklink: string = '';
@@ -19,59 +47,70 @@ class Store {
   @computed get npages() { return this.book.pages.length; }
 
   // update the state typically from a URL
-  @observable currentView: 'landing' | 'book' | 'find' | 'choose' | 'error' = 'landing';
-  @action.bound setBookView(link: string, page: number) {
-    if (this.currentView === 'choose') {
-      this.preBookView = 'choose';
-    } else {
-      this.preBookView = 'find';
-    }
-    this.currentView = 'book';
-    this.booklink = link;
-    this.pageno = page;
-    console.log('set book view', this.booklink, this.pageno);
-  }
-  @action.bound setLandingView() {
-    this.currentView = 'landing';
-  }
-  @action.bound setFindView() {
-    console.log('setFindView', window.location.search);
-    this.currentView = 'find';
-    const search = window.location.search.substring(1);
-    this.findQueryWatch = true;
-    if (search.length > 0) {
-      const o = JSON.parse('{"' +
-        decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
-        '"}');
-      console.log('setFindView', o);
-      for (var p in o) {
-        if (this.findQuery.hasOwnProperty(p)) {
-          this.findQuery[p] = o[p];
+  @observable currentView: ViewName = 'landing';
+  @action.bound setCurrentView(v: View) {
+    switch (v.view) {
+      case 'landing':
+        this.currentView = 'landing';
+        break;
+      case 'book':
+        if (this.currentView === 'choose') {
+          this.preBookView = 'choose';
+        } else {
+          this.preBookView = 'find';
         }
-      }
+        this.currentView = 'book';
+        this.booklink = v.link;
+        this.pageno = v.page;
+        this.pictureTextToggle = 'picture';
+        console.log('set book view', this.booklink, this.pageno);
+        break;
+      case 'find':
+        console.log('setFindView', v.query);
+        this.currentView = 'find';
+        const search = v.query.substring(1);
+        this.findQueryWatch = true;
+        if (search.length > 0) {
+          const o = JSON.parse('{"' +
+            decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
+            '"}');
+          console.log('setFindView', o);
+          for (var p in o) {
+            if (this.findQuery.hasOwnProperty(p)) {
+              this.findQuery[p] = o[p];
+            }
+          }
+        }
+        break;
+      case 'choose':
+        console.log('setChooseView', v.ids);
+        this.currentView = 'choose';
+        this.chooseList = v.ids.split(',');
+        this.chooseIndex = 0;
+        break;
+      default:
+      case 'error':
+        this.currentView = 'error';
+        break;
     }
   }
-  @action.bound setChooseView(ids: number[]) {
-    console.log('setChooseView', ids);
-    this.currentView = 'choose';
-    this.chooseList = ids;
-    this.chooseIndex = 0;
-  }
+
   // set either Find or Choose view depending on where you were last
   // on going back to Choose bump the index
   @observable preBookView: 'find' | 'choose' = 'find';
   @action.bound setPreBookView() {
+    console.log('setPreBookView', this.preBookView);
     if (this.preBookView === 'find') {
-      this.setFindView();
+      this.setCurrentView({
+        view: 'find',
+        query: ''
+      });
     } else if (this.preBookView === 'choose') {
       this.currentView = 'choose';
       this.nextChooseIndex();
     }
   }
 
-  @action.bound setErrorView() {
-    this.currentView = 'error';
-  }
   // map the state to a url
   @computed get currentPath() {
     console.log('currentView', this.currentView);
@@ -210,7 +249,7 @@ class Store {
     }
   }
 
-  @observable chooseList: number[] = [];
+  @observable chooseList: string[] = [];
   @observable chooseIndex: number = 0;
 
   // an observable promise for the choose result

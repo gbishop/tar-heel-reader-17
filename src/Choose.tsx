@@ -36,7 +36,6 @@ const Choose = observer(function Choose(props: {store: Store}) {
         className={'title-page ' + 'buttons-' + store.pageTurnSize}
         style={{fontSize: 1.8 * store.textFontSize}}
       >
-        <p id="question">Would you like to read this book?</p>
         <h1 id="title">{b.title}</h1>
         <p id="author">{b.author}</p>
         <img
@@ -48,18 +47,26 @@ const Choose = observer(function Choose(props: {store: Store}) {
           id="back"
           onClick={store.nextChooseIndex}
         >
-          <img src={BackArrow} />No
+          <img src={BackArrow} />Skip
         </button>
         <button
           className="nav"
           id="next"
-          onClick={e => store.setBookView(b.link, 2)}
+          onClick={e => store.setCurrentView({
+            view: 'book',
+            link: b.link, 
+            page: 2
+          })}
         >
-          <img src={NextArrow} />Yes
+          <img src={NextArrow} />Read
         </button>
         <NRKeyHandler
           keyValue={'ArrowRight'}
-          onKeyHandle={e => store.setBookView(b.link, 2)}
+          onKeyHandle={e => store.setCurrentView({
+            view: 'book',
+            link: b.link, 
+            page: 2
+          })}
         />
         <NRKeyHandler
           keyValue={'ArrowLeft'}

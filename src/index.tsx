@@ -22,13 +22,27 @@ function startRouter(store: Store) {
   let router = new Router();
   router.on(baseUrl + '/:year/:month/:day/:slug/(\\d+)?',
     (year, month, day, slug, page) =>
-      store.setBookView(`/${year}/${month}/${day}/${slug}/`, page ? +page : 1));
-  router.on(baseUrl + '/find/?', store.setFindView);
+    store.setCurrentView({
+      view: 'book',
+      link: `/${year}/${month}/${day}/${slug}/`,
+      page: page ? +page : 1
+    })
+  );
+  router.on(baseUrl + '/find/?',
+    () => store.setCurrentView({
+      view: 'find',
+      query: window.location.search
+    })
+  );
   router.on(baseUrl + '/choose/([0-9,]+)',
-    (idlist) => store.setChooseView(idlist.split(',').map(i => +i)));
-  router.on(baseUrl + '/', store.setLandingView);
+    (idlist) => store.setCurrentView({
+      view: 'choose',
+      ids: idlist
+    }));
+  router.on(baseUrl + '/', 
+    () => store.setCurrentView({ view: 'landing' }));
   router.configure({
-    notfound: () => store.setLandingView(),
+    notfound: () => store.setCurrentView({ view: 'landing' }),
     html5history: true
   });
   router.init();

@@ -46,7 +46,7 @@ export function fetchFind(query: string): Promise<FindResult> {
   });
 }
 
-export function fetchChoose(ids: number[]): Promise<FindResult> {
+export function fetchChoose(ids: string[]): Promise<FindResult> {
   return new Promise((resolve, reject) => {
     const sids = ids.join(',');
     const url = `/THR/api/favorites/?favorites=${sids}&json=1`;

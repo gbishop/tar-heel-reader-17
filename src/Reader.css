@@ -161,6 +161,7 @@ display: table;
 }
 
 #Reader #question {
-  font-size: 1em;
-  margin: 0 0 1em 0;
+  font-size: 3vmax;
+  line-height: 1.2em;
+  margin: 0 0 2vmax 0;
 }
