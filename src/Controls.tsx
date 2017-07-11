@@ -33,7 +33,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
         contentLabel="Reading controls"
         style={customStyles}
       >
-        <div id="Controls">
+        <div className="Controls">
           <h1>Reading controls</h1>
           <label>Font Size:&nbsp;
             <input
@@ -59,7 +59,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
               <option value="normal">Normal</option>
               <option value="medium">Medium</option>
               <option value="large">Large</option>
-              <option value="none">None</option>
+              <option value="off">None</option>
             </select>
           </label>
           <label>Find page format:&nbsp;

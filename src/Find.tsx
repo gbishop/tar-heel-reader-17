@@ -142,30 +142,31 @@ const Find = observer(function Find(props: {store: Store}) {
     const findResults = store.find.books.map(b => (
       <li key={b.ID}>
         <button 
+          className="Find-ReadButton"
           onClick={e => store.setCurrentView({
             view: 'book',
             link: b.link, 
             page: 1})
           } 
         >
-          <img className="cover" src={baseUrl + b.cover.url} alt={b.title} />
+          <img src={baseUrl + b.cover.url} alt={b.title} />
         </button>
         <h1>{b.title}</h1>
-        <p className="author">{b.author}</p>
-        <img className="stars" src={stars[b.rating.text]} title={b.rating.text} />
-        {b.reviewed && (<img src={reviewed} className="reviewed" alt="reviewed" />)}
-        {b.caution && (<img src={caution} className="caution" alt="caution" />)}
-        <p className="pages">{`${b.pages} pages.`}</p>
+        <p className="Find-Author">{b.author}</p>
+        <img className="Find-Icon" src={stars[b.rating.text]} title={b.rating.text} />
+        {b.reviewed && (<img src={reviewed} className="Find-Icon" alt="reviewed" />)}
+        {b.caution && (<img src={caution} className="Find-Icon" alt="caution" />)}
+        <p className="Find-Pages">{`${b.pages} pages.`}</p>
         <div style={{clear: 'both'}} />
       </li>));
     return (
       <div
-        id="Find"
+        className="Find"
       >
-        <div id="Find-form">
+        <div className="Find-Form">
           <SearchForm store={store} />
         </div>
-        <ul id="Find-results" className={store.findFormat} >
+        <ul className="Find-Results" >
           {findResults}
         </ul>
         <Controls store={store} />

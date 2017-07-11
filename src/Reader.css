@@ -1,167 +1,57 @@
-#Reader {
-  font-size: 1.8em;
-  line-height: 1.2em;
+.Reader {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
   margin: 0;
   padding: 0;
   text-align: center;
-}
-#Reader.text-only {
-display: table;
+  font-size: 2vmax;
 }
 
-#Reader button.nav {
-  font-size: 2.2vmin;
-  bottom: 0.5vmin;
-  position: absolute;
-}
-#Reader.buttons-normal button.nav {
-  height: 8vmin;;
-  width: 12vmin;
-}
-#Reader.buttons-medium button.nav {
-  height: 100vh;
-  width: 6vmin;
-}
-#Reader.buttons-large button.nav {
-  height: 100vh;
-  width: 12vmin;
-}
-#Reader.buttons-none button.nav {
-  display: none;
-}
-
-#Reader button#back {
-  left: 0.5vmin;
-}
-
-#Reader button#next {
-  right: 0.5vmin;
-}
-
-#Reader button.nav img {
-  display: block;
-  width: 1.5em;
-  margin: auto;
-}
-
-#Reader.buttons-large button.nav img {
-  width: 8vmin;
-}
-
-#Reader #picture {
-  width: 100vw;
-  height: calc(100vh - 3 * 1.2em);
-  object-fit: contain;
-  margin: 0;
-}
-#Reader.title-page #picture {
-  height: calc(100vh - 2.4em) !important;
-}
-#Reader.title-page.buttons-normal #picture {
-  width: calc(100vw);
-}
-#Reader.title-page.buttons-medium #picture {
-  width: calc(100vw - 13vmin);
-  height: calc(100vh - 4em);
-}
-#Reader.buttons-normal #picture {
-  height: calc(100vh - 3 * 1.2em - 8vmin);
-}e
-
-#Reader.buttons-none #picture {
-  width: 100vw;
-}
-#Reader.buttons-medium #picture {
-  width: calc(100vw - 12vmin);
-}
-#Reader.buttons-large #picture {
-  width: calc(100vw - 24vmin);
-}
-#Reader.text-only #picture {
-  display: none;
-}
-
-#Reader.picture-only #picture {
-  height: 100vh;
-}
-#Reader.picture-only.buttons-normal #picture {
-  height: calc(100vh - 8vmin);
-}
-
-#Reader.title-page #title {
-  font-size: 1em;
-  line-height: 1.2em;
-  margin: 0.1em auto;
-  height: 1.2em;
-  overflow: hidden;
-}
-#Reader.title-page #author {
-  font-size: 0.6em;
-  line-height: 1.2em;
-  height: 1.2em;
-  overflow: hidden;
-  margin: 0.1em auto;
-}
-
-#Reader #text {
-  text-align: center;
-  overflow: hidden;
-  height: calc(3*1.2em);
+.Reader_FlexContainer {
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-}
-#Reader.text-only #text {
-  vertical-align: middle;
-  display: table-cell;
-  position: inherit;
-  width: 100vw;
-  height: 100vh;
-}
-#Reader.buttons-normal #text {
-  bottom: calc(8vmin - 0.2em);
-}
-#Reader.buttons-medium #text {
-  width: calc(100vw - 2*6vmin);
-  left: 6vmin;
-}
-#Reader.buttons-medium.text-only #text {
-  padding-left: 6vmin;
-}
-#Reader.buttons-large #text {
-  width: calc(100vw - 24vmin);
-  left: 12vmin;
-}
-#Reader.buttons-large.text-only #text {
-  padding-left: 12vmin;
-}
-#Reader.picture-only #text {
-  display: none;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
-#Reader #page-number {
+.Reader_PageContainer {
+  flex: 1;
+}
+
+.Reader_Page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.Reader_Title {
+  margin: 0.2em;
+}
+
+.Reader_Author {
+  margin: 0.2em;
+}
+
+.Reader_Button img {
+  width: 2em;
+  height: 2em;
+  display: block;
+  margin: 0 auto;
+}
+
+.Reader_Picture {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+
+.Reader_PageNumber {
+  font-size: 0.8em;
   position: absolute;
-  font-size: 4vmin;
-  line-height: 1.2em;
-  top: 0.5em;
   right: 0.5em;
-}
-
-.example-enter {
-  opacity: 0.01;
-}
-
-.example-enter.example-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-#Reader #question {
-  font-size: 3vmax;
-  line-height: 1.2em;
-  margin: 0 0 2vmax 0;
+  top: 0.5em;
 }

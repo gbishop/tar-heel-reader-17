@@ -1,19 +1,15 @@
-#Find {
-  font-size: 2vmin;
+.Find {
+  font-size: 1rem;
 }
 
-#Find-results { 
+.Find-Results { 
   list-style: none;
   padding-left: 0.0em;
   margin: 0 auto;
   text-align: center;
 }
 
-#Find-results {
-  max-width: calc(100vw - 0.4em);
-}
-
-#Find-results li {
+.Find-Results li {
   margin: 0.1em;
   line-height: 1em;
   width: 40em;
@@ -24,96 +20,61 @@
   border-radius: 0.5em;
 }
 
-#Find-results button {
-  font-size: inherit;
-}
-
-#Find-results button {
+.Find-ReadButton {
   text-align: left;
   padding: 0.1em;
   float: left;
-  margin-right: 0.1em;
+  margin-right: 0.5em;
+  padding: 0.1em;
 }
 
-#Find-results h1 {
-  line-height: 1.2em;
-  overflow: hidden;
-}
-
-#Find-results h1 {
-  font-size: 1.8em;
-  height: 2.4em;
-  margin: 0;
-}
-
-#Find-results img.cover {
-  width: 6.25em;
-  height: 6.25em;
+.Find-ReadButton img {
+  float: left;
+  margin-right: 0.2em;
+  width: 8em;
+  height: 8em;
   display: block;
   object-fit: contain;
 }
 
-
-#Find-results img.cover {
-  float: left;
-  max-width: 25vw;
-  margin-right: 0.2em;
+.Find-Results h1 {
+  margin: 0 0 0.25em 0.25em;
+  height: 2.2em;
+  line-height: 1.1em;
+  overflow: hidden;
 }
 
-#Find-results p.author {
+.Find-Author {
   font-size: 0.8em;
   overflow: hidden;
   margin: 0;
-}
-
-#Find-results p.author {
-  height: 1.1em;
-  display: inline-block;
   width: 10em;
   vertical-align: middle;
+  display: inline-block;
 }
 
-#Find-results img.stars {
-  width: 3em;
+.Find-Icon {
   height: 1em;
   margin-right: 0.2em;
-  max-width: 18vmin;
-  max-height: 6vmin;
   vertical-align: middle;
 }
 
-#Find-results img.reviewed {
-  width: 1em;
-  height: 1em;
-  max-width: 6vmin;
-  max-height: 6vmin;
-  vertical-align: middle;
-}
-
-#Find-results img.caution {
-  width: 1em;
-  height: 1em;
-  max-width: 6vmin;
-  max-height: 6vmin;
-  vertical-align: middle;
-}
-
-#Find-results p.pages {
+.Find-Pages {
   font-size: 0.7em;
   margin: 0;
 }
 
-#Find-form {
+.Find-Form {
   margin: 0 auto;
   text-align: center;
 }
 
-#Find-form input, #Find-form select {
+.Find-Form input, .Find-Form select {
   margin: 0.15em 0.25em;
   font-size: inherit;
 }
 
-#Find-form label {
+.Find-Form label {
   clip-path: inset(100%);
   clip: rect(1px 1px 1px 1px); /* IE 6/7 */
   clip: rect(1px, 1px, 1px, 1px);
@@ -124,7 +85,7 @@
   width: 1px;
 }
 
-#Find-form input[type='search'] {
+.Find-Form input[type='search'] {
   border: 0.1em solid #B2B2B2;
   border-radius: 0.5em;
   display: inline-block;
@@ -134,9 +95,5 @@
   width: 16em;
   transition: all 0.25s ease-in;
   font-size: inherit;
-}
-
-#Find-form select {
-  margin: 0.15em 0.25em;
 }
 

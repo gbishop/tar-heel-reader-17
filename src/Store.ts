@@ -198,8 +198,7 @@ class Store {
   readonly fontScaleMax = 4;
   // font size of book text
   @computed get textFontSize() {
-    return Math.pow(this.fontScaleMax, this.fontScale / (this.textFontSizeSteps - 1))
-      * this.baseFontSize;
+    return Math.pow(this.fontScaleMax, this.fontScale / (this.textFontSizeSteps - 1));
   }
   // size of page turn buttons
   @observable pageTurnSize: PageTurnSize = 'normal';
