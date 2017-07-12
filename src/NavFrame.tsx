@@ -6,6 +6,7 @@ import Store from './Store';
 import Controls from './Controls';
 import NRKeyHandler from './NRKeyHandler';
 import ErrorMsg from './ErrorMsg';
+import { navButtonStyles } from './Styles';
 
 import './NavFrame.css';
 
@@ -28,11 +29,11 @@ const NavFrame = observer(function NavFrame(
   }) {
   const store = props.store;
 
-  function button(style: {}, nb: NavButton) {
+  function button(bstyle: {}, nb: NavButton) {
     return (
       <button
         className="NavFrame_Button"
-        style={style}
+        style={bstyle}
         onClick={nb.action}
       >
         <img src={nb.icon} alt="" />
@@ -40,49 +41,16 @@ const NavFrame = observer(function NavFrame(
       </button>
     );
   }
-  let bstyle = null;
-  switch (store.pageTurnSize) {
-    case 'off':
-      break;
-    case 'normal':
-      bstyle = {
-        width: em(4),
-        height: em(4),
-        fontSize: em(0.75),
-        alignSelf: 'flex-end'
-      };
-      break;
-    case 'medium':
-      bstyle = {
-        flexShrink: 0,
-        flexBasis: 'auto',
-        width: em(4),
-        height: '100%',
-        fontSize: em(1)
-      };
-      break;
-    case 'large':
-      bstyle = {
-        flexShrink: 0,
-        flexBasis: 'auto',
-        width: em(4),
-        height: '100%',
-        fontSize: em(1.5)
-      };
-      break;
-    default:
-      console.log('cannot happen');
-      break;
-  }
+  let bstyle = navButtonStyles[store.pageTurnSize];
 
   return (
     <div className="NavFrame">
       <div className="NavFrame_FlexContainer">
-        {bstyle && button(bstyle, props.back)}
+        {store.pageTurnSize !== 'off' && props.back.label && button(bstyle, props.back)}
         <div className="NavFrame_PageContainer">
           {props.children}
         </div>
-        {bstyle && button(bstyle, props.next)}
+        {store.pageTurnSize !== 'off' && props.next.label && button(bstyle, props.next)}
       </div>
       <NRKeyHandler
         keyValue={'ArrowRight'}

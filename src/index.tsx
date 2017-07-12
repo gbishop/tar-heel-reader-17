@@ -15,8 +15,6 @@ import { autorun, useStrict } from 'mobx';
 function startRouter(store: Store) {
 
   const baseUrl = process.env.PUBLIC_URL;
-  console.log('baseUrl', baseUrl);
-  console.log('pathname', window.location.pathname);
 
   // update state on url change
   let router = new Router();
@@ -50,14 +48,10 @@ function startRouter(store: Store) {
   // update url on state changes
   autorun(() => {
     const path = baseUrl + store.currentPath;
-    console.log('autorun', '|' + path + '|',
-      '|' + window.location.pathname + window.location.search + '|');
     if (path !== window.location.pathname + window.location.search) {
       if (window.location.pathname === '/find/' && window.location.search.length === 0) {
-        console.log('replace', path, window.location.pathname + window.location.search);
         window.history.replaceState(null, '', path);
       } else {
-        console.log('push', path, window.location.pathname + window.location.search);
         window.history.pushState(null, '', path);
       }
     }

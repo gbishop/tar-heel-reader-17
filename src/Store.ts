@@ -2,6 +2,7 @@ import { observable, computed, action, reaction } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
+import { NavButtonStyle, navButtonStyles } from './Styles';
 
 type PageTurnSize = 'normal' | 'medium' | 'large' | 'off';
 
@@ -63,10 +64,8 @@ class Store {
         this.booklink = v.link;
         this.pageno = v.page;
         this.pictureTextToggle = 'picture';
-        console.log('set book view', this.booklink, this.pageno);
         break;
       case 'find':
-        console.log('setFindView', v.query);
         this.currentView = 'find';
         const search = v.query.substring(1);
         this.findQueryWatch = true;
@@ -74,7 +73,6 @@ class Store {
           const o = JSON.parse('{"' +
             decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
             '"}');
-          console.log('setFindView', o);
           for (var p in o) {
             if (this.findQuery.hasOwnProperty(p)) {
               this.findQuery[p] = o[p];
@@ -83,7 +81,6 @@ class Store {
         }
         break;
       case 'choose':
-        console.log('setChooseView', v.ids);
         this.currentView = 'choose';
         this.chooseList = v.ids.split(',');
         this.chooseIndex = 0;
@@ -99,7 +96,6 @@ class Store {
   // on going back to Choose bump the index
   @observable preBookView: 'find' | 'choose' = 'find';
   @action.bound setPreBookView() {
-    console.log('setPreBookView', this.preBookView);
     if (this.preBookView === 'find') {
       this.setCurrentView({
         view: 'find',
@@ -113,10 +109,7 @@ class Store {
 
   // map the state to a url
   @computed get currentPath() {
-    console.log('currentView', this.currentView);
     if (this.currentView === 'book') {
-      console.log('this.bookid', this.booklink);
-      console.log('this.bookP', this.bookP);
       return `${this.booklink}` + (this.pageno > 1 ? `${this.pageno}` : '');
     } else if (this.currentView === 'find') {
       return '/find/?' + this.findQueryString;
@@ -200,21 +193,21 @@ class Store {
   @computed get textFontSize() {
     return Math.pow(this.fontScaleMax, this.fontScale / (this.textFontSizeSteps - 1));
   }
+
   // size of page turn buttons
-  @observable pageTurnSize: PageTurnSize = 'normal';
+  @observable pageTurnSize: NavButtonStyle = 'normal';
   @action.bound setPageTurnSize(value: string) {
-    this.pageTurnSize = value as PageTurnSize;
+    if (value in navButtonStyles) {
+      this.pageTurnSize = value as NavButtonStyle;
+    }
   }
-  // width of page turn buttons
-  @computed get pageTurnWidth() {
-    return this.baseFontSize * 6 * 0.8;
-  }
+
   // visibility of the controls modal
   @observable controlsVisible: boolean = false;
   @action.bound toggleControlsVisible() {
     this.controlsVisible = !this.controlsVisible;
-    console.log('controls', this.controlsVisible);
   }
+
   // Find related variables
   @observable findQuery = {
     search: '',
@@ -283,7 +276,6 @@ class Store {
   // restore the state from json
   @action.bound setPersist(js: string) {
     var v = JSON.parse(js);
-    console.log('setPersist', v);
     if (v.version === this.persistVersion) {
       this.pictureTextMode = v.pictureTextMode;
       this.fontScale = v.fontScale;
@@ -310,20 +302,17 @@ class Store {
     this.fetchHandler = reaction(
       () => this.booklink,
       (booklink) => {
-        console.log('book reaction', booklink);
         this.bookP = fromPromise(fetchBook(this.booklink)) as IPromiseBasedObservable<Book>;
       });
     this.findHandler = reaction(
       () => [ this.findQueryString, this.findQueryWatch ],
       ([query, watch]) => {
-        console.log('find reaction', query, watch);
         this.findP = fromPromise(fetchFind(this.findQueryString)) as
           IPromiseBasedObservable<FindResult>;
       });
     this.chooseHandler = reaction(
       () => this.chooseList,
       (list) => {
-        console.log('choose reaction', list);
         this.chooseP = fromPromise(fetchChoose(this.chooseList)) as
           IPromiseBasedObservable<FindResult>;
       });

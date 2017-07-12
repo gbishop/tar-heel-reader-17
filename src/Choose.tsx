@@ -46,10 +46,9 @@ class RenderBooks extends React.Component<RProps, {}> {
     let coverMargin = 0.1; // em
     const topx = store.baseFontSize * store.textFontSize;
     const size = topx * (coverSize + coverMargin);
-    const maxRows = Math.min(2, Math.max(1, Math.floor(height / size)));
-    const maxCols = Math.min(3, Math.max(1, Math.floor(width / size)));
+    const maxRows = Math.min(height > width ? 3 : 2, Math.max(1, Math.floor(height / size)));
+    const maxCols = Math.min(height > width ? 2 : 3, Math.max(1, Math.floor(width / size)));
     const n = maxRows * maxCols;
-    console.log(n, width, height, maxRows, maxCols);
     const books = store.choose.books.slice(0, n).map((book) => (
       <div
         key={book.ID}
