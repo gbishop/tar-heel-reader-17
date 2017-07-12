@@ -48,7 +48,8 @@
   font-size: 0.8em;
   overflow: hidden;
   margin: 0;
-  width: 10em;
+  width: 20em;
+  height: 1em;
   vertical-align: middle;
   display: inline-block;
 }

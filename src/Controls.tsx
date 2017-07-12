@@ -51,7 +51,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
               onChange={e => store.setAlternatePictureText(e.target.checked)}
             />
           </label>
-          <label>Page Turn Size:&nbsp;
+          <label>Button Size:&nbsp;
             <select
               value={store.pageTurnSize}
               onChange={e => store.setPageTurnSize(e.target.value)}
@@ -62,16 +62,6 @@ const Controls = observer(function Controls(props: {store: Store}) {
               <option value="off">None</option>
             </select>
           </label>
-          <label>Find page format:&nbsp;
-            <select
-              value={store.findFormat}
-              onChange={e => store.setFindFormat(e.target.value)}
-            >
-              <option value="single">Single</option>
-              <option value="boxes">Boxes</option>
-            </select>
-          </label>
-
           <button onClick={store.toggleControlsVisible}>
             Done
           </button>

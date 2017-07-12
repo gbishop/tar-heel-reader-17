@@ -1,16 +1,16 @@
 import * as React from 'react';
-import * as CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { observer } from 'mobx-react';
-import KeyHandler from 'react-key-handler';
-const NextArrow = require('./icons/NextArrow.png');
-const BackArrow = require('./icons/BackArrow.png');
 import Store from './Store';
 import Controls from './Controls';
 import NRKeyHandler from './NRKeyHandler';
 import ErrorMsg from './ErrorMsg';
+import NavFrame from './NavFrame';
+import { NavButton } from './NavFrame';
 
-// import SharedBook from './SharedBook';
 import './Reader.css';
+
+const NextArrow = require('./icons/NextArrow.png');
+const BackArrow = require('./icons/BackArrow.png');
 
 function em(s: number) {
   return `${s}em`;
@@ -35,84 +35,22 @@ const Reader = observer(function Reader(props: {store: Store}) {
   } else if (store.bookP.value.link !== store.booklink) {
     return <h1>Waiting</h1>;
   }
-  let next, back;
+  let next = {label: 'Next', icon: NextArrow, action: store.nextPage};
+  let back = {label: 'Back', icon: BackArrow, action: store.backPage};
   if (store.pageno === 1) {
-    next = store.nextPage;
-    back = store.setPreBookView;
+    back.action = store.setPreBookView;
     page = <TitlePage store={store} />;
   } else if (store.pageno <= store.npages) {
-    next = store.nextPage;
-    back = store.backPage;
     page = <TextPage store={store} />;
   } else {
-    next = store.nextPage;
-    back = store.backPage;
     page = <ChoicePage store={store} />;
-  }
-  function button(style: {}, func: () => void, img: string) {
-    return (
-      <button
-        className="Reader_Button"
-        style={style}
-        onClick={func}
-      >
-        <img src={img} alt="" />
-        Back
-      </button>
-    );
-  }
-  let bstyle = null;
-  switch (store.pageTurnSize) {
-    case 'off':
-      break;
-    case 'normal':
-      bstyle = {
-        width: em(4),
-        height: em(4),
-        fontSize: em(0.75),
-        alignSelf: 'flex-end'
-      };
-      break;
-    case 'medium':
-      bstyle = {
-        flexShrink: 0,
-        flexBasis: 'auto',
-        width: em(4),
-        height: '100%',
-        fontSize: em(1)
-      };
-      break;
-    case 'large':
-      bstyle = {
-        flexShrink: 0,
-        flexBasis: 'auto',
-        width: em(4),
-        height: '100%',
-        fontSize: em(1.5)
-      };
-      break;
-    default:
-      console.log('cannot happen');
-      break;
   }
 
   return (
     <div className="Reader">
-      <div className="Reader_FlexContainer">
-        {bstyle && button(bstyle, back, BackArrow)}
-        <div className="Reader_PageContainer">
-          {page}
-        </div>
-        {bstyle && button(bstyle, next, NextArrow)}
-      </div>
-      <NRKeyHandler
-        keyValue={'ArrowRight'}
-        onKeyHandle={next}
-      />
-      <NRKeyHandler
-        keyValue={'ArrowLeft'}
-        onKeyHandle={back}
-      />
+      <NavFrame store={store} next={next} back={back} >
+        {page}
+      </NavFrame>
       <Controls store={props.store} />
     </div>
   );

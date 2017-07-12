@@ -1,2 +1,45 @@
-#Choose {
+.Choose {
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-size: 2vmax;
 }
+
+.Choose_Slider {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+  justify-content: center;
+  align-content: center;
+}
+
+.Choose_Cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid black;
+  object-fit: contain;
+}
+
+.Choose_Picture {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  min-height: 0;
+  flex: 1;
+}
+
+.Choose_Title {
+  margin: 0.2em;
+  font-size: 1em;
+}
+
+.Choose_Author {
+  margin: 0.2em;
+  font-size: 0.8em;
+}
+

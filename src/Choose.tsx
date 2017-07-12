@@ -4,6 +4,8 @@ import NRKeyHandler from './NRKeyHandler';
 import Store from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
+import NavFrame from './NavFrame';
+import ContainerDimensions from 'react-container-dimensions';
 
 const stars = {
   'Not yet rated': require('./icons/0stars.png'),
@@ -21,57 +23,85 @@ const BackArrow = require('./icons/BackArrow.png');
 
 import './Choose.css';
 
+function em(s: number) {
+  return `${s}em`;
+}
+
+interface RProps {
+  store: Store;
+  width?: number;
+  height?: number;
+}
+
+@observer
+class RenderBooks extends React.Component<RProps, {}> {
+  render() {
+    const baseUrl = process.env.PUBLIC_URL;
+    const store = this.props.store;
+    const width = this.props.width || 1;
+    const height = this.props.height || 1;
+
+    // work which ones to show
+    let coverSize = 10; // em
+    let coverMargin = 0.1; // em
+    const topx = store.baseFontSize * store.textFontSize;
+    const size = topx * (coverSize + coverMargin);
+    const maxRows = Math.min(2, Math.max(1, Math.floor(height / size)));
+    const maxCols = Math.min(3, Math.max(1, Math.floor(width / size)));
+    const n = maxRows * maxCols;
+    console.log(n, width, height, maxRows, maxCols);
+    const books = store.choose.books.slice(0, n).map((book) => (
+      <div
+        key={book.ID}
+        className="Choose_Cover"
+        style={{
+          width: width / maxCols - coverMargin * topx * (maxCols + 1),
+          height: height / maxRows - coverMargin * topx * (maxRows + 1),
+          margin: em(coverMargin)
+        }}
+      >
+        <div>
+          <h1 className="Choose_Title">{book.title}</h1>
+          <p className="Choose_Author">{book.author}</p>
+        </div>
+        <img
+          className="Choose_Picture"
+          src={baseUrl + book.preview.url}
+        />
+      </div>));
+    return (
+      <div
+        className="Choose_Slider"
+        style={{fontSize: em(store.textFontSize)}}
+      >
+        {books}
+      </div>);
+  }
+}
+
 const Choose = observer(function Choose(props: {store: Store}) {
+  const baseUrl = process.env.PUBLIC_URL;
   const store = props.store;
   if (!store.chooseP || store.chooseP.state === 'pending') {
     return <h1>Choices loading</h1>;
   } else if (store.chooseP.state === 'rejected') {
     return <ErrorMsg error={store.chooseP.reason} />;
   } else {
-    const baseUrl = process.env.PUBLIC_URL;
-    const b = store.choose.books[store.chooseIndex];
+    const readit = () => 1;
+
     return (
       <div
-        id="Reader"
-        className={'title-page ' + 'buttons-' + store.pageTurnSize}
-        style={{fontSize: 1.8 * store.textFontSize}}
+        className="Choose"
       >
-        <h1 id="title">{b.title}</h1>
-        <p id="author">{b.author}</p>
-        <img
-          id="picture"
-          src={baseUrl + b.preview.url}
-        />
-        <button
-          className="nav"
-          id="back"
-          onClick={store.nextChooseIndex}
+        <NavFrame
+          store={store}
+          next={{icon: NextArrow, label: 'Next', action: store.nextChooseIndex}}
+          back={{icon: BackArrow, label: 'Read', action: readit}}
         >
-          <img src={BackArrow} />Skip
-        </button>
-        <button
-          className="nav"
-          id="next"
-          onClick={e => store.setCurrentView({
-            view: 'book',
-            link: b.link, 
-            page: 2
-          })}
-        >
-          <img src={NextArrow} />Read
-        </button>
-        <NRKeyHandler
-          keyValue={'ArrowRight'}
-          onKeyHandle={e => store.setCurrentView({
-            view: 'book',
-            link: b.link, 
-            page: 2
-          })}
-        />
-        <NRKeyHandler
-          keyValue={'ArrowLeft'}
-          onKeyHandle={store.nextChooseIndex}
-        />
+        <ContainerDimensions>
+          <RenderBooks store={store} />
+        </ContainerDimensions>
+        </NavFrame>
         <Controls store={store} />
       </div>
     );

@@ -1,5 +1,5 @@
 .Controls {
-  font-size: 2vmax;
+  font-size: 1rem;
 }
 
 .Controls h1 {
@@ -7,7 +7,6 @@
 }
 
 .Controls label {
-  font-size: 2vmax;
   display: block;
   padding: 0.5em;
   vertical-align: middle;
@@ -15,5 +14,4 @@
 
 .Controls input, .Controls select, .Controls button {
   vertical-align: middle;
-  font-size: 2vmax;
 }
