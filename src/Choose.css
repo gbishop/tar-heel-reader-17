@@ -23,6 +23,8 @@
   justify-content: center;
   border: 1px solid black;
   object-fit: contain;
+  background: inherit;
+  font-size: inherit;
 }
 
 .Choose_Picture {
@@ -31,6 +33,10 @@
   object-fit: contain;
   min-height: 0;
   flex: 1;
+}
+
+.Choose_Cover > div {
+  width: 100%;
 }
 
 .Choose_Title {

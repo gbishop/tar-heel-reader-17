@@ -50,7 +50,7 @@ class RenderBooks extends React.Component<RProps, {}> {
     const maxCols = Math.min(height > width ? 2 : 3, Math.max(1, Math.floor(width / size)));
     const n = maxRows * maxCols;
     const books = store.choose.books.slice(0, n).map((book) => (
-      <div
+      <button
         key={book.ID}
         className="Choose_Cover"
         style={{
@@ -67,7 +67,7 @@ class RenderBooks extends React.Component<RProps, {}> {
           className="Choose_Picture"
           src={baseUrl + book.preview.url}
         />
-      </div>));
+      </button>));
     return (
       <div
         className="Choose_Slider"
