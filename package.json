@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/react-slick": "^0.14.1",
-    "@types/react-transition-group": "^1.1.1",
     "director": "^1.2.8",
     "mobx": "^3.1.16",
     "mobx-react": "^4.2.2",
@@ -25,7 +23,10 @@
     "@types/node": "^8.0.6",
     "@types/react": "^15.0.33",
     "@types/react-dom": "^15.5.1",
-    "react-scripts-ts": "^2.3.2"
+    "@types/react-slick": "^0.14.1",
+    "@types/react-transition-group": "^1.1.1",
+    "react-scripts-ts": "^2.4.0",
+    "typescript": "^2.4.1"
   },
   "proxy": {
     "/api": {
