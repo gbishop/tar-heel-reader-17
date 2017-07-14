@@ -14,13 +14,14 @@
   flex-wrap: wrap;
   overflow: hidden;
   justify-content: center;
-  align-content: center;
+  align-items: center;
 }
 
 .Choose_Cover {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   border: 1px solid black;
   object-fit: contain;
   background: inherit;

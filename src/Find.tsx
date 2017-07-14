@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import NRKeyHandler from './NRKeyHandler';
 import Store from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
@@ -28,11 +27,11 @@ class SearchForm extends React.Component<{store: Store}, {}> {
     }
     console.log('submit', e, this.form, this.form.search.value, this.form.category.value);
     const store = this.props.store;
-    store.findQuery.search = this.form.search.value;
-    store.findQuery.category = this.form.category.value;
-    store.findQuery.reviewed = this.form.reviewed.value;
-    store.findQuery.language = this.form.language.value;
-    store.findQuery.page = +this.form.page.value;
+    store.fs.query.search = this.form.search.value;
+    store.fs.query.category = this.form.category.value;
+    store.fs.query.reviewed = this.form.reviewed.value;
+    store.fs.query.language = this.form.language.value;
+    store.fs.query.page = +this.form.page.value;
   }
   render() {
     const store = this.props.store;
@@ -41,7 +40,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
         <label htmlFor="I-search" >Search for</label>
         <input
           type="search"
-          defaultValue={store.findQuery.search}
+          defaultValue={store.fs.query.search}
           id="I-search"
           name="search"
           placeholder="Enter text to search"
@@ -51,7 +50,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
         <select
           id="I-category"
           name="category"
-          defaultValue={store.findQuery.category}
+          defaultValue={store.fs.query.category}
         >
           <option value="" >All Topics</option>
           <option value="Alph" >Alphabet</option>
@@ -75,7 +74,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
         <select
           id="I-reviewed"
           name="reviewed"
-          defaultValue={store.findQuery.reviewed}
+          defaultValue={store.fs.query.reviewed}
         >
           <option value="R">Reviewed only</option>
           <option value="" >Include unreviewed</option>
@@ -84,7 +83,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
         <select
           id="I-audience"
           name="audience"
-          defaultValue={store.findQuery.audience}
+          defaultValue={store.fs.query.audience}
         >
           <option value="E" >Rated E/Everybody</option>
           <option value="C" >Rated C/Caution</option>
@@ -94,7 +93,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
         <select
           id="I-language"
           name="language"
-          defaultValue={store.findQuery.language}
+          defaultValue={store.fs.query.language}
         >
           <option value="ar" >Arabic</option>
           <option value="eu" >Basque</option>
@@ -133,13 +132,13 @@ class SearchForm extends React.Component<{store: Store}, {}> {
 
 const Find = observer(function Find(props: {store: Store}) {
   const store = props.store;
-  if (!store.findP || store.findP.state === 'pending') {
+  if (!store.fs.promise || store.fs.promise.state === 'pending') {
     return <h1>Find loading</h1>;
-  } else if (store.findP.state === 'rejected') {
-    return <ErrorMsg error={store.findP.reason} />;
+  } else if (store.fs.promise.state === 'rejected') {
+    return <ErrorMsg error={store.fs.promise.reason} />;
   } else {
     const baseUrl = process.env.PUBLIC_URL;
-    const findResults = store.find.books.map(b => (
+    const findResults = store.fs.find.books.map(b => (
       <li key={b.ID}>
         <button 
           className="Find-ReadButton"

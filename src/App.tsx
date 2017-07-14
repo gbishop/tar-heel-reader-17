@@ -12,7 +12,7 @@ class App extends React.Component<{store: Store}, {}> {
     const store = this.props.store;
     switch (store.currentView) {
 
-      case 'landing':
+      case 'land':
         return <h1><a href="find/">Find a book</a></h1>;
         
       case 'book':

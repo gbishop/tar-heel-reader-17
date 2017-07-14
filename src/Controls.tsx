@@ -47,8 +47,8 @@ const Controls = observer(function Controls(props: {store: Store}) {
           <label>Alternate Picture and Text:&nbsp;
             <input
               type="checkbox"
-              checked={store.pictureTextMode === 'alternate'}
-              onChange={e => store.setAlternatePictureText(e.target.checked)}
+              checked={store.bs.pictureTextMode === 'alternate'}
+              onChange={e => store.bs.setAlternatePictureText(e.target.checked)}
             />
           </label>
           <label>Button Size:&nbsp;

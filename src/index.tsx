@@ -10,7 +10,7 @@ import './index.css';
 // why I need the strange path.
 import { Router } from 'director/build/director';
 import { autorun, useStrict } from 'mobx';
-// useStrict(true);
+useStrict(true);
 
 function startRouter(store: Store) {
 
@@ -38,9 +38,9 @@ function startRouter(store: Store) {
       ids: idlist
     }));
   router.on(baseUrl + '/', 
-    () => store.setCurrentView({ view: 'landing' }));
+    () => store.setCurrentView({ view: 'land' }));
   router.configure({
-    notfound: () => store.setCurrentView({ view: 'landing' }),
+    notfound: () => store.setCurrentView({ view: 'land' }),
     html5history: true
   });
   router.init();

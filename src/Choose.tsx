@@ -5,7 +5,6 @@ import Store from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
 import NavFrame from './NavFrame';
-import ContainerDimensions from 'react-container-dimensions';
 
 const stars = {
   'Not yet rated': require('./icons/0stars.png'),
@@ -33,77 +32,88 @@ interface RProps {
   height?: number;
 }
 
-@observer
-class RenderBooks extends React.Component<RProps, {}> {
-  render() {
-    const baseUrl = process.env.PUBLIC_URL;
-    const store = this.props.store;
-    const width = this.props.width || 1;
-    const height = this.props.height || 1;
-
-    // work which ones to show
-    let coverSize = 10; // em
-    let coverMargin = 0.1; // em
-    const topx = store.baseFontSize * store.textFontSize;
-    const size = topx * (coverSize + coverMargin);
-    const maxRows = Math.min(height > width ? 3 : 2, Math.max(1, Math.floor(height / size)));
-    const maxCols = Math.min(height > width ? 2 : 3, Math.max(1, Math.floor(width / size)));
-    const n = maxRows * maxCols;
-    const books = store.choose.books.slice(0, n).map((book) => (
-      <button
-        key={book.ID}
-        className="Choose_Cover"
-        style={{
-          width: width / maxCols - coverMargin * topx * (maxCols + 1),
-          height: height / maxRows - coverMargin * topx * (maxRows + 1),
-          margin: em(coverMargin)
-        }}
-      >
-        <div>
-          <h1 className="Choose_Title">{book.title}</h1>
-          <p className="Choose_Author">{book.author}</p>
-        </div>
-        <img
-          className="Choose_Picture"
-          src={baseUrl + book.preview.url}
-        />
-      </button>));
-    return (
-      <div
-        className="Choose_Slider"
-        style={{fontSize: em(store.textFontSize)}}
-      >
-        {books}
-      </div>);
-  }
-}
-
 const Choose = observer(function Choose(props: {store: Store}) {
   const baseUrl = process.env.PUBLIC_URL;
   const store = props.store;
-  if (!store.chooseP || store.chooseP.state === 'pending') {
+  if (!store.cs.promise || store.cs.promise.state === 'pending') {
     return <h1>Choices loading</h1>;
-  } else if (store.chooseP.state === 'rejected') {
-    return <ErrorMsg error={store.chooseP.reason} />;
+  } else if (store.cs.promise.state === 'rejected') {
+    return <ErrorMsg error={store.cs.promise.reason} />;
   } else {
     const readit = () => 1;
+    // all these calculations are in em units
+    // estimate the size of the region for choices
+    const width = store.screen.width / store.baseFontSize - 2 * store.pageTurnWidth;
+    const height = store.screen.height / store.baseFontSize;
 
+    // work out which ones to show
+    // move to Styles
+    const coverSize = 10; // em
+    const coverMargin = 0.1; // em
+
+    const fs = store.textFontSize;
+    const size = fs * (coverSize + coverMargin);
+    const maxRows = Math.min(height > width ? 3 : 2, Math.max(1, Math.floor(height / size)));
+    const maxCols = Math.min(height > width ? 2 : 3, Math.max(1, Math.floor(width / size)));
+    const nVisible = maxRows * maxCols;
+    console.log(fs, size, width, height, nVisible, maxRows, maxCols);
+    let books = [];
+    for (let i = 0; i < nVisible; i++) {
+      const book = store.cs.choose.books[(i + store.cs.visible) % store.cs.nchoices];
+      books.push(
+        <button
+          key={book.ID}
+          className="Choose_Cover"
+          onClick={() => store.setCurrentView({
+            view: 'book',
+            link: book.link,
+            page: 1})
+          }
+          style={{
+            width: em(width / maxCols - coverMargin * fs * (maxCols + 1)),
+            height: em(height / maxRows - coverMargin * fs * (maxRows + 1)),
+            margin: em(coverMargin)
+          }}
+        >
+          <div
+            style={{fontSize: em(store.textFontSize)}}
+          >
+            <h1 className="Choose_Title">{book.title}</h1>
+            <p className="Choose_Author">{book.author}</p>
+          </div>
+          <img
+            className="Choose_Picture"
+            src={baseUrl + book.preview.url}
+          />
+        </button>);
+    }
+    let next = {
+      icon: NextArrow,
+      label: nVisible < store.cs.nchoices ? 'Next' : '',
+      action: () => store.cs.stepVisible(nVisible)};
+    let back = {
+      icon: BackArrow,
+      label: nVisible < store.cs.nchoices ? 'Back' : '',
+      action: () => store.cs.stepVisible(-nVisible)};
+    
     return (
       <div
         className="Choose"
       >
         <NavFrame
           store={store}
-          next={{icon: NextArrow, label: 'Next', action: store.nextChooseIndex}}
-          back={{icon: BackArrow, label: 'Read', action: readit}}
+          next={next}
+          back={back}
         >
-        <ContainerDimensions>
-          <RenderBooks store={store} />
-        </ContainerDimensions>
+          <div
+            className="Choose_Slider"
+          >
+            {books}
+          </div>
+          
         </NavFrame>
         <Controls store={store} />
-      </div>
-    );
+      </div>);
   }
 });
 

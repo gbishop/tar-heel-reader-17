@@ -4,7 +4,8 @@ function em(s: number) {
 
 export const navButtonStyles = {
   off: {
-    width: 0
+    width: em(0),
+    fontSize: em(0)
   },
   normal: {
     width: em(4),
