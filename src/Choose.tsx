@@ -53,9 +53,23 @@ const Choose = observer(function Choose(props: {store: Store}) {
 
     const fs = store.textFontSize;
     const size = fs * (coverSize + coverMargin);
-    const maxRows = Math.min(height > width ? 3 : 2, Math.max(1, Math.floor(height / size)));
-    const maxCols = Math.min(height > width ? 2 : 3, Math.max(1, Math.floor(width / size)));
-    const nVisible = maxRows * maxCols;
+    const nchoices = store.cs.nchoices;
+    /*
+     * nc w n
+     *  1 1 1
+     *  2 2 1
+     *  3 2 2
+     *  4 2 2
+     *  5 3 2
+     *  6 3 2
+     */
+    const W = [1, 2, 2, 2, 3, 3][Math.min(nchoices, 6) - 1];
+    const N = [1, 1, 2, 2, 2, 2][Math.min(nchoices, 6) - 1];
+    const R = height > width ? W : N;
+    const C = height > width ? N : W;
+    const maxRows = Math.min(R, Math.max(1, Math.floor(height / size)));
+    const maxCols = Math.min(C, Math.max(1, Math.floor(width / size)));
+    const nVisible = Math.min(store.cs.nchoices, maxRows * maxCols);
     console.log(fs, size, width, height, nVisible, maxRows, maxCols);
     let books = [];
     for (let i = 0; i < nVisible; i++) {

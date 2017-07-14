@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   border: 1px solid black;
   object-fit: contain;
   background: inherit;
