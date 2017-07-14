@@ -25,9 +25,13 @@ const NavFrame = observer(function NavFrame(
     store: Store,
     next: NavButton,
     back: NavButton,
+    mover?: () => void,
+    chooser?: () => void,
     children: React.ReactNode
   }) {
   const store = props.store;
+  const mover = props.mover || props.next.action;
+  const chooser = props.chooser || props.back.action;
 
   function button(bstyle: {}, nb: NavButton) {
     return (
@@ -54,11 +58,11 @@ const NavFrame = observer(function NavFrame(
       </div>
       <NRKeyHandler
         keyValue={'ArrowRight'}
-        onKeyHandle={props.next.action}
+        onKeyHandle={mover}
       />
       <NRKeyHandler
         keyValue={'ArrowLeft'}
-        onKeyHandle={props.back.action}
+        onKeyHandle={chooser}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import NRKeyHandler from './NRKeyHandler';
 import Store from './Store';
+import { BookView } from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
 import NavFrame from './NavFrame';
@@ -62,53 +63,84 @@ const Choose = observer(function Choose(props: {store: Store}) {
      *  4 2 2
      *  5 3 2
      *  6 3 2
+     *  7 3 3
+     *  8 3 3
+     *  9 3 3
      */
-    const W = [1, 2, 2, 2, 3, 3][Math.min(nchoices, 6) - 1];
-    const N = [1, 1, 2, 2, 2, 2][Math.min(nchoices, 6) - 1];
+    const W = [1, 2, 2, 2, 3, 3, 3, 3, 3][Math.min(nchoices, 9) - 1];
+    const N = [1, 1, 2, 2, 2, 2, 3, 3, 3][Math.min(nchoices, 9) - 1];
     const R = height > width ? W : N;
     const C = height > width ? N : W;
     const maxRows = Math.min(R, Math.max(1, Math.floor(height / size)));
     const maxCols = Math.min(C, Math.max(1, Math.floor(width / size)));
-    const nVisible = Math.min(store.cs.nchoices, maxRows * maxCols);
-    console.log(fs, size, width, height, nVisible, maxRows, maxCols);
+    const nVisible = maxRows * maxCols;
     let books = [];
+    let views: BookView[] = [];
     for (let i = 0; i < nVisible; i++) {
       const book = store.cs.choose.books[(i + store.cs.visible) % store.cs.nchoices];
-      books.push(
-        <button
-          key={book.ID}
-          className="Choose_Cover"
-          onClick={() => store.setCurrentView({
-            view: 'book',
-            link: book.link,
-            page: 1})
-          }
-          style={{
-            width: em(width / maxCols - coverMargin * fs * (maxCols + 1)),
-            height: em(height / maxRows - coverMargin * fs * (maxRows + 1)),
-            margin: em(coverMargin)
-          }}
-        >
-          <div
-            style={{fontSize: em(store.textFontSize)}}
+      const view: BookView = {
+        view: 'book',
+        link: book.link,
+        page: 1};
+      if (i < nchoices) {
+        views.push(view);
+        books.push(
+          <button
+            key={book.ID}
+            className="Choose_Cover"
+            onClick={() => store.setCurrentView(view)
+            }
+            style={{
+              width: em(width / maxCols - coverMargin * fs * (maxCols + 1)),
+              height: em(height / maxRows - coverMargin * fs * (maxRows + 1)),
+              margin: em(coverMargin),
+              outline: i === store.cs.selected ? 'red solid thick' : 'none'
+            }}
           >
-            <h1 className="Choose_Title">{book.title}</h1>
-            <p className="Choose_Author">{book.author}</p>
-          </div>
-          <img
-            className="Choose_Picture"
-            src={baseUrl + book.preview.url}
-          />
-        </button>);
+            <div
+              style={{fontSize: em(store.textFontSize)}}
+            >
+              <h1 className="Choose_Title">{book.title}</h1>
+              <p className="Choose_Author">{book.author}</p>
+            </div>
+            <img
+              className="Choose_Picture"
+              src={baseUrl + book.preview.url}
+            />
+          </button>);
+      } else {
+        books.push(
+          <div
+            key={i}
+            style={{
+              width: em(width / maxCols - coverMargin * fs * (maxCols + 1)),
+              height: em(height / maxRows - coverMargin * fs * (maxRows + 1)),
+              margin: em(coverMargin)
+            }}
+          />);
+      }
     }
-    let next = {
+    const next = {
       icon: NextArrow,
       label: nVisible < store.cs.nchoices ? 'Next' : '',
       action: () => store.cs.stepVisible(nVisible)};
-    let back = {
+    const back = {
       icon: BackArrow,
       label: nVisible < store.cs.nchoices ? 'Back' : '',
       action: () => store.cs.stepVisible(-nVisible)};
+    const mover = () => {
+      if (nVisible > 1 && store.cs.selected < nVisible - 1) {
+        store.cs.setSelected(store.cs.selected + 1);
+      } else if (nchoices > nVisible) {
+        store.cs.stepVisible(nVisible);
+      } else {
+        store.cs.setSelected(0);
+      }
+    };
+    const chooser = () => {
+      const selected = Math.max(0, store.cs.selected);
+      store.setCurrentView(views[selected]);
+    };
     
     return (
       <div
@@ -118,6 +150,8 @@ const Choose = observer(function Choose(props: {store: Store}) {
           store={store}
           next={next}
           back={back}
+          mover={mover}
+          chooser={chooser}
         >
           <div
             className="Choose_Slider"

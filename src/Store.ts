@@ -10,7 +10,7 @@ interface LandView {
   view: 'land';
 }
 
-interface BookView {
+export interface BookView {
   view: 'book';
   link: string;
   page: number;
@@ -178,7 +178,7 @@ class ChooseStore {
   // list of book ids on the choose page
   @observable list: string[] = [];
   // index of the currently selected book
-  @observable selected: number = 0;
+  @observable selected: number = -1;
   @action.bound setSelected(i: number) {
     this.selected = i % this.list.length;
     if (this.selected < 0) {
@@ -193,6 +193,7 @@ class ChooseStore {
     if (this.visible < 0) {
       this.visible += L;
     }
+    this.selected = -1;
   }
 
   // an observable promise for the choose result
@@ -203,7 +204,7 @@ class ChooseStore {
   @action.bound setView(v: ChooseView) {
     this.list = v.ids.split(',');
     this.visible = 0;
-    this.selected = 0;
+    this.selected = -1;
   }
 
   // handle updating choose result
