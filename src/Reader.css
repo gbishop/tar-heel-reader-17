@@ -29,6 +29,8 @@
 
 .Reader_Title {
   margin: 0.2em;
+  overflow: hidden;
+  max-height: 20vh;
 }
 
 .Reader_Author {
@@ -54,4 +56,13 @@
   position: absolute;
   right: 0.5em;
   top: 0.5em;
+}
+
+.Reader_Choice {
+  display: block;
+  font-size: 2em;
+  flex: 1;
+  max-height: 25vh;
+  overflow: hidden;
+  z-index: 10;
 }

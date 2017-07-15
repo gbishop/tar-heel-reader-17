@@ -34,10 +34,7 @@ const Reader = observer(function Reader(props: {store: Store}) {
   } else if (store.bs.promise.value.link !== store.bs.link) {
     return <h1>Waiting</h1>;
   }
-  let next = {label: 'Next', icon: NextArrow, action: store.bs.nextPage};
-  let back = {label: 'Back', icon: BackArrow, action: store.bs.backPage};
   if (store.bs.pageno === 1) {
-    back.action = store.setPreBookView;
     page = <TitlePage store={store} />;
   } else if (store.bs.pageno <= store.bs.npages) {
     page = <TextPage store={store} />;
@@ -47,9 +44,7 @@ const Reader = observer(function Reader(props: {store: Store}) {
 
   return (
     <div className="Reader">
-      <NavFrame store={store} next={next} back={back} >
-        {page}
-      </NavFrame>
+      {page}
       <Controls store={props.store} />
     </div>
   );
@@ -64,17 +59,21 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
   const store = props.store;
   const page = store.bs.book.pages[1];
   const baseUrl = process.env.PUBLIC_URL;
+  let next = {label: 'Next', icon: NextArrow, action: store.bs.nextPage};
+  let back = {label: 'Back', icon: BackArrow, action: store.setPreBookView};
   return (
-    <div className="Reader_Page" >
-      <div style={{fontSize: em(store.textFontSize)}}>
-        <h1 className="Reader_Title">{store.bs.book.title}</h1>
-        <p className="Reader_Author">{store.bs.book.author}</p>
+    <NavFrame store={store} next={next} back={back} >
+      <div className="Reader_Page" >
+        <div style={{fontSize: em(store.textFontSize)}}>
+          <h1 className="Reader_Title">{store.bs.book.title}</h1>
+          <p className="Reader_Author">{store.bs.book.author}</p>
+        </div>
+        <img
+          className="Reader_Picture"
+          src={baseUrl + page.url}
+        />
       </div>
-      <img
-        className="Reader_Picture"
-        src={baseUrl + page.url}
-      />
-    </div>
+    </NavFrame>
   );
 });
 
@@ -88,28 +87,116 @@ const TextPage = observer(function TextPage(props: PageProps) {
   const baseUrl = process.env.PUBLIC_URL;
   const showPic = store.bs.pictureTextMode === 'combined' || store.bs.pictureTextToggle === 'picture';
   const showText = store.bs.pictureTextMode === 'combined' || store.bs.pictureTextToggle === 'text';
+  let next = {label: 'Next', icon: NextArrow, action: store.bs.nextPage};
+  let back = {label: 'Back', icon: BackArrow, action: store.bs.backPage};
   return (
-    <div className="Reader_Page" >
-      {showPic && <img
-        key={page.url}
-        className="Reader_Picture"
-        src={baseUrl + page.url}
-      />}
-      {showText && (
-        <div className="Reader_TextButtons" style={{fontSize: em(store.textFontSize)}}>
-          <p style={{flex: 1, fontSize: em(2)}}>{page.text}</p>
-        </div>
-        )
-      }
-      <span className="Reader_PageNumber">
-        {store.bs.pageno}
-      </span>
-    </div>
+    <NavFrame store={store} next={next} back={back} >
+      <div className="Reader_Page" >
+        {showPic && <img
+          key={page.url}
+          className="Reader_Picture"
+          src={baseUrl + page.url}
+        />}
+        {showText && (
+          <div style={{fontSize: em(store.textFontSize)}}>
+            <p style={{flex: 1, fontSize: em(2)}}>{page.text}</p>
+          </div>
+          )
+        }
+        <span className="Reader_PageNumber">
+          {store.bs.pageno}
+        </span>
+      </div>
+    </NavFrame>
   );
 });
 
 const ChoicePage = observer(function ChoicePage(props: PageProps) {
-  return <p>Choice Page</p>;
+  const store = props.store;
+  const nop = () => {return; };
+  let next = { label: 'No', icon: NextArrow, action: nop };
+  let back = { label: 'Yes', icon: BackArrow, action: nop };
+  let buttons;
+  let question;
+  let action: (i: number) => void;
+  switch (store.bs.step) {
+    default:
+    case 'what':
+      next.action =  () => store.bs.selectNext(3);
+      action = (i: number) => {
+        switch (i) {
+          default:
+            break;
+          case 0:
+            store.bs.setPage(1);
+            store.bs.setStep('what');
+            break;
+          case 1:
+            store.bs.setStep('rate');
+            break;
+          case 2:
+            store.setPreBookView();
+            store.bs.setStep('what');
+            break;
+        }
+      };
+      back.action = () => action(store.bs.selected);
+      question = 'What would you like to do now?';
+      buttons = [ 'Read this book again', 'Rate this book', 'Choose another book' ];
+      break;
+    case 'rate':
+      next.action = () => store.bs.selectNext(3);
+      action = (i) => {
+        if (i >= 0) {
+          console.log('rate book', i+1);
+          store.bs.setStep('thanks');
+        }
+      };
+      question = 'How do you rate this book?';
+      buttons = [ '1 star', '2 stars', '3 stars' ];
+      back.action = () => action(store.bs.selected);
+      break;
+    case 'thanks':
+      next.action = () => store.bs.selectNext(2);
+      action = (i: number) => {
+        switch (i) {
+          default:
+            break;
+          case 0:
+            store.bs.setPage(1);
+            store.bs.setStep('what');
+            break;
+          case 1:
+            store.setPreBookView();
+            store.bs.setStep('what');
+            break;
+        }
+      };
+      back.action = () => action(store.bs.selected);
+      question = 'What would you like to do now?';
+      buttons = [ 'Read this book again', 'Choose another book' ];
+      break;
+  }
+  const abutton = (l: string, a: () => void, s: boolean) => (
+    <button
+      key={l}
+      className="Reader_Choice"
+      onClick={a}
+      style={{outline: s ? 'red solid thick' : 'none'}}
+    >
+      {l}
+    </button>);
+  return (
+    <NavFrame store={store} next={next} back={back} >
+      <div
+        className="Reader_Page"
+        style={{fontSize: em(store.textFontSize), justifyContent: 'space-around'}}
+      >
+      <h1>{question}</h1>
+      {buttons.map((b, i) => abutton(b, () => action(i), i === store.bs.selected))}
+      </div>;
+    </NavFrame>
+  );
 });
 
 export default Reader;

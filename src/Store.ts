@@ -32,6 +32,8 @@ interface ErrorView {
 
 type View = LandView | BookView | FindView | ChooseView | ErrorView;
 
+type Steps = 'what' | 'rate' | 'thanks';
+
 class BookStore {
   // the link of the book to read or '' for the landing page
   @observable link: string = '';
@@ -105,6 +107,16 @@ class BookStore {
     } else if (this.pictureTextMode === 'alternate') {
       this.pictureTextToggle = 'picture';
     }
+  }
+  // choice page state
+  @observable step: Steps = 'what';
+  @action.bound setStep(s: Steps) {
+    this.step = s;
+    this.selected = -1;
+  }
+  @observable selected: number = -1;
+  @action.bound selectNext(n: number) {
+    this.selected = (this.selected + 1) % n;
   }
 
   // handle updating the book when the id changes
