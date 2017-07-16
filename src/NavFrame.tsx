@@ -23,15 +23,15 @@ export interface NavButton {
 const NavFrame = observer(function NavFrame(
   props: {
     store: Store,
-    next: NavButton,
-    back: NavButton,
+    next?: NavButton,
+    back?: NavButton,
     mover?: () => void,
     chooser?: () => void,
     children: React.ReactNode
   }) {
   const store = props.store;
-  const mover = props.mover || props.next.action;
-  const chooser = props.chooser || props.back.action;
+  const mover = props.mover || (props.next && props.next.action);
+  const chooser = props.chooser || (props.back && props.back.action);
 
   function mybutton(bstyle: {}, nb: NavButton) {
     return (
@@ -50,20 +50,20 @@ const NavFrame = observer(function NavFrame(
   return (
     <div className="NavFrame">
       <div className="NavFrame_FlexContainer">
-        {store.pageTurnSize !== 'off' && props.back.label && mybutton(bstyle, props.back)}
+        {store.pageTurnSize !== 'off' && props.back && mybutton(bstyle, props.back)}
         <div className="NavFrame_PageContainer">
           {props.children}
         </div>
-        {store.pageTurnSize !== 'off' && props.next.label && mybutton(bstyle, props.next)}
+        {store.pageTurnSize !== 'off' && props.next && mybutton(bstyle, props.next)}
       </div>
-      <NRKeyHandler
+      { mover && <NRKeyHandler
         keyValue={'ArrowRight'}
         onKeyHandle={mover}
-      />
-      <NRKeyHandler
+      /> }
+      { chooser && <NRKeyHandler
         keyValue={'ArrowLeft'}
         onKeyHandle={chooser}
-      />
+      /> }
     </div>
   );
 

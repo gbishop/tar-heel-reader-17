@@ -114,16 +114,16 @@ const TextPage = observer(function TextPage(props: PageProps) {
 const ChoicePage = observer(function ChoicePage(props: PageProps) {
   const store = props.store;
   const nop = () => {return; };
-  let next = { label: 'No', icon: NextArrow, action: nop };
-  let back = { label: 'Yes', icon: BackArrow, action: nop };
+  let mover = nop;
+  let chooser = nop;
+  let click: (i: number) => void;
   let buttons;
   let question;
-  let action: (i: number) => void;
   switch (store.bs.step) {
     default:
     case 'what':
-      next.action =  () => store.bs.selectNext(3);
-      action = (i: number) => {
+      mover =  () => store.bs.selectNext(3);
+      click = (i: number) => {
         switch (i) {
           default:
             break;
@@ -140,25 +140,25 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
             break;
         }
       };
-      back.action = () => action(store.bs.selected);
+      chooser = () => click(store.bs.selected);
       question = 'What would you like to do now?';
       buttons = [ 'Read this book again', 'Rate this book', 'Choose another book' ];
       break;
     case 'rate':
-      next.action = () => store.bs.selectNext(3);
-      action = (i) => {
+      mover = () => store.bs.selectNext(3);
+      click = (i) => {
         if (i >= 0) {
-          console.log('rate book', i+1);
+          console.log('rate book', i + 1);
           store.bs.setStep('thanks');
         }
       };
       question = 'How do you rate this book?';
       buttons = [ '1 star', '2 stars', '3 stars' ];
-      back.action = () => action(store.bs.selected);
+      chooser = () => click(store.bs.selected);
       break;
     case 'thanks':
-      next.action = () => store.bs.selectNext(2);
-      action = (i: number) => {
+      mover = () => store.bs.selectNext(2);
+      click = (i: number) => {
         switch (i) {
           default:
             break;
@@ -172,7 +172,7 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
             break;
         }
       };
-      back.action = () => action(store.bs.selected);
+      chooser = () => click(store.bs.selected);
       question = 'What would you like to do now?';
       buttons = [ 'Read this book again', 'Choose another book' ];
       break;
@@ -187,13 +187,13 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
       {l}
     </button>);
   return (
-    <NavFrame store={store} next={next} back={back} >
+    <NavFrame store={store} mover={mover} chooser={chooser} >
       <div
         className="Reader_Page"
         style={{fontSize: em(store.textFontSize), justifyContent: 'space-around'}}
       >
       <h1>{question}</h1>
-      {buttons.map((b, i) => abutton(b, () => action(i), i === store.bs.selected))}
+      {buttons.map((b, i) => abutton(b, () => click(i), i === store.bs.selected))}
       </div>;
     </NavFrame>
   );
