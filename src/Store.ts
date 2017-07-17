@@ -143,6 +143,18 @@ class FindStore {
     page: 1,
     count: 24
   };
+  @action.bound setQuery(
+    search: string,
+    category: string,
+    reviewed: string,
+    language: string,
+    page: number) {
+    this.query.search = search;
+    this.query.category = category;
+    this.query.reviewed = reviewed;
+    this.query.language = language;
+    this.query.page = +page;
+  }
   @computed get queryString() {
     let parts = [];
     const q = this.query;

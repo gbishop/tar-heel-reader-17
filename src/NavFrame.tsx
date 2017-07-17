@@ -50,11 +50,13 @@ const NavFrame = observer(function NavFrame(
   return (
     <div className="NavFrame">
       <div className="NavFrame_FlexContainer">
-        {store.pageTurnSize !== 'off' && props.back && mybutton(bstyle, props.back)}
+        {store.pageTurnSize !== 'off' && props.back && props.back.label &&
+        mybutton(bstyle, props.back)}
         <div className="NavFrame_PageContainer">
           {props.children}
         </div>
-        {store.pageTurnSize !== 'off' && props.next && mybutton(bstyle, props.next)}
+        {store.pageTurnSize !== 'off' && props.next && props.next.label &&
+        mybutton(bstyle, props.next)}
       </div>
       { mover && <NRKeyHandler
         keyValue={'ArrowRight'}

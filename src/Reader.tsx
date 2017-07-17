@@ -7,6 +7,7 @@ import NavFrame from './NavFrame';
 import { NavButton } from './NavFrame';
 
 import './Reader.css';
+import './Loading.css';
 
 const NextArrow = require('./icons/NextArrow.png');
 const BackArrow = require('./icons/BackArrow.png');
@@ -20,7 +21,7 @@ const Reader = observer(function Reader(props: {store: Store}) {
   let page;
 
   if (store.bs.promise.state === 'pending') {
-    return <h1>Loading</h1>;
+    return <h1 className="loader">Loading</h1>;
 
   } else if (store.bs.promise.state === 'rejected') {
     console.log('store', store);
@@ -85,8 +86,10 @@ const TextPage = observer(function TextPage(props: PageProps) {
     pt = ' ' + store.bs.pictureTextToggle + '-only';
   }
   const baseUrl = process.env.PUBLIC_URL;
-  const showPic = store.bs.pictureTextMode === 'combined' || store.bs.pictureTextToggle === 'picture';
-  const showText = store.bs.pictureTextMode === 'combined' || store.bs.pictureTextToggle === 'text';
+  const showPic = store.bs.pictureTextMode === 'combined' ||
+    store.bs.pictureTextToggle === 'picture';
+  const showText = store.bs.pictureTextMode === 'combined' ||
+    store.bs.pictureTextToggle === 'text';
   let next = {label: 'Next', icon: NextArrow, action: store.bs.nextPage};
   let back = {label: 'Back', icon: BackArrow, action: store.bs.backPage};
   return (

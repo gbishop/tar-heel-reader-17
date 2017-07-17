@@ -17,6 +17,7 @@ const reviewed = require('./icons/reviewed.png');
 const caution = require('./icons/caution.png');
 
 import './Find.css';
+import './Loading.css';
 
 class SearchForm extends React.Component<{store: Store}, {}> {
   form: HTMLFormElement | null;
@@ -27,11 +28,8 @@ class SearchForm extends React.Component<{store: Store}, {}> {
     }
     console.log('submit', e, this.form, this.form.search.value, this.form.category.value);
     const store = this.props.store;
-    store.fs.query.search = this.form.search.value;
-    store.fs.query.category = this.form.category.value;
-    store.fs.query.reviewed = this.form.reviewed.value;
-    store.fs.query.language = this.form.language.value;
-    store.fs.query.page = +this.form.page.value;
+    store.fs.setQuery(this.form.search.value, this.form.category.value,
+      this.form.reviewed.value, this.form.language.value, +this.form.page.value);
   }
   render() {
     const store = this.props.store;
@@ -133,7 +131,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
 const Find = observer(function Find(props: {store: Store}) {
   const store = props.store;
   if (!store.fs.promise || store.fs.promise.state === 'pending') {
-    return <h1>Find loading</h1>;
+    return <h1 className="loader">Find loading</h1>;
   } else if (store.fs.promise.state === 'rejected') {
     return <ErrorMsg error={store.fs.promise.reason} />;
   } else {
