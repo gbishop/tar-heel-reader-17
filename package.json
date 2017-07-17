@@ -14,15 +14,15 @@
     "react-dom": "^15.6.1",
     "react-key-handler": "^0.3.0",
     "react-modal": "^2.2.2",
-    "runtypes": "^0.10.1"
+    "runtypes": "^0.10.2"
   },
   "devDependencies": {
     "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.10",
-    "@types/react": "^15.0.37",
+    "@types/node": "^8.0.13",
+    "@types/react": "^15.0.38",
     "@types/react-dom": "^15.5.1",
     "@types/react-slick": "^0.14.1",
-    "@types/react-transition-group": "^1.1.1",
+    "@types/react-transition-group": "^1.1.2",
     "react-scripts-ts": "^2.4.0",
     "typescript": "^2.4.1"
   },
