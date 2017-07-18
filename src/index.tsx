@@ -32,10 +32,10 @@ function startRouter(store: Store) {
       query: window.location.search
     })
   );
-  router.on(baseUrl + '/choose/([0-9,]+)',
-    (idlist) => store.setCurrentView({
+  router.on(baseUrl + '/choose/?',
+    () => store.setCurrentView({
       view: 'choose',
-      ids: idlist
+      query: window.location.search
     }));
   router.on(baseUrl + '/', 
     () => store.setCurrentView({ view: 'land' }));
@@ -60,12 +60,12 @@ function startRouter(store: Store) {
 }
 
 function startPersist(store: Store) {
-  var persist = window.localStorage.getItem('settings');
+  var persist = window.localStorage.getItem('THR17settings');
   if (persist) {
     store.setPersist(persist);
   }
   autorun(() => {
-    window.localStorage.setItem('settings', store.persist);
+    window.localStorage.setItem('THR17settings', store.persist);
   });
 }
 

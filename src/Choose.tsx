@@ -22,6 +22,7 @@ const NextArrow = require('./icons/NextArrow.png');
 const BackArrow = require('./icons/BackArrow.png');
 
 import './Choose.css';
+import './Loading.css';
 
 function em(s: number) {
   return `${s}em`;
@@ -37,7 +38,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
   const baseUrl = process.env.PUBLIC_URL;
   const store = props.store;
   if (!store.cs.promise || store.cs.promise.state === 'pending') {
-    return <h1>Choices loading</h1>;
+    return <p className="loading"/>;
   } else if (store.cs.promise.state === 'rejected') {
     return <ErrorMsg error={store.cs.promise.reason} />;
   } else {

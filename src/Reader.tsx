@@ -21,7 +21,7 @@ const Reader = observer(function Reader(props: {store: Store}) {
   let page;
 
   if (store.bs.promise.state === 'pending') {
-    return <h1 className="loader">Loading</h1>;
+    return <p className="loading"/>;
 
   } else if (store.bs.promise.state === 'rejected') {
     console.log('store', store);

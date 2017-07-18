@@ -23,7 +23,7 @@ interface FindView {
 
 interface ChooseView {
   view: 'choose';
-  ids: string;
+  query: string;
 }
 
 interface ErrorView {
@@ -34,11 +34,28 @@ type View = LandView | BookView | FindView | ChooseView | ErrorView;
 
 type Steps = 'what' | 'rate' | 'thanks';
 
+interface PersistedData {
+  pictureTextMode: 'combined' | 'alternate';
+  fontScale: number;
+  pageTurnSize: NavButtonStyle;
+  query: {
+    search: string,
+    category: string,
+    reviewed: string,
+    audience: string,
+    language: string,
+    page: number
+  };
+  choices: string[];
+}
+
 class BookStore {
   // the link of the book to read or '' for the landing page
   @observable link: string = '';
   // an observable promise for the book associated with bookid
-  @observable promise: IPromiseBasedObservable<Book>;
+  @computed get promise() {
+     return fromPromise(fetchBook(this.link)) as IPromiseBasedObservable<Book>;
+  }
   // get the book without having to say book.promise.value all the time
   // these computed are cached so this function only runs once after a change
   @computed get book() { return this.promise.value; }
@@ -119,17 +136,17 @@ class BookStore {
     this.selected = (this.selected + 1) % n;
   }
 
-  // handle updating the book when the id changes
-  fetchHandler: {};
-  constructor() {
-    // fetch the book when the id changes
-    // figure out when to dispose of this
-    this.fetchHandler = reaction(
-      () => this.link,
-      (link) => {
-        this.promise = fromPromise(fetchBook(link)) as IPromiseBasedObservable<Book>;
-      });
+  // link to parent
+  store: Store;
+  constructor(store: Store) {
+    this.store = store;
   }
+}
+
+function parseQueryString(query: string) {
+  return JSON.parse('{"' +
+    decodeURI(query).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
+    '"}');
 }
 
 class FindStore {
@@ -147,11 +164,13 @@ class FindStore {
     search: string,
     category: string,
     reviewed: string,
+    audience: string,
     language: string,
     page: number) {
     this.query.search = search;
     this.query.category = category;
     this.query.reviewed = reviewed;
+    this.query.audience = audience;
     this.query.language = language;
     this.query.page = +page;
   }
@@ -166,35 +185,31 @@ class FindStore {
     return parts.join('&');
   }
   // an observable promise for the find result associated with the fs.query
-  @observable promise: IPromiseBasedObservable<FindResult>;
+  @computed get promise() {
+     return fromPromise(fetchFind(this.queryString)) as IPromiseBasedObservable<FindResult>;
+  }
   // get the find result without having to say promise.value all the time
   // these computed are cached so this function only runs once after a change
   @computed get find() { return this.promise.value; }
   // set the find view
   @action.bound setView(v: FindView) {
     const search = v.query.substring(1);
-    this.queryWatch = true;
     if (search.length > 0) {
-      const o = JSON.parse('{"' +
-        decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
-        '"}');
+      const o = parseQueryString(search);
       for (var p in o) {
         if (this.query.hasOwnProperty(p)) { this.query[p] = o[p];
         }
       }
     }
+    console.log('set view', this.queryString);
   }
 
+  // link to parent
+  store: Store;
+
   // handle updating the find result
-  findHandler: {};
-  @observable queryWatch = false;
-  constructor() {
-    this.findHandler = reaction(
-      () => [ this.queryString, this.queryWatch ],
-      ([query, watch]) => {
-        this.promise = fromPromise(fetchFind(this.queryString)) as
-          IPromiseBasedObservable<FindResult>;
-      });
+  constructor(store: Store) {
+    this.store = store;
   }
 }
 
@@ -221,33 +236,34 @@ class ChooseStore {
   }
 
   // an observable promise for the choose result
-  @observable promise: IPromiseBasedObservable<FindResult>;
+  @computed get promise() {
+    return fromPromise(fetchChoose(this.list)) as IPromiseBasedObservable<FindResult>;
+  }
   @computed get choose() { return this.promise.value; }
   @computed get nchoices() { return this.choose.books.length; }
 
   @action.bound setView(v: ChooseView) {
-    this.list = v.ids.split(',');
-    this.visible = 0;
-    this.selected = -1;
+    const qs = v.query.substring(1);
+    console.log('qs', qs);
+    if (qs.length > 1) {
+      const queries = parseQueryString(qs);
+      console.log('qu', queries);
+      this.list = queries.favorites.split(',');
+      this.visible = 0;
+      this.selected = -1;
+    }
   }
 
-  // handle updating choose result
-  chooseHandler: {};
-
-  constructor() {
-    this.chooseHandler = reaction(
-      () => this.list,
-      (list) => {
-        this.promise = fromPromise(fetchChoose(this.list)) as
-          IPromiseBasedObservable<FindResult>;
-      });
+  store: Store;
+  constructor(store: Store) {
+    this.store = store;
   }
 }
 
 class Store {
-  public bs = new BookStore();
-  public fs = new FindStore();
-  public cs = new ChooseStore();
+  public bs: BookStore;
+  public fs: FindStore;
+  public cs: ChooseStore;
   
   // update the state typically from a URL
   @observable currentView: ViewName = 'land';
@@ -301,7 +317,7 @@ class Store {
     } else if (this.currentView === 'find') {
       return '/find/?' + this.fs.queryString;
     } else if (this.currentView === 'choose') {
-      return `/choose/${this.cs.list.join(',')}`;
+      return `/choose/?favorites=${this.cs.list.join(',')}`;
     } else {
       return '/';
     }
@@ -334,7 +350,6 @@ class Store {
   @computed get pageTurnWidth() {
     const nbs = navButtonStyles[this.pageTurnSize];
     const w = parseFloat(nbs.width) * parseFloat(nbs.fontSize);
-    console.log('ptw', this.pageTurnSize, w);
     return w;
   }
 
@@ -354,16 +369,19 @@ class Store {
     this.screen.height = window.innerHeight;
   }
   // persistence version
-  readonly persistVersion = 2;
+  readonly persistVersion = 3;
   // json string to persist the state
   @computed get persist(): string {
-    return JSON.stringify({
+    const json = JSON.stringify({
       version: this.persistVersion,
       pictureTextMode: this.bs.pictureTextMode,
       fontScale: this.fontScale,
       pageTurnSize: this.pageTurnSize,
-      query: this.fs.query
+      query: this.fs.query,
+      choices: this.cs.list
     });
+    console.log('set persist', json);
+    return json;
   }
   // restore the state from json
   @action.bound setPersist(js: string) {
@@ -378,7 +396,14 @@ class Store {
       this.fs.query.audience = v.query.audience;
       this.fs.query.language = v.query.language;
       this.fs.query.page = v.query.page;
+      this.cs.list = v.choices;
     }
+  }
+
+  constructor() {
+    this.fs = new FindStore(this);
+    this.cs = new ChooseStore(this);
+    this.bs = new BookStore(this);
   }
 }
 

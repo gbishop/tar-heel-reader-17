@@ -29,7 +29,8 @@ class SearchForm extends React.Component<{store: Store}, {}> {
     console.log('submit', e, this.form, this.form.search.value, this.form.category.value);
     const store = this.props.store;
     store.fs.setQuery(this.form.search.value, this.form.category.value,
-      this.form.reviewed.value, this.form.language.value, +this.form.page.value);
+      this.form.reviewed.value, this.form.audience.value, this.form.language.value,
+      +this.form.page.value);
   }
   render() {
     const store = this.props.store;
@@ -131,7 +132,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
 const Find = observer(function Find(props: {store: Store}) {
   const store = props.store;
   if (!store.fs.promise || store.fs.promise.state === 'pending') {
-    return <h1 className="loader">Find loading</h1>;
+    return <p className="loading"/>;
   } else if (store.fs.promise.state === 'rejected') {
     return <ErrorMsg error={store.fs.promise.reason} />;
   } else {
