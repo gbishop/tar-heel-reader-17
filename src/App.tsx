@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
+import Home from './Home';
 import Reader from './Reader';
 import Find from './Find';
 import Choose from './Choose';
@@ -12,8 +13,8 @@ class App extends React.Component<{store: Store}, {}> {
     const store = this.props.store;
     switch (store.currentView) {
 
-      case 'land':
-        return <h1><a href="find/">Find a book</a></h1>;
+      case 'home':
+        return <Home store={store} />;
         
       case 'book':
         return <Reader store={store} />;

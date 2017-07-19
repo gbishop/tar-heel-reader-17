@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import Store from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
+import Menu from './Menu';
 
 const stars = {
   'Not yet rated': require('./icons/0stars.png'),
@@ -36,6 +37,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
     const store = this.props.store;
     return (
       <form id="myform" onSubmit={this.onSubmit} ref={(f) => this.form = f}>
+        <Menu store={store} />
         <label htmlFor="I-search" >Search for</label>
         <input
           type="search"

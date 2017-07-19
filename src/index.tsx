@@ -38,9 +38,9 @@ function startRouter(store: Store) {
       query: window.location.search
     }));
   router.on(baseUrl + '/', 
-    () => store.setCurrentView({ view: 'land' }));
+    () => store.setCurrentView({ view: 'home' }));
   router.configure({
-    notfound: () => store.setCurrentView({ view: 'land' }),
+    notfound: () => store.setCurrentView({ view: 'home' }),
     html5history: true
   });
   router.init();

@@ -6,6 +6,7 @@ import { BookView } from './Store';
 import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
 import NavFrame from './NavFrame';
+import Menu from './Menu';
 
 const stars = {
   'Not yet rated': require('./icons/0stars.png'),
@@ -147,6 +148,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
       <div
         className="Choose"
       >
+        <Menu store={store} />
         <NavFrame
           store={store}
           next={next}

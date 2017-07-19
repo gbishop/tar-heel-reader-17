@@ -1,0 +1,89 @@
+.AriaMenuButton {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  width: 3em;
+  height: 3em;
+}
+
+.AriaMenuButton-trigger {
+  cursor: pointer;
+  display: inline-block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0.1em solid #D5D5D5;
+  border-radius: 0.25em;
+  font-weight: bold;
+  filter: grayscale(100%);
+  transition: 1s;
+}
+
+.AriaMenuButton-trigger img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.AriaMenuButton-trigger:hover,
+.AriaMenuButton-trigger:focus,
+.AriaMenuButton-trigger.is-open {
+  border-color: #CCC;
+  filter: grayscale(0);
+}
+
+.AriaMenuButton-trigger:active,
+.AriaMenuButton-trigger.is-open {
+  background-color: #DCDCDC;
+  background-image: none;
+  border-color: #B5B5B5;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.AriaMenuButton-menu {
+  background: #fff;
+  border: 1px solid rgba(200, 200, 200, 0.4);
+  list-style-type: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 99;
+  padding-left: 0;
+  border-radius: 3px;
+  margin: 4px 0 0 0;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  width: 215px;
+}
+
+.AriaMenuButton-menu--flushRight {
+  right: 0;
+}
+
+.AriaMenuButton-menuItem {
+  cursor: pointer;
+  padding: 8px;
+  border-bottom: 1px solid #EEE;
+}
+
+.AriaMenuButton-menuItemWrapper:first-of-type .AriaMenuButton-menuItem {
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.AriaMenuButton-menuItemWrapper:last-of-type .AriaMenuButton-menuItem {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.AriaMenuButton-menuItem:hover,
+.AriaMenuButton-menuItem:focus {
+  background-color: #4183C4;
+  color: #fff;
+}
+
+.AriaMenuButton-menuItem.is-selected {
+  cursor: default;
+  font-weight: bold;
+}
+

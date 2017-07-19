@@ -66,3 +66,20 @@
   overflow: hidden;
   z-index: 10;
 }
+
+.Reader .AriaMenuButton {
+  width: 1em;
+  height: 1em;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Reader .AriaMenuButton-trigger {
+  opacity: 0.5;
+}
+
+.Reader .AriaMenuButton-trigger:hover, .Reader .AriaMenuButton-trigger:focus {
+  opacity: 1;
+}
+

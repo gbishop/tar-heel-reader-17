@@ -5,6 +5,7 @@ import Controls from './Controls';
 import ErrorMsg from './ErrorMsg';
 import NavFrame from './NavFrame';
 import { NavButton } from './NavFrame';
+import Menu from './Menu';
 
 import './Reader.css';
 import './Loading.css';
@@ -45,6 +46,7 @@ const Reader = observer(function Reader(props: {store: Store}) {
 
   return (
     <div className="Reader">
+      <Menu store={store} />
       {page}
       <Controls store={props.store} />
     </div>

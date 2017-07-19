@@ -50,3 +50,21 @@
   font-size: 0.8em;
 }
 
+.Choose .AriaMenuButton {
+  width: 1em;
+  height: 1em;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Choose .AriaMenuButton-trigger {
+  opacity: 0.5;
+}
+
+.Choose .AriaMenuButton-trigger:hover, .Choose .AriaMenuButton-trigger:focus {
+  opacity: 1;
+  width: 3em;
+  height: 3em;
+}
+

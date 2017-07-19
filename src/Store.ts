@@ -4,10 +4,10 @@ import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 
-type ViewName = 'land' | 'book' | 'find' | 'choose' | 'error';
+type ViewName = 'home' | 'book' | 'find' | 'choose' | 'error' | 'settings';
 
-interface LandView {
-  view: 'land';
+interface HomeView {
+  view: 'home';
 }
 
 export interface BookView {
@@ -18,19 +18,23 @@ export interface BookView {
 
 interface FindView {
   view: 'find';
-  query: string;
+  query?: string;
 }
 
 interface ChooseView {
   view: 'choose';
-  query: string;
+  query?: string;
 }
 
 interface ErrorView {
   view: 'error';
 }
 
-type View = LandView | BookView | FindView | ChooseView | ErrorView;
+interface SettingsView {
+  view: 'settings';
+}
+
+type View = HomeView | BookView | FindView | ChooseView | ErrorView | SettingsView;
 
 type Steps = 'what' | 'rate' | 'thanks';
 
@@ -50,7 +54,7 @@ interface PersistedData {
 }
 
 class BookStore {
-  // the link of the book to read or '' for the landing page
+  // the link of the book to read
   @observable link: string = '';
   // an observable promise for the book associated with bookid
   @computed get promise() {
@@ -193,7 +197,7 @@ class FindStore {
   @computed get find() { return this.promise.value; }
   // set the find view
   @action.bound setView(v: FindView) {
-    const search = v.query.substring(1);
+    const search = v.query ? v.query.substring(1) : '';
     if (search.length > 0) {
       const o = parseQueryString(search);
       for (var p in o) {
@@ -243,7 +247,7 @@ class ChooseStore {
   @computed get nchoices() { return this.choose.books.length; }
 
   @action.bound setView(v: ChooseView) {
-    const qs = v.query.substring(1);
+    const qs = v.query ? v.query.substring(1) : '';
     console.log('qs', qs);
     if (qs.length > 1) {
       const queries = parseQueryString(qs);
@@ -266,11 +270,12 @@ class Store {
   public cs: ChooseStore;
   
   // update the state typically from a URL
-  @observable currentView: ViewName = 'land';
+  @observable currentView: ViewName = 'home';
   @action.bound setCurrentView(v: View) {
+    console.log('setCurrentView', v);
     switch (v.view) {
-      case 'land':
-        this.currentView = 'land';
+      case 'home':
+        this.currentView = 'home';
         break;
       case 'book':
         if (this.currentView === 'choose') {
@@ -288,6 +293,9 @@ class Store {
       case 'choose':
         this.currentView = 'choose';
         this.cs.setView(v);
+        break;
+      case 'settings':
+        this.toggleControlsVisible();
         break;
       default:
       case 'error':
