@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import NRKeyHandler from './NRKeyHandler';
 import Store from './Store';
 import { BookView } from './Store';
 import ErrorMsg from './ErrorMsg';
@@ -8,31 +7,14 @@ import Controls from './Controls';
 import NavFrame from './NavFrame';
 import Menu from './Menu';
 
-const stars = {
-  'Not yet rated': require('./icons/0stars.png'),
-  '1 stars': require('./icons/1stars.png'),
-  '1.5 stars': require('./icons/1.5stars.png'),
-  '2 stars': require('./icons/2stars.png'),
-  '2.5 stars': require('./icons/2.5stars.png'),
-  '3 stars': require('./icons/3stars.png')
-};
-
-const reviewed = require('./icons/reviewed.png');
-const caution = require('./icons/caution.png');
-const NextArrow = require('./icons/NextArrow.png');
-const BackArrow = require('./icons/BackArrow.png');
-
 import './Choose.css';
 import './Loading.css';
 
+const NextArrow = require('./icons/NextArrow.png');
+const BackArrow = require('./icons/BackArrow.png');
+
 function em(s: number) {
   return `${s}em`;
-}
-
-interface RProps {
-  store: Store;
-  width?: number;
-  height?: number;
 }
 
 const Choose = observer(function Choose(props: {store: Store}) {
@@ -43,7 +25,6 @@ const Choose = observer(function Choose(props: {store: Store}) {
   } else if (store.cs.promise.state === 'rejected') {
     return <ErrorMsg error={store.cs.promise.reason} />;
   } else {
-    const readit = () => 1;
     // all these calculations are in em units
     // estimate the size of the region for choices
     const width = store.screen.width / store.baseFontSize - 2 * store.pageTurnWidth;

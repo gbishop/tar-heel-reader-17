@@ -5,7 +5,6 @@ import Home from './Home';
 import Reader from './Reader';
 import Find from './Find';
 import Choose from './Choose';
-import ErrorMsg from './ErrorMsg';
 
 @observer
 class App extends React.Component<{store: Store}, {}> {

@@ -1,4 +1,4 @@
-import { observable, computed, action, reaction } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
@@ -37,21 +37,6 @@ interface SettingsView {
 type View = HomeView | BookView | FindView | ChooseView | ErrorView | SettingsView;
 
 type Steps = 'what' | 'rate' | 'thanks';
-
-interface PersistedData {
-  pictureTextMode: 'combined' | 'alternate';
-  fontScale: number;
-  pageTurnSize: NavButtonStyle;
-  query: {
-    search: string,
-    category: string,
-    reviewed: string,
-    audience: string,
-    language: string,
-    page: number
-  };
-  choices: string[];
-}
 
 class BookStore {
   // the link of the book to read

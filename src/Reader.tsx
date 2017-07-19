@@ -4,7 +4,6 @@ import Store from './Store';
 import Controls from './Controls';
 import ErrorMsg from './ErrorMsg';
 import NavFrame from './NavFrame';
-import { NavButton } from './NavFrame';
 import Menu from './Menu';
 
 import './Reader.css';

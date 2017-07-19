@@ -1,18 +1,10 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-const NextArrow = require('./icons/NextArrow.png');
-const BackArrow = require('./icons/BackArrow.png');
 import Store from './Store';
-import Controls from './Controls';
 import NRKeyHandler from './NRKeyHandler';
-import ErrorMsg from './ErrorMsg';
 import { navButtonStyles } from './Styles';
 
 import './NavFrame.css';
-
-function em(s: number) {
-  return `${s}em`;
-}
 
 export interface NavButton {
   action: () => void;
