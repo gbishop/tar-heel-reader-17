@@ -46,6 +46,7 @@ const NavFrame = observer(function NavFrame(
       mouseSwipe={false}
       onSwipedLeft={mover} 
       onSwipedRight={chooser}
+      preventDefaultEvent={false}
     >
         <div className="NavFrame_FlexContainer">
           {store.pageTurnSize !== 'off' && props.back && props.back.label &&
