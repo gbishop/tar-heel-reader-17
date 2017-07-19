@@ -17,7 +17,7 @@
   border-radius: 0.25em;
   font-weight: bold;
   filter: grayscale(100%);
-  transition: 1s;
+  transition: filter 1s;
 }
 
 .AriaMenuButton-trigger img {

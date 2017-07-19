@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import Store from './Store';
 import NRKeyHandler from './NRKeyHandler';
 import { navButtonStyles } from './Styles';
+import Swipe from 'react-swipe-component';
 
 import './NavFrame.css';
 
@@ -40,25 +41,30 @@ const NavFrame = observer(function NavFrame(
   let bstyle = navButtonStyles[store.pageTurnSize];
 
   return (
-    <div className="NavFrame">
-      <div className="NavFrame_FlexContainer">
-        {store.pageTurnSize !== 'off' && props.back && props.back.label &&
-        mybutton(bstyle, props.back)}
-        <div className="NavFrame_PageContainer">
-          {props.children}
+    <Swipe
+      className="NavFrame"
+      mouseSwipe={false}
+      onSwipedLeft={mover} 
+      onSwipedRight={chooser}
+    >
+        <div className="NavFrame_FlexContainer">
+          {store.pageTurnSize !== 'off' && props.back && props.back.label &&
+          mybutton(bstyle, props.back)}
+          <div className="NavFrame_PageContainer">
+            {props.children}
+          </div>
+          {store.pageTurnSize !== 'off' && props.next && props.next.label &&
+          mybutton(bstyle, props.next)}
         </div>
-        {store.pageTurnSize !== 'off' && props.next && props.next.label &&
-        mybutton(bstyle, props.next)}
-      </div>
-      { mover && <NRKeyHandler
-        keyValue={'ArrowRight'}
-        onKeyHandle={mover}
-      /> }
-      { chooser && <NRKeyHandler
-        keyValue={'ArrowLeft'}
-        onKeyHandle={chooser}
-      /> }
-    </div>
+        { mover && <NRKeyHandler
+          keyValue={'ArrowRight'}
+          onKeyHandle={mover}
+        /> }
+        { chooser && <NRKeyHandler
+          keyValue={'ArrowLeft'}
+          onKeyHandle={chooser}
+        /> }
+    </Swipe>
   );
 
 });
