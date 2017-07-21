@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
-import ErrorMsg from './ErrorMsg';
 import Controls from './Controls';
 import Menu from './Menu';
+import loading from './Loading';
 
 const stars = {
   'Not yet rated': require('./icons/0stars.png'),
@@ -133,45 +133,43 @@ class SearchForm extends React.Component<{store: Store}, {}> {
 
 const Find = observer(function Find(props: {store: Store}) {
   const store = props.store;
-  if (!store.fs.promise || store.fs.promise.state === 'pending') {
-    return <p className="loading"/>;
-  } else if (store.fs.promise.state === 'rejected') {
-    return <ErrorMsg error={store.fs.promise.reason} />;
-  } else {
-    const baseUrl = process.env.PUBLIC_URL;
-    const findResults = store.fs.find.books.map(b => (
-      <li key={b.ID}>
-        <button 
-          className="Find-ReadButton"
-          onClick={e => store.setCurrentView({
-            view: 'book',
-            link: b.link, 
-            page: 1})
-          } 
-        >
-          <img src={baseUrl + b.cover.url} alt={b.title} />
-        </button>
-        <h1>{b.title}</h1>
-        <p className="Find-Author">{b.author}</p>
-        <img className="Find-Icon" src={stars[b.rating.text]} title={b.rating.text} />
-        {b.reviewed && (<img src={reviewed} className="Find-Icon" alt="reviewed" />)}
-        {b.caution && (<img src={caution} className="Find-Icon" alt="caution" />)}
-        <p className="Find-Pages">{`${b.pages} pages.`}</p>
-        <div style={{clear: 'both'}} />
-      </li>));
-    return (
-      <div
-        className="Find"
-      >
-        <div className="Find-Form">
-          <SearchForm store={store} />
-        </div>
-        <ul className="Find-Results" >
-          {findResults}
-        </ul>
-        <Controls store={store} />
-      </div>);
+  const waitmsg = loading(store.fs.promise);
+  if (waitmsg) {
+    return waitmsg;
   }
+  const baseUrl = process.env.PUBLIC_URL;
+  const findResults = store.fs.find.books.map(b => (
+    <li key={b.ID}>
+      <button 
+        className="Find-ReadButton"
+        onClick={e => store.setCurrentView({
+          view: 'book',
+          link: b.link, 
+          page: 1})
+        } 
+      >
+        <img src={baseUrl + b.cover.url} alt={b.title} />
+      </button>
+      <h1>{b.title}</h1>
+      <p className="Find-Author">{b.author}</p>
+      <img className="Find-Icon" src={stars[b.rating.text]} title={b.rating.text} />
+      {b.reviewed && (<img src={reviewed} className="Find-Icon" alt="reviewed" />)}
+      {b.caution && (<img src={caution} className="Find-Icon" alt="caution" />)}
+      <p className="Find-Pages">{`${b.pages} pages.`}</p>
+      <div style={{clear: 'both'}} />
+    </li>));
+  return (
+    <div
+      className="Find"
+    >
+      <div className="Find-Form">
+        <SearchForm store={store} />
+      </div>
+      <ul className="Find-Results" >
+        {findResults}
+      </ul>
+      <Controls store={store} />
+    </div>);
 });
 
 export default Find;

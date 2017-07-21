@@ -2,12 +2,11 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
 import Controls from './Controls';
-import ErrorMsg from './ErrorMsg';
 import NavFrame from './NavFrame';
 import Menu from './Menu';
+import loading from './Loading';
 
 import './Reader.css';
-import './Loading.css';
 
 const NextArrow = require('./icons/NextArrow.png');
 const BackArrow = require('./icons/BackArrow.png');
@@ -19,21 +18,9 @@ function em(s: number) {
 const Reader = observer(function Reader(props: {store: Store}) {
   const store = props.store;
   let page;
-
-  if (store.bs.promise.state === 'pending') {
-    return <p className="loading"/>;
-
-  } else if (store.bs.promise.state === 'rejected') {
-    console.log('store', store);
-    return (
-      <div>
-        <ErrorMsg error={store.bs.promise.reason} />
-        <p> /1 is the only functioning url right now</p>
-      </div>
-    );
-
-  } else if (store.bs.promise.value.link !== store.bs.link) {
-    return <h1>Waiting</h1>;
+  const waitmsg = loading(store.bs.promise);
+  if (waitmsg) {
+    return waitmsg;
   }
   if (store.bs.pageno === 1) {
     page = <TitlePage store={store} />;

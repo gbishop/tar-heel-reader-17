@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
+import { IPromiseBasedObservable } from 'mobx-utils';
+import './Loading.css';
 
 const ErrorMsg = observer((props: { error: Response|Error }) => {
   const error = props.error;
@@ -12,4 +14,15 @@ const ErrorMsg = observer((props: { error: Response|Error }) => {
   }
 });
 
-export default ErrorMsg;
+// tslint:disable-next-line
+export function loading(promise: IPromiseBasedObservable<any>) {
+  if (promise.state === 'rejected') {
+    return <ErrorMsg error={promise.reason} />;
+  } else if (promise.state === 'pending') {
+    return <p className="loading" />;
+  } else {
+    return false;
+  }
+}
+
+export default loading;
