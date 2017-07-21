@@ -251,7 +251,7 @@ class ChooseStore {
 }
 
 class MessagesStore {
-  @observable locale = 'de';
+  @observable locale = 'en';
   @computed get promise() {
     return fromPromise(fetchMessages(this.locale)) as IPromiseBasedObservable<Messages>;
   }

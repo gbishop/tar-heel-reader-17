@@ -101,13 +101,14 @@ const Choose = observer(function Choose(props: {store: Store}) {
         />);
     }
   }
+  const M = store.ms.M;
   const next = {
     icon: NextArrow,
-    label: nVisible < store.cs.nchoices ? 'Next' : '',
+    label: nVisible < store.cs.nchoices ? M.next : '',
     action: () => store.cs.stepVisible(nVisible)};
   const back = {
     icon: BackArrow,
-    label: nVisible < store.cs.nchoices ? 'Back' : '',
+    label: nVisible < store.cs.nchoices ? M.back : '',
     action: () => store.cs.stepVisible(-nVisible)};
   const mover = () => {
     if (nVisible > 1 && store.cs.selected < nVisible - 1) {

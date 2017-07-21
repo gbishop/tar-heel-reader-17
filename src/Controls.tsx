@@ -8,6 +8,7 @@ import './Controls.css';
 
 const Controls = observer(function Controls(props: {store: Store}) {
   const store = props.store;
+  const M = store.ms.M;
   const customStyles = {
     content : {
       top                   : '50%',
@@ -35,12 +36,12 @@ const Controls = observer(function Controls(props: {store: Store}) {
       />
       <Modal
         isOpen={store.controlsVisible}
-        contentLabel="Reading controls"
+        contentLabel={M.ReadingControls}
         style={customStyles}
       >
         <div className="Controls">
           <h1>Reading controls</h1>
-          <label>Font Size:&nbsp;
+          <label>{M.FontSize}:&nbsp;
             <input
               type="range"
               min="0"
@@ -49,35 +50,35 @@ const Controls = observer(function Controls(props: {store: Store}) {
               onChange={e => store.setFontScale(+e.target.value)}
             />
           </label>
-          <label>Alternate Picture and Text:&nbsp;
+          <label>{M.AlternatePictureAndText}:&nbsp;
             <input
               type="checkbox"
               checked={store.bs.pictureTextMode === 'alternate'}
               onChange={e => store.bs.setAlternatePictureText(e.target.checked)}
             />
           </label>
-          <label>Button Size:&nbsp;
+          <label>{M.ButtonSize}:&nbsp;
             <select
               value={store.pageTurnSize}
               onChange={e => store.setPageTurnSize(e.target.value)}
             >
-              <option value="normal">Normal</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-              <option value="off">None</option>
+              <option value="normal">{M.normal}</option>
+              <option value="medium">{M.medium}</option>
+              <option value="large">{M.large}</option>
+              <option value="off">{M.off}</option>
             </select>
           </label>
-          <label>Voice: &nbsp;
+          <label>{M.Voice}: &nbsp;
             <select
               value={store.voice && store.voice.voiceURI || 'silent'}
               onChange={e => store.setVoice(voiceMap[e.target.value])}
             >
-              <option value="silent">Silent</option>
+              <option value="silent">{M.silent}</option>
               {voiceOptions}
             </select>
           </label>
           <button onClick={store.toggleControlsVisible}>
-            Done
+            {M.Close}
           </button>
         </div>
       </Modal>

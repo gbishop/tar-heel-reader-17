@@ -35,97 +35,97 @@ class SearchForm extends React.Component<{store: Store}, {}> {
   }
   render() {
     const store = this.props.store;
+    const M = store.ms.M;
     return (
       <form id="myform" onSubmit={this.onSubmit} ref={(f) => this.form = f}>
         <Menu store={store} modifiers="inline"/>
-        <label htmlFor="I-search" >Search for</label>
+        <label htmlFor="I-search" >{M.SearchFor}</label>
         <input
           type="search"
           defaultValue={store.fs.query.search}
           id="I-search"
           name="search"
-          placeholder="Enter text to search"
-          title="Enter text to search"
+          placeholder={M.EnterTextToSearch}
         />
-        <label htmlFor="I-category" >Topics</label>
+        <label htmlFor="I-category" >{M.Topics}</label>
         <select
           id="I-category"
           name="category"
           defaultValue={store.fs.query.category}
         >
-          <option value="" >All Topics</option>
-          <option value="Alph" >Alphabet</option>
-          <option value="Anim" >Animals and Nature</option>
-          <option value="ArtM" >Art and Music</option>
-          <option value="Biog" >Biographies</option>
-          <option value="Fair" >Fairy and Folk Tales</option>
-          <option value="Fict" >Fiction</option>
-          <option value="Food" >Foods</option>
-          <option value="Heal" >Health</option>
-          <option value="Hist" >History</option>
-          <option value="Holi" >Holidays</option>
-          <option value="Math" >Math and Science</option>
-          <option value="Nurs" >Nursery Rhymes</option>
-          <option value="Peop" >People and Places</option>
-          <option value="Poet" >Poetry</option>
-          <option value="Recr" >Recreation and Leisure</option>
-          <option value="Spor" >Sports</option>
+          <option value="" >{M.AllTopics}</option>
+          <option value="Alph" >{M.Alph}</option>
+          <option value="Anim" >{M.Anim}</option>
+          <option value="ArtM" >{M.ArtM}</option>
+          <option value="Biog" >{M.Biog}</option>
+          <option value="Fair" >{M.Fair}</option>
+          <option value="Fict" >{M.Fict}</option>
+          <option value="Food" >{M.Food}</option>
+          <option value="Heal" >{M.Heal}</option>
+          <option value="Hist" >{M.Hist}</option>
+          <option value="Holi" >{M.Holi}</option>
+          <option value="Math" >{M.Math}</option>
+          <option value="Nurs" >{M.Nurs}</option>
+          <option value="Peop" >{M.Peop}</option>
+          <option value="Poet" >{M.Poet}</option>
+          <option value="Recr" >{M.Recr}</option>
+          <option value="Spor" >{M.Spor}</option>
         </select>
-        <label htmlFor="I-reviewed" >Review status</label>
+        <label htmlFor="I-reviewed" >{M.ReviewStatus}</label>
         <select
           id="I-reviewed"
           name="reviewed"
           defaultValue={store.fs.query.reviewed}
         >
-          <option value="R">Reviewed only</option>
-          <option value="" >Include unreviewed</option>
+          <option value="R">{M.ReviewedOnly}</option>
+          <option value="" >{M.IncludeUnreviewed}</option>
         </select>
-        <label htmlFor="I-audience" >Audience</label>
+        <label htmlFor="I-audience" >{M.Audience}</label>
         <select
           id="I-audience"
           name="audience"
           defaultValue={store.fs.query.audience}
         >
-          <option value="E" >Rated E/Everybody</option>
-          <option value="C" >Rated C/Caution</option>
-          <option value="" >Any rating</option>
+          <option value="E" >{M.RatedE}</option>
+          <option value="C" >{M.RatedC}</option>
+          <option value="" >{M.AnyRating}</option>
         </select>
-        <label htmlFor="I-language" >Language</label>
+        <label htmlFor="I-language" >{M.Language}</label>
         <select
           id="I-language"
           name="language"
           defaultValue={store.fs.query.language}
         >
-          <option value="ar" >Arabic</option>
-          <option value="eu" >Basque</option>
-          <option value="ca" >Catalan</option>
-          <option value="zh" >Chinese</option>
-          <option value="chr" >Cherokee</option>
-          <option value="da" >Danish</option>
-          <option value="nl" >Dutch</option>
-          <option value="en" >English</option>
-          <option value="fil" >Filipino</option>
-          <option value="fi" >Finnish</option>
-          <option value="fr" >French</option>
-          <option value="gl" >Galician</option>
-          <option value="de" >German</option>
-          <option value="el" >Greek</option>
-          <option value="he" >Hebrew</option>
-          <option value="is" >Icelandic</option>
-          <option value="id" >Indonesian</option>
-          <option value="it" >Italian</option>
-          <option value="ja" >Japanese</option>
-          <option value="la" >Latin</option>
-          <option value="no" >Norwegian</option>
-          <option value="pl" >Polish</option>
-          <option value="pt" >Portuguese</option>
-          <option value="sa" >Sanskrit</option>
-          <option value="es" >Spanish</option>
-          <option value="sv" >Swedish</option>
-          <option value="tr" >Turkish</option>
+          <option value="ar" >{M.ar}</option>
+          <option value="eu" >{M.eu}</option>
+          <option value="ca" >{M.ca}</option>
+          <option value="zh" >{M.zh}</option>
+          <option value="chr" >{M.chr}</option>
+          <option value="da" >{M.da}</option>
+          <option value="nl" >{M.nl}</option>
+          <option value="en" >{M.en}</option>
+          <option value="fil" >{M.fil}</option>
+          <option value="fi" >{M.fi}</option>
+          <option value="fr" >{M.fr}</option>
+          <option value="gl" >{M.gl}</option>
+          <option value="de" >{M.de}</option>
+          <option value="el" >{M.el}</option>
+          <option value="he" >{M.he}</option>
+          <option value="is" >{M.is}</option>
+          <option value="id" >{M.id}</option>
+          <option value="it" >{M.it}</option>
+          <option value="ja" >{M.ja}</option>
+          <option value="la" >{M.la}</option>
+          <option value="no" >{M.no}</option>
+          <option value="pl" >{M.pl}</option>
+          <option value="pt" >{M.pt}</option>
+          <option value="sa" >{M.sa}</option>
+          <option value="es" >{M.es}</option>
+          <option value="sv" >{M.sv}</option>
+          <option value="tr" >{M.tr}</option>
         </select>
         <input type="hidden" value="1" id="I-page" name="page"  />
-        <input type="submit" value="Search" id="I-"   />
+        <input type="submit" value={M.Search} id="I-"   />
       </form>
     );
   }
