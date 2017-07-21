@@ -45,7 +45,7 @@ const Reader = observer(function Reader(props: {store: Store}) {
 
   return (
     <div className="Reader">
-      <Menu store={store} />
+      <Menu store={store} modifiers="gray discrete" />
       {page}
       <Controls store={props.store} />
     </div>

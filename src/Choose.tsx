@@ -129,7 +129,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
       <div
         className="Choose"
       >
-        <Menu store={store} />
+        <Menu store={store} modifiers="discrete gray"/>
         <NavFrame
           store={store}
           next={next}

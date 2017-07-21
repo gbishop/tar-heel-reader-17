@@ -1,9 +1,8 @@
 .AriaMenuButton {
-  display: inline-block;
   position: relative;
-  vertical-align: middle;
-  width: 3em;
-  height: 3em;
+  width: 4em;
+  height: 4em;
+  font-size: 1rem;
 }
 
 .AriaMenuButton-trigger {
@@ -16,8 +15,6 @@
   border: 0.1em solid #D5D5D5;
   border-radius: 0.25em;
   font-weight: bold;
-  filter: grayscale(100%);
-  transition: filter 1s;
 }
 
 .AriaMenuButton-trigger img {
@@ -87,3 +84,42 @@
   font-weight: bold;
 }
 
+.AriaMenuButton {
+}
+
+.AriaMenuButton.AriaMenuButton-discrete {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.AriaMenuButton-discrete .AriaMenuButton-trigger {
+  transform: scale(0.33);
+  transform-origin: left top;
+  transition: all 1s;
+}
+
+.AriaMenuButton-discrete .AriaMenuButton-trigger:hover, .AriaMenuButton-discrete .AriaMenuButton-trigger:focus {
+  transform: scale(1);
+}
+
+.AriaMenuButton-discrete .AriaMenuButton-trigger {
+  opacity: 0.4;
+}
+
+.AriaMenuButton-discrete .AriaMenuButton-trigger:hover, .AriaMenuButton-discrete .AriaMenuButton-trigger:focus {
+  opacity: 1;
+}
+
+.AriaMenuButton.AriaMenuButton-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.AriaMenuButton-gray .AriaMenuButton-trigger {
+  filter: grayscale(100%);
+}
+
+.AriaMenuButton-gray .AriaMenuButton-trigger:hover, .AriaMenuButton-gray .AriaMenuButton-trigger:focus {
+  filter: grayscale(0%);
+}

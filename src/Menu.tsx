@@ -2,35 +2,42 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
 import { Wrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
-
 import './Menu.css';
 
 const OldWell = require('./icons/Well.png');
 
+interface SiteMenuProps {
+  store: Store;
+  modifiers?: string;
+}
+
 @observer
-class SiteMenu extends React.Component<{store: Store}, {}> {
+class SiteMenu extends React.Component<SiteMenuProps, {}> {
   render() {
+    const mods = this.props.modifiers && this.props.modifiers.split(' ') || [];
+    const classes = mods.map((mod) => 'AriaMenuButton-' + mod).join(' ');
+    const M = this.props.store.ms.M;
     return (
       <Wrapper
-        className="AriaMenuButton"
+        className={'AriaMenuButton ' + classes}
         onSelection={(v, e) => this.props.store.setCurrentView({view: v})}
       >
         <Button className="AriaMenuButton-trigger">
-          <img src={OldWell} alt="Menu" />
+          <img src={OldWell} alt="Menu" title="Old Well Menu"/>
         </Button>
         <Menu>
           <ul className="AriaMenuButton-menu">
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="home" className="AriaMenuButton-item">Home</MenuItem>
+              <MenuItem value="home" className="AriaMenuButton-item">{M.home}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="find" className="AriaMenuButton-item">Find</MenuItem>
+              <MenuItem value="find" className="AriaMenuButton-item">{M.find}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="choose" className="AriaMenuButton-item">Choose</MenuItem>
+              <MenuItem value="choose" className="AriaMenuButton-item">{M.choose}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="settings" className="AriaMenuButton-item">Settings</MenuItem>
+              <MenuItem value="settings" className="AriaMenuButton-item">{M.settings}</MenuItem>
             </li>
           </ul>
         </Menu>

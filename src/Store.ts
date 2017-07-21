@@ -3,6 +3,7 @@ import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
+import { Messages, fetchMessages } from './Messages';
 
 type ViewName = 'home' | 'book' | 'find' | 'choose' | 'error' | 'settings';
 
@@ -249,10 +250,26 @@ class ChooseStore {
   }
 }
 
+class MessagesStore {
+  @observable locale = 'de';
+  @computed get promise() {
+    return fromPromise(fetchMessages(this.locale)) as IPromiseBasedObservable<Messages>;
+  }
+  @computed get M() {
+    return this.promise.value;
+  }
+
+  store: Store;
+  constructor(store: Store) {
+    this.store = store;
+  }
+}
+
 class Store {
   public bs: BookStore;
   public fs: FindStore;
   public cs: ChooseStore;
+  public ms: MessagesStore;
   
   // update the state typically from a URL
   @observable currentView: ViewName = 'home';
@@ -346,6 +363,12 @@ class Store {
     return w;
   }
 
+  // speech
+  @observable voice: SpeechSynthesisVoice;
+  @action.bound setVoice(voice: SpeechSynthesisVoice) {
+    this.voice = voice;
+  }
+
   // visibility of the controls modal
   @observable controlsVisible: boolean = false;
   @action.bound toggleControlsVisible() {
@@ -397,6 +420,7 @@ class Store {
     this.fs = new FindStore(this);
     this.cs = new ChooseStore(this);
     this.bs = new BookStore(this);
+    this.ms = new MessagesStore(this);
   }
 }
 

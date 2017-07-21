@@ -21,6 +21,11 @@ const Controls = observer(function Controls(props: {store: Store}) {
       backgroundColor   : 'rgba(255, 255, 255, 0.0)'
     }
   };
+  const voices = window.speechSynthesis && window.speechSynthesis.getVoices() || [];
+  let voiceMap = {'silent': { voiceURI: 'silent' }};
+  const voiceOptions = voices.map((voice, i) => {
+    voiceMap[voice.voiceURI] = voice;
+    return <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>; });
 
   return (
     <div>
@@ -60,6 +65,15 @@ const Controls = observer(function Controls(props: {store: Store}) {
               <option value="medium">Medium</option>
               <option value="large">Large</option>
               <option value="off">None</option>
+            </select>
+          </label>
+          <label>Voice: &nbsp;
+            <select
+              value={store.voice && store.voice.voiceURI || 'silent'}
+              onChange={e => store.setVoice(voiceMap[e.target.value])}
+            >
+              <option value="silent">Silent</option>
+              {voiceOptions}
             </select>
           </label>
           <button onClick={store.toggleControlsVisible}>

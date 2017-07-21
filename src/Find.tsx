@@ -37,7 +37,7 @@ class SearchForm extends React.Component<{store: Store}, {}> {
     const store = this.props.store;
     return (
       <form id="myform" onSubmit={this.onSubmit} ref={(f) => this.form = f}>
-        <Menu store={store} />
+        <Menu store={store} modifiers="inline"/>
         <label htmlFor="I-search" >Search for</label>
         <input
           type="search"
