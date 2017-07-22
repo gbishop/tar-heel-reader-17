@@ -99,7 +99,7 @@
   transition: all 1s;
 }
 
-.AriaMenuButton-discrete .AriaMenuButton-trigger:hover, .AriaMenuButton-discrete .AriaMenuButton-trigger:focus {
+.AriaMenuButton-discrete .AriaMenuButton-trigger:hover {
   transform: scale(1);
 }
 
@@ -107,7 +107,7 @@
   opacity: 0.4;
 }
 
-.AriaMenuButton-discrete .AriaMenuButton-trigger:hover, .AriaMenuButton-discrete .AriaMenuButton-trigger:focus {
+.AriaMenuButton-discrete .AriaMenuButton-trigger:hover {
   opacity: 1;
 }
 
@@ -120,6 +120,6 @@
   filter: grayscale(100%);
 }
 
-.AriaMenuButton-gray .AriaMenuButton-trigger:hover, .AriaMenuButton-gray .AriaMenuButton-trigger:focus {
+.AriaMenuButton-gray .AriaMenuButton-trigger:hover {
   filter: grayscale(0%);
 }

@@ -1,5 +1,10 @@
+// tslint:disable:max-line-length
 const enMessages = {
   home: 'Home page',
+  welcome: 'Welcome',
+  welcomeTo: 'Welcome to the Tar Heel Reader, a collection of free, easy-to-read, and accessible books on a wide range of topics. Each book can be speech enabled and accessed using multiple interfaces, including touch screens, the IntelliKeys with custom overlays, and 1 to 3 switches.',
+  otherLangs: 'This site is also available in other languages. To help with translation, contact us.',
+  prototype: 'This is a prototype for a new version of Tar Heel Reader. We would appreciate your feedback on how well it works for your students.',
   find: 'Find books',
   choose: 'Choose a book',
   settings: 'Settings',

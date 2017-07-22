@@ -28,16 +28,16 @@ class SiteMenu extends React.Component<SiteMenuProps, {}> {
         <Menu>
           <ul className="AriaMenuButton-menu">
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="home" className="AriaMenuButton-item">{M.home}</MenuItem>
+              <MenuItem value="home" className="AriaMenuButton-menuItem">{M.home}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="find" className="AriaMenuButton-item">{M.find}</MenuItem>
+              <MenuItem value="find" className="AriaMenuButton-menuItem">{M.find}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="choose" className="AriaMenuButton-item">{M.choose}</MenuItem>
+              <MenuItem value="choose" className="AriaMenuButton-menuItem">{M.choose}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="settings" className="AriaMenuButton-item">{M.settings}</MenuItem>
+              <MenuItem value="settings" className="AriaMenuButton-menuItem">{M.settings}</MenuItem>
             </li>
           </ul>
         </Menu>

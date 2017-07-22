@@ -258,6 +258,9 @@ class MessagesStore {
   @computed get M() {
     return this.promise.value;
   }
+  @action.bound setLocale(loc: string) {
+    this.locale = loc;
+  }
 
   store: Store;
   constructor(store: Store) {
@@ -298,6 +301,7 @@ class Store {
         break;
       case 'settings':
         this.toggleControlsVisible();
+        console.log('toggle controls', this.controlsVisible);
         break;
       default:
       case 'error':
