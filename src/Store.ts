@@ -214,6 +214,15 @@ class ChooseStore {
       this.selected += this.list.length;
     }
   }
+  @action.bound addFavorite(id: string) {
+    this.list.push(id);
+  }
+  @action.bound removeFavorite(id: string) {
+    const index = this.list.indexOf(id);
+    if (index >= 0) {
+      this.list.splice(index, 1);
+    }
+  }
   // index of the first visible book
   @observable visible: number = 0;
   @action.bound stepVisible(i: number) {
@@ -234,11 +243,21 @@ class ChooseStore {
 
   @action.bound setView(v: ChooseView) {
     const qs = v.query ? v.query.substring(1) : '';
-    console.log('qs', qs);
+    console.log('qs', qs, this.list.length, this.list);
     if (qs.length > 1) {
       const queries = parseQueryString(qs);
       console.log('qu', queries);
-      this.list = queries.favorites.split(',');
+      if (queries.favorites.length > 0) {
+        this.list = queries.favorites.split(',');
+      } else {
+        this.list = ['172981', '172982', '172984', '171772', '171191'];
+      }
+      this.visible = 0;
+      this.selected = -1;
+    } else if (this.list.length === 0) {
+      // bash something in for now
+      console.log('bash it');
+      this.list = ['172981', '172982', '172984', '171772', '171191'];
       this.visible = 0;
       this.selected = -1;
     }

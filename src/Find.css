@@ -60,6 +60,16 @@
   vertical-align: middle;
 }
 
+.Find-Favorite input {
+  vertical-align: middle;
+}
+
+.Find-Favorite img {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
+}
+
 .Find-Pages {
   font-size: 0.7em;
   margin: 0;

@@ -4,6 +4,7 @@ import Store from './Store';
 import Controls from './Controls';
 import Menu from './Menu';
 import loading from './Loading';
+import { FindBook } from './FindResult';
 
 const stars = {
   'Not yet rated': require('./icons/0stars.png'),
@@ -16,6 +17,9 @@ const stars = {
 
 const reviewed = require('./icons/reviewed.png');
 const caution = require('./icons/caution.png');
+
+const FavoriteNoIcon = require('./icons/FavoriteNoIcon.png');
+const FavoriteYesIcon = require('./icons/FavoriteYesIcon.png');
 
 import './Find.css';
 import './Loading.css';
@@ -131,33 +135,74 @@ class SearchForm extends React.Component<{store: Store}, {}> {
   }
 }
 
+@observer
+class Favorite extends React.Component<{store: Store, bid: number}, {}> {
+  render() {
+    const store = this.props.store;
+    const bid = String(this.props.bid);
+    const isFav = store.cs.list.indexOf(bid) >= 0;
+    function toggleFavorite(e: React.ChangeEvent<HTMLInputElement>) {
+      if (e.target.checked) {
+        store.cs.addFavorite(e.target.name);
+      } else {
+        store.cs.removeFavorite(e.target.name);
+      }
+    }
+    const src = isFav ? FavoriteYesIcon : FavoriteNoIcon;
+    return (
+      <span className="Find-Favorite">
+        <input
+          type="checkbox"
+          id={bid}
+          name={bid}
+          checked={isFav}
+          onChange={toggleFavorite}
+        />
+        <label htmlFor={bid} ><img src={src} alt="Add to favorites" /></label>
+        
+      </span>
+    );
+  }
+}
+
+@observer
+class FindResult extends React.Component<{store: Store, book: FindBook}, {}> {
+  render() {
+    const baseUrl = process.env.PUBLIC_URL;
+    const b = this.props.book;
+    const store = this.props.store;
+    return (
+      <li> 
+        <button 
+          className="Find-ReadButton"
+          onClick={e => store.setCurrentView({
+            view: 'book',
+            link: b.link, 
+            page: 1})
+          } 
+        >
+          <img src={baseUrl + b.cover.url} alt={b.title} />
+        </button>
+        <h1>{b.title}</h1>
+        <p className="Find-Author">{b.author}</p>
+        <img className="Find-Icon" src={stars[b.rating.text]} title={b.rating.text} />
+        {b.reviewed && (<img src={reviewed} className="Find-Icon" alt="reviewed" />)}
+        {b.caution && (<img src={caution} className="Find-Icon" alt="caution" />)}
+        <Favorite store={store} bid={b.ID} />
+        <p className="Find-Pages">{`${b.pages} pages.`}</p>
+      </li>);
+  }
+}
+
 const Find = observer(function Find(props: {store: Store}) {
   const store = props.store;
   const waitmsg = loading(store.fs.promise);
   if (waitmsg) {
     return waitmsg;
   }
-  const baseUrl = process.env.PUBLIC_URL;
   const findResults = store.fs.find.books.map(b => (
-    <li key={b.ID}>
-      <button 
-        className="Find-ReadButton"
-        onClick={e => store.setCurrentView({
-          view: 'book',
-          link: b.link, 
-          page: 1})
-        } 
-      >
-        <img src={baseUrl + b.cover.url} alt={b.title} />
-      </button>
-      <h1>{b.title}</h1>
-      <p className="Find-Author">{b.author}</p>
-      <img className="Find-Icon" src={stars[b.rating.text]} title={b.rating.text} />
-      {b.reviewed && (<img src={reviewed} className="Find-Icon" alt="reviewed" />)}
-      {b.caution && (<img src={caution} className="Find-Icon" alt="caution" />)}
-      <p className="Find-Pages">{`${b.pages} pages.`}</p>
-      <div style={{clear: 'both'}} />
-    </li>));
+    <FindResult key={b.ID} book={b} store={store} />
+  ));
   return (
     <div
       className="Find"
