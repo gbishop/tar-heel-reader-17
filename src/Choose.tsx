@@ -6,6 +6,7 @@ import Controls from './Controls';
 import NavFrame from './NavFrame';
 import Menu from './Menu';
 import loading from './Loading';
+import Speech from './Speech';
 
 import './Choose.css';
 
@@ -64,6 +65,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
       link: book.link,
       page: 1};
     if (i < nchoices) {
+      const isSelected = i === store.cs.selected;
       views.push(view);
       books.push(
         <button
@@ -75,7 +77,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
             width: em(width / maxCols - coverMargin * fs * (maxCols + 1)),
             height: em(height / maxRows - coverMargin * fs * (maxRows + 1)),
             margin: em(coverMargin),
-            outline: i === store.cs.selected ? 'red solid thick' : 'none'
+            outline: isSelected ? 'red solid thick' : 'none'
           }}
         >
           <div
@@ -88,6 +90,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
             className="Choose_Picture"
             src={baseUrl + book.preview.url}
           />
+          {isSelected && <Speech store={store} lang={book.language} text={book.title} />}
         </button>);
     } else {
       books.push(

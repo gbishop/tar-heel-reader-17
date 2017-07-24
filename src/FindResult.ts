@@ -20,7 +20,8 @@ const FindBookValidator = Record({
     text: String
   }),
   reviewed: Boolean,
-  caution: Boolean
+  caution: Boolean,
+  language: String
 });
 
 const FindValidator = Record({

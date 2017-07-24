@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, extendObservable, toJS } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
@@ -387,9 +387,26 @@ class Store {
   }
 
   // speech
-  @observable voice: SpeechSynthesisVoice;
-  @action.bound setVoice(voice: SpeechSynthesisVoice) {
-    this.voice = voice;
+  @observable speak: boolean = false;
+  @action.bound toggleSpeak() {
+    this.speak = !this.speak;
+  }
+  // why do I need this? The preferredVoice map doesn't trigger a render when I update it. Why?
+  @observable bumpVoice: number = 0;
+  @observable preferredVoice: {[lang: string]: string} = {};
+  @action.bound setPreferredVoice(lang: string, uri: string) {
+    console.log('setPreferredVoice', lang, uri);
+    this.preferredVoice[lang] = uri;
+    console.log(this.preferredVoice);
+    this.bumpVoice += 1;
+  }
+  @observable speechRate = 1; // 0.1 to 10
+  @action.bound setSpeechRate(v: number) {
+    this.speechRate = v;
+  }
+  @observable speechPitch = 1; // 0 to 2
+  @action.bound setSpeechPitch(v: number) {
+    this.speechPitch = v;
   }
 
   // visibility of the controls modal

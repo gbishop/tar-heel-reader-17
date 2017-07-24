@@ -77,6 +77,9 @@ const enMessages = {
   AlternatePictureAndText: 'Alternate Picture and Text',
   Voice: 'Voice',
   Close: 'Close',
+  Default: 'Default',
+  SpeechRate: 'Speech Rate',
+  SpeechPitch: 'Speech Pitch',
 };
 
 export type Messages = typeof enMessages;

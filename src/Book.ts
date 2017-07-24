@@ -13,7 +13,11 @@ const BookValidator = Record({
   slug: String,
   author: String,
   pages: Array(Page),
-  link: String
+  link: String,
+  language: String,
+  rating_count: Number,
+  rating_total: Number,
+  rating_value: Number
 });
 
 // construct the typescript type

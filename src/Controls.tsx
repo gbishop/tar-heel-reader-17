@@ -23,10 +23,14 @@ const Controls = observer(function Controls(props: {store: Store}) {
     }
   };
   const voices = window.speechSynthesis && window.speechSynthesis.getVoices() || [];
-  let voiceMap = {'silent': { voiceURI: 'silent' }};
+  console.log('voices', voices);
+  let voiceMap = {};
   const voiceOptions = voices.map((voice, i) => {
     voiceMap[voice.voiceURI] = voice;
     return <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>; });
+  const lang = store.currentView === 'book' ? store.bs.book.language : store.ms.locale;
+  // const preferredVoice = (store.preferredVoice[lang] && store.preferredVoice[lang].voiceURI) || '';
+  console.log('controls', lang, store.preferredVoice[lang]);
 
   return (
     <div>
@@ -59,7 +63,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
           </label>
           <label>{M.ButtonSize}:&nbsp;
             <select
-              value={store.pageTurnSize}
+              value={store.baseFontSize}
               onChange={e => store.setPageTurnSize(e.target.value)}
             >
               <option value="normal">{M.normal}</option>
@@ -68,14 +72,41 @@ const Controls = observer(function Controls(props: {store: Store}) {
               <option value="off">{M.off}</option>
             </select>
           </label>
+          <label>Speak text: &nbsp;
+            <input
+              type="checkbox"
+              checked={store.speak}
+              onChange={store.toggleSpeak}
+            />
+          </label>
           <label>{M.Voice}: &nbsp;
             <select
-              value={store.voice && store.voice.voiceURI || 'silent'}
-              onChange={e => store.setVoice(voiceMap[e.target.value])}
+              value={store.preferredVoice[lang]}
+              onChange={e => store.setPreferredVoice(lang, e.target.value)}
             >
-              <option value="silent">{M.silent}</option>
+              <option value="">{M.Default}</option>
               {voiceOptions}
             </select>
+          </label>
+          <label>{M.SpeechRate}: &nbsp;
+              <input
+                value={store.speechRate}
+                type="range"
+                min={0.1}
+                max={2}
+                step={0.3}
+                onChange={e => store.setSpeechRate(+e.target.value)}
+              />
+          </label>
+          <label>{M.SpeechPitch}: &nbsp;
+              <input
+                value={store.speechPitch}
+                type="range"
+                min={0}
+                max={2}
+                step={0.25}
+                onChange={e => store.setSpeechPitch(+e.target.value)}
+              />
           </label>
           <button onClick={store.toggleControlsVisible}>
             {M.Close}
