@@ -143,7 +143,8 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
       mover = () => store.bs.selectNext(3);
       click = (i) => {
         if (i >= 0) {
-          console.log('rate book', i + 1);
+          fetch(process.env.PUBLIC_URL +
+            `/THR/api/rateajax/?id=${store.bs.book.ID}&rating=${i + 1}`);
           store.bs.setStep('thanks');
         }
       };

@@ -11,6 +11,7 @@ const Page = Record({
 const BookValidator = Record({
   title: String,
   slug: String,
+  ID: Number,
   author: String,
   pages: Array(Page),
   link: String,
