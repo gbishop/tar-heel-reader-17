@@ -66,12 +66,12 @@ for lang in args.langs.split(','):
     # Translate the ones we can't find elsewhere
     new = {}
     for key, message in enMessages:
-        if key in old:
+        if key in old and len(old[key]) > 0:
             new[key] = old[key]
-        elif message in po:
+        elif message in po and len(po[message]) > 0:
             new[key] = po[message]
         else:
-            new[key] = g_translate(message, args.lang)
+            new[key] = g_translate(message, lang)
             print(key, new[key])
 
     # get the native name for the locales
