@@ -5,6 +5,7 @@ import Controls from './Controls';
 import NavFrame from './NavFrame';
 import Menu from './Menu';
 import loading from './Loading';
+import Speech from './Speech';
 
 import './Reader.css';
 
@@ -61,6 +62,7 @@ const TitlePage = observer(function TitlePage(props: PageProps) {
           className="Reader_Picture"
           src={baseUrl + page.url}
         />
+        <Speech store={store} text={store.bs.book.title} lang={store.bs.book.language} />
       </div>
     </NavFrame>
   );
@@ -97,6 +99,7 @@ const TextPage = observer(function TextPage(props: PageProps) {
         <span className="Reader_PageNumber">
           {store.bs.pageno}
         </span>
+        <Speech store={store} text={page.text} lang={store.bs.book.language} />
       </div>
     </NavFrame>
   );
@@ -104,6 +107,7 @@ const TextPage = observer(function TextPage(props: PageProps) {
 
 const ChoicePage = observer(function ChoicePage(props: PageProps) {
   const store = props.store;
+  const M = store.ms.M;
   const nop = () => {return; };
   let mover = nop;
   let chooser = nop;
@@ -132,8 +136,8 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
         }
       };
       chooser = () => click(store.bs.selected);
-      question = 'What would you like to do now?';
-      buttons = [ 'Read this book again', 'Rate this book', 'Choose another book' ];
+      question = M.WhatNow;
+      buttons = [ M.ReadAgain, M.Rate, M.Another ];
       break;
     case 'rate':
       mover = () => store.bs.selectNext(3);
@@ -143,8 +147,8 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
           store.bs.setStep('thanks');
         }
       };
-      question = 'How do you rate this book?';
-      buttons = [ '1 star', '2 stars', '3 stars' ];
+      question = M.HowRate;
+      buttons = [ M.Rate1, M.Rate2, M.Rate3 ];
       chooser = () => click(store.bs.selected);
       break;
     case 'thanks':
@@ -164,8 +168,8 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
         }
       };
       chooser = () => click(store.bs.selected);
-      question = 'What would you like to do now?';
-      buttons = [ 'Read this book again', 'Choose another book' ];
+      question = M.WhatNow;
+      buttons = [ M.ReadAgain, M.Another ];
       break;
   }
   const abutton = (l: string, a: () => void, s: boolean) => (
@@ -176,6 +180,7 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
       style={{outline: s ? 'red solid thick' : 'none'}}
     >
       {l}
+      {s && <Speech store={store} text={l} lang={store.ms.locale} />}
     </button>);
   return (
     <NavFrame store={store} mover={mover} chooser={chooser} >
@@ -184,6 +189,7 @@ const ChoicePage = observer(function ChoicePage(props: PageProps) {
         style={{fontSize: em(store.textFontSize), justifyContent: 'space-around'}}
       >
       <h1>{question}</h1>
+      <Speech store={store} text={question} lang={store.ms.locale} /> 
       {buttons.map((b, i) => abutton(b, () => click(i), i === store.bs.selected))}
       </div>;
     </NavFrame>

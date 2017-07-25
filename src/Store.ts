@@ -425,7 +425,7 @@ class Store {
     this.screen.height = window.innerHeight;
   }
   // persistence version
-  readonly persistVersion = 3;
+  readonly persistVersion = 5;
   // json string to persist the state
   @computed get persist(): string {
     const json = JSON.stringify({
@@ -434,7 +434,12 @@ class Store {
       fontScale: this.fontScale,
       pageTurnSize: this.pageTurnSize,
       query: this.fs.query,
-      choices: this.cs.list
+      choices: this.cs.list,
+      speak: this.speak,
+      voice: this.preferredVoice,
+      rate: this.speechRate,
+      pitch: this.speechPitch,
+      locale: this.ms.locale
     });
     console.log('set persist', json);
     return json;
@@ -453,6 +458,11 @@ class Store {
       this.fs.query.language = v.query.language;
       this.fs.query.page = v.query.page;
       this.cs.list = v.choices;
+      this.speak = v.speak;
+      this.preferredVoice = v.voice;
+      this.speechRate = v.rate;
+      this.speechPitch = v.pitch;
+      this.ms.locale = v.locale;
     }
   }
 

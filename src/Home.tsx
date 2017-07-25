@@ -19,6 +19,11 @@ class Home extends React.Component<{store: Store}, {}> {
         <Menu store={this.props.store} />
         <h1>{M.welcome}</h1>
         <p>{M.welcomeTo}</p>
+        <p>
+          <a href="https://goo.gl/forms/YTHCLvzHNIRVsy653" target="_blank">
+            Please take our design survey.
+          </a>
+        </p>
         <p>{M.otherLangs}</p>
         <select
           value={store.ms.locale}

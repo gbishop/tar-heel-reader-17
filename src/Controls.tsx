@@ -23,14 +23,12 @@ const Controls = observer(function Controls(props: {store: Store}) {
     }
   };
   const voices = window.speechSynthesis && window.speechSynthesis.getVoices() || [];
-  console.log('voices', voices);
   let voiceMap = {};
   const voiceOptions = voices.map((voice, i) => {
     voiceMap[voice.voiceURI] = voice;
     return <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>; });
   const lang = store.currentView === 'book' ? store.bs.book.language : store.ms.locale;
   // const preferredVoice = (store.preferredVoice[lang] && store.preferredVoice[lang].voiceURI) || '';
-  console.log('controls', lang, store.preferredVoice[lang]);
 
   return (
     <div>
@@ -44,7 +42,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
         style={customStyles}
       >
         <div className="Controls">
-          <h1>Reading controls</h1>
+          <h1>{M.ReadingControls}</h1>
           <label>{M.FontSize}:&nbsp;
             <input
               type="range"
@@ -72,7 +70,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
               <option value="off">{M.off}</option>
             </select>
           </label>
-          <label>Speak text: &nbsp;
+          <label>{M.SpeakText}: &nbsp;
             <input
               type="checkbox"
               checked={store.speak}

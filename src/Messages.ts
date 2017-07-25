@@ -78,8 +78,17 @@ const enMessages = {
   Voice: 'Voice',
   Close: 'Close',
   Default: 'Default',
+  SpeakText: 'Speak Text',
   SpeechRate: 'Speech Rate',
   SpeechPitch: 'Speech Pitch',
+  WhatNow: 'What would you like to do now?',
+  ReadAgain: 'Read this book again.',
+  Rate: 'Rate this book.',
+  Another: 'Choose another book.',
+  HowRate: 'How do you rate this book?',
+  Rate1: '1 star',
+  Rate2: '2 stars',
+  Rate3: '3 stars',
 };
 
 export type Messages = typeof enMessages;
