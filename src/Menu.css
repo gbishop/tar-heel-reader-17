@@ -111,6 +111,10 @@
   opacity: 1;
 }
 
+.AriaMenuButton-centered {
+  margin: 0 auto;
+}
+
 .AriaMenuButton.AriaMenuButton-inline {
   display: inline-block;
   vertical-align: text-bottom;

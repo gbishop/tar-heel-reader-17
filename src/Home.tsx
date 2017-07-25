@@ -16,8 +16,9 @@ class Home extends React.Component<{store: Store}, {}> {
     const lockeys = Object.keys(locales).sort();
     return (
       <div className="Home">
-        <Menu store={this.props.store} />
-        <h1>{M.welcome}</h1>
+        <Menu store={this.props.store} modifiers="centered" />
+        <h1>Tar Heel Reader</h1>
+        <h2>{M.welcome}</h2>
         <p>{M.welcomeTo}</p>
         <p>
           <a href="https://goo.gl/forms/YTHCLvzHNIRVsy653" target="_blank">
