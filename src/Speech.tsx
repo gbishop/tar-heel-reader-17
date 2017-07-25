@@ -4,7 +4,7 @@ import Store from './Store';
 
 @observer
 class Speech extends React.Component<{store: Store, text: string, lang: string}, {}> {
-  getVoice(uri: string, lang: string) {
+  getVoice(uri: string | undefined, lang: string) {
     const voices = window.speechSynthesis && window.speechSynthesis.getVoices() || [];
     var best: SpeechSynthesisVoice | null = null;
     var def: SpeechSynthesisVoice | null = null;
@@ -31,10 +31,7 @@ class Speech extends React.Component<{store: Store, text: string, lang: string},
     if (!store.speak) {
       return null;
     }
-    const bumpVoice = store.bumpVoice;
-    const pv = store.preferredVoice;
-    const voice = this.getVoice(pv[lang], lang);
-    console.log('voice', voice);
+    const voice = this.getVoice(store.preferredVoice.get(lang), lang);
     speechSynthesis.cancel();
     const msg = new SpeechSynthesisUtterance(text);
     msg.lang = lang;
@@ -44,7 +41,6 @@ class Speech extends React.Component<{store: Store, text: string, lang: string},
     msg.rate = store.speechRate;
     msg.pitch = store.speechPitch;
     speechSynthesis.speak(msg);
-    console.log('speech', text, lang);
     return null;
   }
 }

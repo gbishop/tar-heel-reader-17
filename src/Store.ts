@@ -1,4 +1,4 @@
-import { observable, computed, action, extendObservable, toJS } from 'mobx';
+import { observable, computed, action, extendObservable, toJS, ObservableMap, autorun } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
@@ -391,14 +391,11 @@ class Store {
   @action.bound toggleSpeak() {
     this.speak = !this.speak;
   }
-  // why do I need this? The preferredVoice map doesn't trigger a render when I update it. Why?
-  @observable bumpVoice: number = 0;
-  @observable preferredVoice: {[lang: string]: string} = {};
+  @observable preferredVoice: ObservableMap<string> = observable.map();
   @action.bound setPreferredVoice(lang: string, uri: string) {
-    console.log('setPreferredVoice', lang, uri);
-    this.preferredVoice[lang] = uri;
-    console.log(this.preferredVoice);
-    this.bumpVoice += 1;
+    if (uri) {
+      this.preferredVoice.set(lang, uri);
+    }
   }
   @observable speechRate = 1; // 0.1 to 10
   @action.bound setSpeechRate(v: number) {
@@ -436,7 +433,7 @@ class Store {
       query: this.fs.query,
       choices: this.cs.list,
       speak: this.speak,
-      voice: this.preferredVoice,
+      voice: this.preferredVoice.toJS(),
       rate: this.speechRate,
       pitch: this.speechPitch,
       locale: this.ms.locale
@@ -459,7 +456,11 @@ class Store {
       this.fs.query.page = v.query.page;
       this.cs.list = v.choices;
       this.speak = v.speak;
-      this.preferredVoice = v.voice;
+      for (var k in v.voice) {
+        if (v.voice.hasOwnProperty(k)) {
+          this.preferredVoice.set(k, v.voice[k]);
+        }
+      }
       this.speechRate = v.rate;
       this.speechPitch = v.pitch;
       this.ms.locale = v.locale;
@@ -471,6 +472,7 @@ class Store {
     this.cs = new ChooseStore(this);
     this.bs = new BookStore(this);
     this.ms = new MessagesStore(this);
+    autorun(() => console.log('pf', this.preferredVoice.keys()));
   }
 }
 

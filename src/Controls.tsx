@@ -28,7 +28,6 @@ const Controls = observer(function Controls(props: {store: Store}) {
     voiceMap[voice.voiceURI] = voice;
     return <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>; });
   const lang = store.currentView === 'book' ? store.bs.book.language : store.ms.locale;
-  // const preferredVoice = (store.preferredVoice[lang] && store.preferredVoice[lang].voiceURI) || '';
 
   return (
     <div>
@@ -79,7 +78,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
           </label>
           <label>{M.Voice}: &nbsp;
             <select
-              value={store.preferredVoice[lang]}
+              value={store.preferredVoice.get(lang) || ''}
               onChange={e => store.setPreferredVoice(lang, e.target.value)}
             >
               <option value="">{M.Default}</option>
