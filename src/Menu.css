@@ -113,7 +113,9 @@
 
 .AriaMenuButton.AriaMenuButton-inline {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: text-bottom;
+  height: 1.5em;
+  width: 1.5em;
 }
 
 .AriaMenuButton-gray .AriaMenuButton-trigger {
