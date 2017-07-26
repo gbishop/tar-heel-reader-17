@@ -5,7 +5,7 @@ import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 import { Messages, fetchMessages } from './Messages';
 
-type ViewName = 'home' | 'book' | 'find' | 'choose' | 'error' | 'settings';
+type ViewName = 'home' | 'book' | 'find' | 'choose' | 'yourFavorites' | 'error';
 
 interface HomeView {
   view: 'home';
@@ -27,6 +27,10 @@ interface ChooseView {
   query?: string;
 }
 
+interface YourFavoritesView {
+  view: 'yourFavorites';
+}
+
 interface ErrorView {
   view: 'error';
 }
@@ -35,7 +39,15 @@ interface SettingsView {
   view: 'settings';
 }
 
-type View = HomeView | BookView | FindView | ChooseView | ErrorView | SettingsView;
+type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView |
+  ErrorView | SettingsView;
+
+// Externally-visible signature
+export function throwBadView(p: never): never;
+// Implementation signature
+export function throwBadView(v: View) {
+    throw new Error('Unknown view: ' + v.view);
+}
 
 type Steps = 'what' | 'rate' | 'thanks';
 
@@ -205,7 +217,9 @@ class FindStore {
 
 class ChooseStore {
   // list of book ids on the choose page
-  @observable list: string[] = [];
+  @observable lists: ObservableMap<string[]> = observable.map({Favorites: []});
+  @observable currentListName: string = 'Favorites';
+  @computed get list() { return this.lists.get(this.currentListName) || []; }
   // index of the currently selected book
   @observable selected: number = -1;
   @action.bound setSelected(i: number) {
@@ -215,7 +229,7 @@ class ChooseStore {
     }
   }
   @action.bound addFavorite(id: string) {
-    this.list.push(id);
+    this.lists.set(this.currentListName, [...this.list, id]);
   }
   @action.bound removeFavorite(id: string) {
     const index = this.list.indexOf(id);
@@ -247,20 +261,17 @@ class ChooseStore {
     if (qs.length > 1) {
       const queries = parseQueryString(qs);
       console.log('qu', queries);
+      this.currentListName = queries.name || 'Favorites';
       if (queries.favorites.length > 0) {
-        this.list = queries.favorites.split(',');
-      } else {
-        this.list = ['172981', '172982', '172984', '171772', '171191'];
+        this.lists.set(this.currentListName, queries.favorites.split(','));
       }
       this.visible = 0;
       this.selected = -1;
-    } else if (this.list.length === 0) {
-      // bash something in for now
-      console.log('bash it');
-      this.list = ['172981', '172982', '172984', '171772', '171191'];
-      this.visible = 0;
-      this.selected = -1;
     }
+  }
+
+  @computed get path() {
+    return `/choose/?favorites=${this.list.join(',')}&name=${this.currentListName}`;
   }
 
   store: Store;
@@ -287,7 +298,7 @@ class MessagesStore {
   }
 }
 
-class Store {
+export class Store {
   public bs: BookStore;
   public fs: FindStore;
   public cs: ChooseStore;
@@ -318,14 +329,18 @@ class Store {
         this.currentView = 'choose';
         this.cs.setView(v);
         break;
+      case 'yourFavorites':
+        this.currentView = 'yourFavorites';
+        break;
       case 'settings':
         this.toggleControlsVisible();
         console.log('toggle controls', this.controlsVisible);
         break;
-      default:
       case 'error':
         this.currentView = 'error';
         break;
+      default:
+        throwBadView(v);
     }
   }
 
@@ -350,7 +365,7 @@ class Store {
     } else if (this.currentView === 'find') {
       return '/find/?' + this.fs.queryString;
     } else if (this.currentView === 'choose') {
-      return `/choose/?favorites=${this.cs.list.join(',')}`;
+      return this.cs.path;
     } else {
       return '/';
     }
@@ -422,7 +437,7 @@ class Store {
     this.screen.height = window.innerHeight;
   }
   // persistence version
-  readonly persistVersion = 5;
+  readonly persistVersion = 6;
   // json string to persist the state
   @computed get persist(): string {
     const json = JSON.stringify({
@@ -431,7 +446,7 @@ class Store {
       fontScale: this.fontScale,
       pageTurnSize: this.pageTurnSize,
       query: this.fs.query,
-      choices: this.cs.list,
+      lists: this.cs.lists.toJS(),
       speak: this.speak,
       voice: this.preferredVoice.toJS(),
       rate: this.speechRate,
@@ -454,7 +469,11 @@ class Store {
       this.fs.query.audience = v.query.audience;
       this.fs.query.language = v.query.language;
       this.fs.query.page = v.query.page;
-      this.cs.list = v.choices;
+      for (var l in v.lists) {
+        if (v.lists.hasOwnProperty(l)) {
+          this.cs.lists.set(l, v.lists[l]);
+        }
+      }
       this.speak = v.speak;
       for (var k in v.voice) {
         if (v.voice.hasOwnProperty(k)) {
