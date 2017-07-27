@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import Store from './Store';
+import { Store, Views } from './Store';
 import { Wrapper, Button, Menu, MenuItem } from 'react-aria-menubutton';
 import './Menu.css';
 
@@ -28,16 +28,16 @@ class SiteMenu extends React.Component<SiteMenuProps, {}> {
         <Menu>
           <ul className="AriaMenuButton-menu">
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="home" className="AriaMenuButton-menuItem">{M.home}</MenuItem>
+              <MenuItem value={Views.home} className="AriaMenuButton-menuItem">{M.home}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="find" className="AriaMenuButton-menuItem">{M.find}</MenuItem>
+              <MenuItem value={Views.find} className="AriaMenuButton-menuItem">{M.find}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="choose" className="AriaMenuButton-menuItem">{M.choose}</MenuItem>
+              <MenuItem value={Views.choose} className="AriaMenuButton-menuItem">{M.choose}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value="yourFavorites" className="AriaMenuButton-menuItem">Your Favorites</MenuItem>
+              <MenuItem value={Views.favorites} className="AriaMenuButton-menuItem">Your Favorites</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
               <MenuItem value="settings" className="AriaMenuButton-menuItem">{M.settings}</MenuItem>

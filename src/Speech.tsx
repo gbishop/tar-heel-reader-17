@@ -4,34 +4,13 @@ import Store from './Store';
 
 @observer
 class Speech extends React.Component<{store: Store, text: string, lang: string}, {}> {
-  getVoice(uri: string | undefined, lang: string) {
-    const voices = window.speechSynthesis && window.speechSynthesis.getVoices() || [];
-    var best: SpeechSynthesisVoice | null = null;
-    var def: SpeechSynthesisVoice | null = null;
-    for (var i = 0; i < voices.length; i++) {
-      const v = voices[i];
-      if (v.default) {
-        def = v;
-      }
-      if (v.voiceURI === uri) {
-        return v;
-      }
-      if (v.lang.slice(0, lang.length) === lang) {
-        if (!best) {
-          best = v;
-        } else if (!best.localService && v.localService) {
-          best = v;
-        }
-      }
-    }
-    return best || def;
-  }
   render() {
     const { store, text, lang }  = this.props;
     if (!store.speak) {
       return null;
     }
-    const voice = this.getVoice(store.preferredVoice.get(lang), lang);
+    const voice = store.getVoice(lang);
+    console.log('voice', voice);
     speechSynthesis.cancel();
     const msg = new SpeechSynthesisUtterance(text);
     msg.lang = lang;

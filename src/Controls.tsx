@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import Store from './Store';
+import { Store, Views } from './Store';
 import Modal from 'react-modal';
 import NRKeyHandler from './NRKeyHandler';
 
@@ -27,7 +27,7 @@ const Controls = observer(function Controls(props: {store: Store}) {
   const voiceOptions = voices.map((voice, i) => {
     voiceMap[voice.voiceURI] = voice;
     return <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>; });
-  const lang = store.currentView === 'book' ? store.bs.book.language : store.ms.locale;
+  const lang = store.currentView === Views.book ? store.bs.book.language : store.ms.locale;
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import Store from './Store';
+import { Store, Views } from './Store';
 import Controls from './Controls';
 import Menu from './Menu';
 import loading from './Loading';
@@ -176,7 +176,7 @@ class FindResult extends React.Component<{store: Store, book: FindBook}, {}> {
         <button 
           className="Find-ReadButton"
           onClick={e => store.setCurrentView({
-            view: 'book',
+            view: Views.book,
             link: b.link, 
             page: 1})
           } 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Store, throwBadView } from './Store';
+import { Store, Views, throwBadView } from './Store';
 import Home from './Home';
 import Reader from './Reader';
 import Find from './Find';
@@ -10,30 +10,33 @@ import { loading } from './Loading';
 
 @observer
 class App extends React.Component<{store: Store}, {}> {
-  render() {
+  render(): JSX.Element {
     const store = this.props.store;
     const msg = loading(store.ms.promise);
     if (msg) {
       return msg;
     }
     switch (store.currentView) {
-      case 'home':
+      case Views.home:
         return <Home store={store} />;
         
-      case 'book':
+      case Views.book:
         return <Reader store={store} />;
 
-      case 'find':
+      case Views.find:
         return <Find store={store} />;
 
-      case 'choose':
+      case Views.choose:
         return <Choose store={store} />;
 
-      case 'yourFavorites':
+      case Views.favorites:
         return <YourFavorites store={store} />;
 
-      case 'error':
+      case Views.error:
         return <h1>Bad URL</h1>;
+
+      case Views.settings:
+        return <p>Not here</p>;
 
       default:
         return throwBadView(store.currentView);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import Store from './Store';
+import { Store, Views } from './Store';
 import { BookView } from './Store';
 import Controls from './Controls';
 import NavFrame from './NavFrame';
@@ -61,7 +61,7 @@ const Choose = observer(function Choose(props: {store: Store}) {
   for (let i = 0; i < nVisible; i++) {
     const book = store.cs.choose.books[(i + store.cs.visible) % store.cs.nchoices];
     const view: BookView = {
-      view: 'book',
+      view: Views.book,
       link: book.link,
       page: 1};
     if (i < nchoices) {

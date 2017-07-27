@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-import Store from './Store';
+import { Store, Views } from './Store';
 // import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
@@ -20,26 +20,30 @@ function startRouter(store: Store) {
   router.on(baseUrl + '/:year/:month/:day/:slug/(\\d+)?',
     (year, month, day, slug, page) =>
     store.setCurrentView({
-      view: 'book',
+      view: Views.book,
       link: `/${year}/${month}/${day}/${slug}/`,
       page: page ? +page : 1
     })
   );
   router.on(baseUrl + '/find/?',
     () => store.setCurrentView({
-      view: 'find',
+      view: Views.find,
       query: window.location.search
     })
   );
   router.on(baseUrl + '/choose/?',
     () => store.setCurrentView({
-      view: 'choose',
+      view: Views.choose,
       query: window.location.search
     }));
+  router.on(baseUrl + '/your-favorites/?',
+    () => store.setCurrentView({
+      view: Views.favorites
+    }));
   router.on(baseUrl + '/', 
-    () => store.setCurrentView({ view: 'home' }));
+    () => store.setCurrentView({ view: Views.home }));
   router.configure({
-    notfound: () => store.setCurrentView({ view: 'home' }),
+    notfound: () => store.setCurrentView({ view: Views.home }),
     html5history: true
   });
   router.init();

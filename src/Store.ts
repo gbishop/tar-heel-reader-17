@@ -1,46 +1,54 @@
-import { observable, computed, action, extendObservable, toJS, ObservableMap, autorun } from 'mobx';
+import { observable, computed, action, extendObservable, toJS, ObservableMap, autorun, createTransformer } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 import { Messages, fetchMessages } from './Messages';
 
-type ViewName = 'home' | 'book' | 'find' | 'choose' | 'yourFavorites' | 'error';
-
+export enum Views {
+  home = 'home',
+  book = 'book',
+  find = 'find',
+  choose = 'choose',
+  favorites = 'your-favorites',
+  error = 'error',
+  settings = 'settings'
+}
+    
 interface HomeView {
-  view: 'home';
+  view: Views.home;
 }
 
 export interface BookView {
-  view: 'book';
+  view: Views.book;
   link: string;
   page: number;
 }
 
 interface FindView {
-  view: 'find';
+  view: Views.find;
   query?: string;
 }
 
 interface ChooseView {
-  view: 'choose';
+  view: Views.choose;
   query?: string;
 }
 
 interface YourFavoritesView {
-  view: 'yourFavorites';
+  view: Views.favorites;
 }
 
 interface ErrorView {
-  view: 'error';
+  view: Views.error;
 }
 
 interface SettingsView {
-  view: 'settings';
+  view: Views.settings;
 }
 
 type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView |
-  ErrorView | SettingsView;
+  ErrorView;
 
 // Externally-visible signature
 export function throwBadView(p: never): never;
@@ -305,39 +313,39 @@ export class Store {
   public ms: MessagesStore;
   
   // update the state typically from a URL
-  @observable currentView: ViewName = 'home';
-  @action.bound setCurrentView(v: View) {
+  @observable currentView: Views = Views.home;
+  @action.bound setCurrentView(v: View | SettingsView) {
     console.log('setCurrentView', v);
     switch (v.view) {
-      case 'home':
-        this.currentView = 'home';
+      case Views.home:
+        this.currentView = v.view;
         break;
-      case 'book':
-        if (this.currentView === 'choose') {
-          this.preBookView = 'choose';
+      case Views.book:
+        if (this.currentView === Views.choose) {
+          this.preBookView = Views.choose;
         } else {
-          this.preBookView = 'find';
+          this.preBookView = Views.find;
         }
-        this.currentView = 'book';
+        this.currentView = Views.book;
         this.bs.setView(v);
         break;
-      case 'find':
-        this.currentView = 'find';
+      case Views.find:
+        this.currentView = Views.find;
         this.fs.setView(v);
         break;
-      case 'choose':
-        this.currentView = 'choose';
+      case Views.choose:
+        this.currentView = Views.choose;
         this.cs.setView(v);
         break;
-      case 'yourFavorites':
-        this.currentView = 'yourFavorites';
+      case Views.favorites:
+        this.currentView = Views.favorites;
         break;
-      case 'settings':
+      case Views.settings:
         this.toggleControlsVisible();
         console.log('toggle controls', this.controlsVisible);
         break;
-      case 'error':
-        this.currentView = 'error';
+      case Views.error:
+        this.currentView = Views.error;
         break;
       default:
         throwBadView(v);
@@ -346,26 +354,28 @@ export class Store {
 
   // set either Find or Choose view depending on where you were last
   // on going back to Choose bump the index
-  @observable preBookView: 'find' | 'choose' = 'find';
+  @observable preBookView: Views.find | Views.choose = Views.find;
   @action.bound setPreBookView() {
-    if (this.preBookView === 'find') {
+    if (this.preBookView === Views.find) {
       this.setCurrentView({
-        view: 'find',
+        view: Views.find,
         query: ''
       });
-    } else if (this.preBookView === 'choose') {
-      this.currentView = 'choose';
+    } else if (this.preBookView === Views.choose) {
+      this.currentView = Views.choose;
     }
   }
 
   // map the state to a url
   @computed get currentPath() {
-    if (this.currentView === 'book') {
+    if (this.currentView === Views.book) {
       return `${this.bs.link}` + (this.bs.pageno > 1 ? `${this.bs.pageno}` : '');
-    } else if (this.currentView === 'find') {
+    } else if (this.currentView === Views.find) {
       return '/find/?' + this.fs.queryString;
-    } else if (this.currentView === 'choose') {
+    } else if (this.currentView === Views.choose) {
       return this.cs.path;
+    } else if (this.currentView === Views.favorites) {
+      return '/your-favorites/';
     } else {
       return '/';
     }
@@ -406,12 +416,42 @@ export class Store {
   @action.bound toggleSpeak() {
     this.speak = !this.speak;
   }
+  @observable availableVoices = speechSynthesis.getVoices();
+  @action.bound updateAvailableVoices() {
+    console.log('updateAvailableVoices', this.availableVoices.length);
+    this.availableVoices = speechSynthesis.getVoices();
+    console.log('updateAvailableVoices', this.availableVoices);
+  }
   @observable preferredVoice: ObservableMap<string> = observable.map();
   @action.bound setPreferredVoice(lang: string, uri: string) {
     if (uri) {
       this.preferredVoice.set(lang, uri);
     }
   }
+  getVoice = createTransformer((lang: string) => {
+    var best: SpeechSynthesisVoice | null = null;
+    var def: SpeechSynthesisVoice | null = null;
+    const uri = this.preferredVoice.get(lang);
+    console.log('uri', uri, lang, this.availableVoices.length);
+    for (var i = 0; i < this.availableVoices.length; i++) {
+      const v = this.availableVoices[i];
+      if (v.default) {
+        def = v;
+      }
+      if (v.voiceURI === uri) {
+        return v;
+      }
+      if (v.lang.slice(0, lang.length) === lang) {
+        if (!best) {
+          best = v;
+        } else if (!best.localService && v.localService) {
+          best = v;
+        }
+      }
+    }
+    return best || def;
+  });
+
   @observable speechRate = 1; // 0.1 to 10
   @action.bound setSpeechRate(v: number) {
     this.speechRate = v;
@@ -492,6 +532,8 @@ export class Store {
     this.bs = new BookStore(this);
     this.ms = new MessagesStore(this);
     autorun(() => console.log('pf', this.preferredVoice.keys()));
+    // enable tracking the voices available
+    speechSynthesis.onvoiceschanged = this.updateAvailableVoices;
   }
 }
 
