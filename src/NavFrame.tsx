@@ -13,61 +13,65 @@ export interface NavButton {
   icon: string;
 }
 
-const NavFrame = observer(function NavFrame(
-  props: {
-    store: Store,
-    next?: NavButton,
-    back?: NavButton,
-    mover?: () => void,
-    chooser?: () => void,
-    children: React.ReactNode
-  }) {
-  const store = props.store;
-  const mover = props.mover || (props.next && props.next.action);
-  const chooser = props.chooser || (props.back && props.back.action);
+interface NavFrameProps {
+  store: Store;
+  next?: NavButton;
+  back?: NavButton;
+  mover?: () => void;
+  chooser?: () => void;
+  children: React.ReactNode;
+}
 
-  function mybutton(bstyle: {}, nb: NavButton) {
+@observer
+class NavFrame extends React.Component<NavFrameProps, {}> {
+  render() {
+    const props = this.props;
+    const store = props.store;
+    const mover = props.mover || (props.next && props.next.action);
+    const chooser = props.chooser || (props.back && props.back.action);
+
+    function mybutton(style: {}, nb: NavButton) {
+      return (
+        <button
+          className="NavFrame_Button"
+          style={style}
+          onClick={nb.action}
+        >
+          <img src={nb.icon} alt="" />
+          {nb.label}
+        </button>
+      );
+    }
+    let bstyle = navButtonStyles[store.pageTurnSize];
+
     return (
-      <button
-        className="NavFrame_Button"
-        style={bstyle}
-        onClick={nb.action}
+      <Swipe
+        className="NavFrame"
+        mouseSwipe={false}
+        onSwipedLeft={mover} 
+        onSwipedRight={chooser}
+        preventDefaultEvent={false}
       >
-        <img src={nb.icon} alt="" />
-        {nb.label}
-      </button>
+          <div className="NavFrame_FlexContainer">
+            {store.pageTurnSize !== 'off' && props.back && props.back.label &&
+            mybutton(bstyle, props.back)}
+            <div className="NavFrame_PageContainer">
+              {props.children}
+            </div>
+            {store.pageTurnSize !== 'off' && props.next && props.next.label &&
+            mybutton(bstyle, props.next)}
+          </div>
+          { mover && <NRKeyHandler
+            keyValue={'ArrowRight'}
+            onKeyHandle={mover}
+          /> }
+          { chooser && <NRKeyHandler
+            keyValue={'ArrowLeft'}
+            onKeyHandle={chooser}
+          /> }
+      </Swipe>
     );
   }
-  let bstyle = navButtonStyles[store.pageTurnSize];
-
-  return (
-    <Swipe
-      className="NavFrame"
-      mouseSwipe={false}
-      onSwipedLeft={mover} 
-      onSwipedRight={chooser}
-      preventDefaultEvent={false}
-    >
-        <div className="NavFrame_FlexContainer">
-          {store.pageTurnSize !== 'off' && props.back && props.back.label &&
-          mybutton(bstyle, props.back)}
-          <div className="NavFrame_PageContainer">
-            {props.children}
-          </div>
-          {store.pageTurnSize !== 'off' && props.next && props.next.label &&
-          mybutton(bstyle, props.next)}
-        </div>
-        { mover && <NRKeyHandler
-          keyValue={'ArrowRight'}
-          onKeyHandle={mover}
-        /> }
-        { chooser && <NRKeyHandler
-          keyValue={'ArrowLeft'}
-          onKeyHandle={chooser}
-        /> }
-    </Swipe>
-  );
-
-});
+}
 
 export default NavFrame;

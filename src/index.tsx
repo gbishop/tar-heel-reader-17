@@ -72,15 +72,15 @@ function startPersist(store: Store) {
   });
 }
 
-const store = new Store();
+const theStore = new Store();
 
-startPersist(store);
-startRouter(store);
-window.addEventListener('resize', store.resize);
+startPersist(theStore);
+startRouter(theStore);
+window.addEventListener('resize', theStore.resize);
 
 ReactDOM.render(
   <div>
-    <App store={store} />
+    <App store={theStore} />
     {/*<DevTools />*/}
   </div>,
   document.getElementById('root') as HTMLElement

@@ -194,27 +194,30 @@ class FindResult extends React.Component<{store: Store, book: FindBook}, {}> {
   }
 }
 
-const Find = observer(function Find(props: {store: Store}) {
-  const store = props.store;
-  const waitmsg = loading(store.fs.promise);
-  if (waitmsg) {
-    return waitmsg;
+@observer
+class Find extends React.Component<{store: Store}, {}> {
+  render() {
+    const store = this.props.store;
+    const waitmsg = loading(store.fs.promise);
+    if (waitmsg) {
+      return waitmsg;
+    }
+    const findResults = store.fs.find.books.map(b => (
+      <FindResult key={b.ID} book={b} store={store} />
+    ));
+    return (
+      <div
+        className="Find"
+      >
+        <div className="Find-Form">
+          <SearchForm store={store} />
+        </div>
+        <ul className="Find-Results" >
+          {findResults}
+        </ul>
+        <Controls store={store} />
+      </div>);
   }
-  const findResults = store.fs.find.books.map(b => (
-    <FindResult key={b.ID} book={b} store={store} />
-  ));
-  return (
-    <div
-      className="Find"
-    >
-      <div className="Find-Form">
-        <SearchForm store={store} />
-      </div>
-      <ul className="Find-Results" >
-        {findResults}
-      </ul>
-      <Controls store={store} />
-    </div>);
-});
+}
 
 export default Find;

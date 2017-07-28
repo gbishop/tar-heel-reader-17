@@ -2,8 +2,6 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
 
-import '../node_modules/react-accessible-accordion/dist/react-accessible-accordion.css';
-
 class YourFavorites extends React.Component<{store: Store}, {}> {
   render() {
     const store = this.props.store;

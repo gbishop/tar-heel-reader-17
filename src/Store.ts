@@ -68,7 +68,13 @@ class BookStore {
   }
   // get the book without having to say book.promise.value all the time
   // these computed are cached so this function only runs once after a change
-  @computed get book() { return this.promise.value; }
+  @computed get book() {
+    if (this.promise.state === 'fulfilled') {
+      return this.promise.value;
+    } else {
+      throw new Error('Incorrect access to book');
+    }
+  }
   // the page number we're reading
   @observable pageno: number = 1;
   // number of pages in the book
@@ -200,7 +206,13 @@ class FindStore {
   }
   // get the find result without having to say promise.value all the time
   // these computed are cached so this function only runs once after a change
-  @computed get find() { return this.promise.value; }
+  @computed get find() { 
+    if (this.promise.state === 'fulfilled') {
+      return this.promise.value;
+    } else {
+      throw new Error('Incorrect access to find');
+    }
+  }
   // set the find view
   @action.bound setView(v: FindView) {
     const search = v.query ? v.query.substring(1) : '';
@@ -260,7 +272,13 @@ class ChooseStore {
   @computed get promise() {
     return fromPromise(fetchChoose(this.list)) as IPromiseBasedObservable<FindResult>;
   }
-  @computed get choose() { return this.promise.value; }
+  @computed get choose() {
+    if (this.promise.state === 'fulfilled') {
+      return this.promise.value;
+    } else {
+      throw new Error('Incorrect access to choose');
+    }
+  }
   @computed get nchoices() { return this.choose.books.length; }
 
   @action.bound setView(v: ChooseView) {
@@ -294,7 +312,11 @@ class MessagesStore {
     return fromPromise(fetchMessages(this.locale)) as IPromiseBasedObservable<Messages>;
   }
   @computed get M() {
-    return this.promise.value;
+    if (this.promise.state === 'fulfilled') {
+      return this.promise.value;
+    } else {
+      throw new Error('Incorrect access to M');
+    }
   }
   @action.bound setLocale(loc: string) {
     this.locale = loc;

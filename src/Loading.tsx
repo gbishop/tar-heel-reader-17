@@ -17,7 +17,7 @@ const ErrorMsg = observer((props: { error: Response|Error }) => {
 // tslint:disable-next-line
 export function loading(promise: IPromiseBasedObservable<any>) {
   if (promise.state === 'rejected') {
-    return <ErrorMsg error={promise.reason} />;
+    return <ErrorMsg error={promise.value.message} />;
   } else if (promise.state === 'pending') {
     return <p className="loading" />;
   } else {
