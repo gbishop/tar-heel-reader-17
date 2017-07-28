@@ -10,6 +10,7 @@ import { loading } from './Loading';
 
 @observer
 class App extends React.Component<{store: Store}, {}> {
+  // this declaration forces every case to appear in the switch
   render(): JSX.Element {
     const store = this.props.store;
     const msg = loading(store.ms.promise);
@@ -34,9 +35,6 @@ class App extends React.Component<{store: Store}, {}> {
 
       case Views.error:
         return <h1>Bad URL</h1>;
-
-      case Views.settings:
-        return <p>Not here</p>;
     }
   }
 }

@@ -21,7 +21,12 @@ class SiteMenu extends React.Component<SiteMenuProps, {}> {
     return (
       <Wrapper
         className={'AriaMenuButton ' + classes}
-        onSelection={(v, e) => this.props.store.setCurrentView({view: v})}
+        onSelection={(v, e) => {
+          if (v === 'settings') {
+            store.toggleControlsVisible();
+          } else {
+            this.props.store.setCurrentView({view: v});
+          }}}
       >
         <Button className="AriaMenuButton-trigger">
           <img src={OldWell} alt="Menu" title="Old Well Menu"/>

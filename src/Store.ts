@@ -5,14 +5,13 @@ import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 import { Messages, fetchMessages } from './Messages';
 
-export enum Views {
+export const enum Views {
   home = 'home',
   book = 'book',
   find = 'find',
   choose = 'choose',
   favorites = 'your-favorites',
   error = 'error',
-  settings = 'settings'
 }
     
 interface HomeView {
@@ -44,11 +43,10 @@ interface ErrorView {
 }
 
 interface SettingsView {
-  view: Views.settings;
+  view: 'settings';
 }
 
-type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView |
-  ErrorView;
+type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView | ErrorView;
 
 type Steps = 'what' | 'rate' | 'thanks';
 
@@ -319,12 +317,9 @@ export class Store {
   
   // update the state typically from a URL
   @observable currentView: Views = Views.home;
-  @action.bound setCurrentView(v: View | SettingsView) {
+  @action.bound setCurrentView(v: View) {
     console.log('setCurrentView', v);
     switch (v.view) {
-      case Views.home:
-        this.currentView = v.view;
-        break;
       case Views.book:
         if (this.currentView === Views.choose) {
           this.preBookView = Views.choose;
@@ -343,14 +338,9 @@ export class Store {
         this.cs.setView(v);
         break;
       case Views.favorites:
-        this.currentView = Views.favorites;
-        break;
-      case Views.settings:
-        this.toggleControlsVisible();
-        console.log('toggle controls', this.controlsVisible);
-        break;
       case Views.error:
-        this.currentView = Views.error;
+      case Views.home:
+        this.currentView = v.view;
         break;
     }
   }
