@@ -16,7 +16,8 @@ class SiteMenu extends React.Component<SiteMenuProps, {}> {
   render() {
     const mods = this.props.modifiers && this.props.modifiers.split(' ') || [];
     const classes = mods.map((mod) => 'AriaMenuButton-' + mod).join(' ');
-    const M = this.props.store.ms.M;
+    const store = this.props.store;
+    const M = store.ms.M;
     return (
       <Wrapper
         className={'AriaMenuButton ' + classes}
