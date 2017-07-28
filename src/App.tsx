@@ -5,7 +5,7 @@ import Home from './Home';
 import Reader from './Reader';
 import Find from './Find';
 import Choose from './Choose';
-import YourFavorites from './YourFavorites';
+import YourBooks from './YourBooks';
 import { loading } from './Loading';
 
 @observer
@@ -30,8 +30,8 @@ class App extends React.Component<{store: Store}, {}> {
       case Views.choose:
         return <Choose store={store} />;
 
-      case Views.favorites:
-        return <YourFavorites store={store} />;
+      case Views.yourbooks:
+        return <YourBooks store={store} />;
 
       case Views.error:
         return <h1>Bad URL</h1>;

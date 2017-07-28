@@ -10,7 +10,7 @@ export const enum Views {
   book = 'book',
   find = 'find',
   choose = 'choose',
-  favorites = 'your-favorites',
+  yourbooks = 'your-books',
   error = 'error',
 }
     
@@ -35,7 +35,7 @@ interface ChooseView {
 }
 
 interface YourFavoritesView {
-  view: Views.favorites;
+  view: Views.yourbooks;
 }
 
 interface ErrorView {
@@ -337,7 +337,7 @@ export class Store {
         this.currentView = Views.choose;
         this.cs.setView(v);
         break;
-      case Views.favorites:
+      case Views.yourbooks:
       case Views.error:
       case Views.home:
         this.currentView = v.view;
@@ -367,7 +367,7 @@ export class Store {
       return '/find/?' + this.fs.queryString;
     } else if (this.currentView === Views.choose) {
       return this.cs.path;
-    } else if (this.currentView === Views.favorites) {
+    } else if (this.currentView === Views.yourbooks) {
       return '/your-favorites/';
     } else {
       return '/';

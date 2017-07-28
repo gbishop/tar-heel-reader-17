@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
 
-class YourFavorites extends React.Component<{store: Store}, {}> {
+class YourBooks extends React.Component<{store: Store}, {}> {
   render() {
     const store = this.props.store;
     const names = store.cs.lists.keys();
@@ -27,4 +27,4 @@ class YourFavorites extends React.Component<{store: Store}, {}> {
   }
 }
 
-export default YourFavorites;
+export default YourBooks;

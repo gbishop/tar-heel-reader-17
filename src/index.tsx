@@ -38,7 +38,7 @@ function startRouter(store: Store) {
     }));
   router.on(baseUrl + '/your-favorites/?',
     () => store.setCurrentView({
-      view: Views.favorites
+      view: Views.yourbooks
     }));
   router.on(baseUrl + '/', 
     () => store.setCurrentView({ view: Views.home }));

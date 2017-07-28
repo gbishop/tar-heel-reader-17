@@ -43,7 +43,7 @@ class SiteMenu extends React.Component<SiteMenuProps, {}> {
               <MenuItem value={Views.choose} className="AriaMenuButton-menuItem">{M.choose}</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
-              <MenuItem value={Views.favorites} className="AriaMenuButton-menuItem">Your Favorites</MenuItem>
+              <MenuItem value={Views.yourbooks} className="AriaMenuButton-menuItem">Your Books</MenuItem>
             </li>
             <li className="AriaMenuButton-menuItemWrapper">
               <MenuItem value="settings" className="AriaMenuButton-menuItem">{M.settings}</MenuItem>
