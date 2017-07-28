@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Store, Views, throwBadView } from './Store';
+import { Store, Views } from './Store';
 import Home from './Home';
 import Reader from './Reader';
 import Find from './Find';
@@ -37,9 +37,6 @@ class App extends React.Component<{store: Store}, {}> {
 
       case Views.settings:
         return <p>Not here</p>;
-
-      default:
-        return throwBadView(store.currentView);
     }
   }
 }

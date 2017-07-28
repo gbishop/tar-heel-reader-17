@@ -50,14 +50,15 @@ interface SettingsView {
 type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView |
   ErrorView;
 
-// Externally-visible signature
-export function throwBadView(p: never): never;
-// Implementation signature
-export function throwBadView(v: View) {
-    throw new Error('Unknown view: ' + v.view);
-}
-
 type Steps = 'what' | 'rate' | 'thanks';
+
+function promiseValue<T>(p: IPromiseBasedObservable<T>): T {
+  if (p.state === 'fulfilled') {
+    return p.value;
+  } else {
+    throw new Error('unresolved promise');
+  }
+}
 
 class BookStore {
   // the link of the book to read
@@ -68,13 +69,7 @@ class BookStore {
   }
   // get the book without having to say book.promise.value all the time
   // these computed are cached so this function only runs once after a change
-  @computed get book() {
-    if (this.promise.state === 'fulfilled') {
-      return this.promise.value;
-    } else {
-      throw new Error('Incorrect access to book');
-    }
-  }
+  @computed get book() { return promiseValue(this.promise); }
   // the page number we're reading
   @observable pageno: number = 1;
   // number of pages in the book
@@ -206,13 +201,7 @@ class FindStore {
   }
   // get the find result without having to say promise.value all the time
   // these computed are cached so this function only runs once after a change
-  @computed get find() { 
-    if (this.promise.state === 'fulfilled') {
-      return this.promise.value;
-    } else {
-      throw new Error('Incorrect access to find');
-    }
-  }
+  @computed get find() { return promiseValue(this.promise); }
   // set the find view
   @action.bound setView(v: FindView) {
     const search = v.query ? v.query.substring(1) : '';
@@ -272,13 +261,7 @@ class ChooseStore {
   @computed get promise() {
     return fromPromise(fetchChoose(this.list)) as IPromiseBasedObservable<FindResult>;
   }
-  @computed get choose() {
-    if (this.promise.state === 'fulfilled') {
-      return this.promise.value;
-    } else {
-      throw new Error('Incorrect access to choose');
-    }
-  }
+  @computed get choose() { return promiseValue(this.promise); }
   @computed get nchoices() { return this.choose.books.length; }
 
   @action.bound setView(v: ChooseView) {
@@ -369,8 +352,6 @@ export class Store {
       case Views.error:
         this.currentView = Views.error;
         break;
-      default:
-        throwBadView(v);
     }
   }
 
