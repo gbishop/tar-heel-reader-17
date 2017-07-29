@@ -4,7 +4,6 @@ import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 import { Messages, fetchMessages } from './Messages';
-import * as queryString from 'query-string';
 
 export const enum Views {
   home = 'home',
@@ -56,6 +55,17 @@ function promiseValue<T>(p: IPromiseBasedObservable<T>): T {
     return p.value;
   } else {
     throw new Error('unresolved promise');
+  }
+}
+
+// parse query string from: https://stackoverflow.com/a/8649003/1115662
+function parseQueryString(search: string) {
+  search = search.substring(1);
+  if (search) {
+    return JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}',
+                      (key, value) => key === '' ? value : decodeURIComponent(value) );
+  } else {
+    return {};
   }
 }
 
@@ -375,9 +385,10 @@ export class Store {
     { view: Views.find,
       pattern: /^\/find\// },
   ];
-
-  doRoute(pathname: string, search: string) {
-    const qs = queryString.parse(search);
+  // history listener matches path to routes above
+  @action.bound doRoute(pathname: string, search: string) {
+    console.log('doRoute', pathname, search);
+    const qs = parseQueryString(search);
     for (var i = 0; i < this.routes.length; i++) {
       const match = pathname.match(this.routes[i].pattern);
       if (match) {
