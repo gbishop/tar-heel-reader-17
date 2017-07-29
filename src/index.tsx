@@ -22,7 +22,11 @@ const history = createHistory({ basename: process.env.PUBLIC_URL});
 store.doRoute(history.location.pathname, history.location.search);
 
 // update the state when the url changes
-history.listen((location, action) => store.doRoute(location.pathname, location.search));
+history.listen((location, action) => {
+  if (action === 'POP') {
+    store.doRoute(location.pathname, location.search);
+  }
+});
 
 // update the url when the state changes
 autorun(() => {
