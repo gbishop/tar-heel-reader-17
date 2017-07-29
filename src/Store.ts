@@ -4,6 +4,13 @@ import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 import { Messages, fetchMessages } from './Messages';
+import * as queryString from 'query-string';
+
+// Simple routing table
+interface Route {
+  pattern: RegExp;
+  action: (matches: string[], query: {}) => void;
+}
 
 export const enum Views {
   home = 'home',
@@ -26,12 +33,12 @@ export interface BookView {
 
 interface FindView {
   view: Views.find;
-  query?: string;
+  query?: {};
 }
 
 interface ChooseView {
   view: Views.choose;
-  query?: string;
+  query?: { favorites?: string, name?: string };
 }
 
 interface YourFavoritesView {
@@ -46,7 +53,7 @@ interface SettingsView {
   view: 'settings';
 }
 
-type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView | ErrorView;
+export type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView | ErrorView;
 
 type Steps = 'what' | 'rate' | 'thanks';
 
@@ -202,11 +209,11 @@ class FindStore {
   @computed get find() { return promiseValue(this.promise); }
   // set the find view
   @action.bound setView(v: FindView) {
-    const search = v.query ? v.query.substring(1) : '';
-    if (search.length > 0) {
-      const o = parseQueryString(search);
-      for (var p in o) {
-        if (this.query.hasOwnProperty(p)) { this.query[p] = o[p];
+    const query = v.query || {};
+    if (v.hasOwnProperty('query') && v.query) {
+      for (var p in v.query) {
+        if (this.query.hasOwnProperty(p)) {
+          this.query[p] = v.query[p];
         }
       }
     }
@@ -263,14 +270,12 @@ class ChooseStore {
   @computed get nchoices() { return this.choose.books.length; }
 
   @action.bound setView(v: ChooseView) {
-    const qs = v.query ? v.query.substring(1) : '';
-    console.log('qs', qs, this.list.length, this.list);
-    if (qs.length > 1) {
-      const queries = parseQueryString(qs);
-      console.log('qu', queries);
-      this.currentListName = queries.name || 'Favorites';
-      if (queries.favorites.length > 0) {
-        this.lists.set(this.currentListName, queries.favorites.split(','));
+    if (v.hasOwnProperty('query') && v.query) {
+      const name = v.query.name || 'Favorites';
+      const favorites = v.query.favorites || '';
+      this.currentListName = name;
+      if (favorites.match(/[\d,]+$/)) {
+        this.lists.set(this.currentListName, favorites.split(','));
       }
       this.visible = 0;
       this.selected = -1;
@@ -344,15 +349,13 @@ export class Store {
         break;
     }
   }
-
   // set either Find or Choose view depending on where you were last
   // on going back to Choose bump the index
   @observable preBookView: Views.find | Views.choose = Views.find;
   @action.bound setPreBookView() {
     if (this.preBookView === Views.find) {
       this.setCurrentView({
-        view: Views.find,
-        query: ''
+        view: Views.find
       });
     } else if (this.preBookView === Views.choose) {
       this.currentView = Views.choose;
@@ -368,11 +371,61 @@ export class Store {
     } else if (this.currentView === Views.choose) {
       return this.cs.path;
     } else if (this.currentView === Views.yourbooks) {
-      return '/your-favorites/';
+      return '/your-books/';
     } else {
       return '/';
     }
   }
+  // map the url to the state
+  routes = [
+    { view: Views.yourbooks,
+      pattern: /^\/your-books\// },
+    { view: Views.choose,
+      pattern: /^\/choose\// },
+    { view: Views.book,
+      pattern: /^\/(\d+)\/(\d+)\/(\d+)\/([^/]+)\/(\d+)?/ },
+    { view: Views.home,
+      pattern: /^\/$/ },
+    { view: Views.find,
+      pattern: /^\/find\// },
+  ];
+
+  doRoute(pathname: string, search: string) {
+    const qs = queryString.parse(search);
+    for (var i = 0; i < this.routes.length; i++) {
+      const match = pathname.match(this.routes[i].pattern);
+      if (match) {
+        console.log('got match', match);
+        match.shift();
+        this.setRoute(this.routes[i].view, match, qs);
+        return;
+      }
+    }
+    this.setCurrentView({view: Views.home});
+  }
+
+  @action.bound setRoute(view: Views, match: string[], query: {}) {
+    switch (view) {
+      case Views.book:
+        this.preBookView = Views.find;
+        const link = `/${match[0]}/${match[1]}/${match[2]}/${match[3]}/`;
+        const page = match[4] ? +match[4] : 1;
+        this.bs.setView({
+          view: Views.book,
+          link: link,
+          page: page
+        });
+        break;
+      case Views.choose:
+        this.cs.setView({
+          view: Views.choose,
+          query: query
+        });
+        break;
+    }
+    this.currentView = view;
+  }
+
   // base font size for the page, 2% of smaller screen dimension
   @computed get baseFontSize() {
     return Math.max(this.screen.width, this.screen.height) * 0.02;
