@@ -45,7 +45,11 @@ interface ErrorView {
 
 export type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView | ErrorView;
 
-type Steps = 'what' | 'rate' | 'thanks';
+export const enum Questions {
+  what = 'what',
+  rate = 'rate',
+  thanks = 'thanks'
+}
 
 function promiseValue<T>(p: IPromiseBasedObservable<T>): T {
   if (p.state === 'fulfilled') {
@@ -132,9 +136,9 @@ class BookStore {
     }
   }
   // choice page state
-  @observable step: Steps = 'what';
-  @action.bound setStep(s: Steps) {
-    this.step = s;
+  @observable question: Questions = Questions.what;
+  @action.bound setQuestion(s: Questions) {
+    this.question = s;
     this.selected = -1;
   }
   @observable selected: number = -1;

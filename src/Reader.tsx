@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import Store from './Store';
+import { Store, Questions } from './Store';
 import Controls from './Controls';
 import NavFrame from './NavFrame';
 import Menu from './Menu';
@@ -121,9 +121,9 @@ class ChoicePage extends React.Component<{store: Store}, {}> {
     let click: (i: number) => void;
     let buttons;
     let question;
-    switch (store.bs.step) {
+    switch (store.bs.question) {
       default:
-      case 'what':
+      case Questions.what:
         mover =  () => store.bs.selectNext(3);
         click = (i: number) => {
           switch (i) {
@@ -131,14 +131,14 @@ class ChoicePage extends React.Component<{store: Store}, {}> {
               break;
             case 0:
               store.bs.setPage(1);
-              store.bs.setStep('what');
+              store.bs.setQuestion(Questions.what);
               break;
             case 1:
-              store.bs.setStep('rate');
+              store.bs.setQuestion(Questions.rate);
               break;
             case 2:
               store.setPreBookView();
-              store.bs.setStep('what');
+              store.bs.setQuestion(Questions.what);
               break;
           }
         };
@@ -146,20 +146,20 @@ class ChoicePage extends React.Component<{store: Store}, {}> {
         question = M.WhatNow;
         buttons = [ M.ReadAgain, M.Rate, M.Another ];
         break;
-      case 'rate':
+      case Questions.rate:
         mover = () => store.bs.selectNext(3);
         click = (i) => {
           if (i >= 0) {
             fetch(process.env.PUBLIC_URL +
               `/THR/api/rateajax/?id=${store.bs.book.ID}&rating=${i + 1}`);
-            store.bs.setStep('thanks');
+            store.bs.setQuestion(Questions.thanks);
           }
         };
         question = M.HowRate;
         buttons = [ M.Rate1, M.Rate2, M.Rate3 ];
         chooser = () => click(store.bs.selected);
         break;
-      case 'thanks':
+      case Questions.thanks:
         mover = () => store.bs.selectNext(2);
         click = (i: number) => {
           switch (i) {
@@ -167,11 +167,11 @@ class ChoicePage extends React.Component<{store: Store}, {}> {
               break;
             case 0:
               store.bs.setPage(1);
-              store.bs.setStep('what');
+              store.bs.setQuestion(Questions.what);
               break;
             case 1:
               store.setPreBookView();
-              store.bs.setStep('what');
+              store.bs.setQuestion(Questions.what);
               break;
           }
         };
