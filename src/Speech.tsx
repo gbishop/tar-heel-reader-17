@@ -10,7 +10,6 @@ class Speech extends React.Component<{store: Store, text: string, lang: string},
       return null;
     }
     const voice = store.getVoice(lang);
-    console.log('voice', voice);
     speechSynthesis.cancel();
     const msg = new SpeechSynthesisUtterance(text);
     msg.lang = lang;
