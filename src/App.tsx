@@ -21,7 +21,7 @@ class App extends React.Component<{store: Store}, {}> {
       case Views.home:
         return <Home store={store} />;
         
-      case Views.book:
+      case Views.read:
         return <Reader store={store} />;
 
       case Views.find:

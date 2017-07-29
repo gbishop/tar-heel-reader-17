@@ -63,7 +63,7 @@ class Choose extends React.Component<{store: Store}, {}> {
     for (let i = 0; i < nVisible; i++) {
       const book = store.cs.choose.books[(i + store.cs.visible) % store.cs.nchoices];
       const view: BookView = {
-        view: Views.book,
+        view: Views.read,
         link: book.link,
         page: 1};
       if (i < nchoices) {

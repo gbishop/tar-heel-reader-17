@@ -176,7 +176,7 @@ class FindResult extends React.Component<{store: Store, book: FindBook}, {}> {
         <button 
           className="Find-ReadButton"
           onClick={e => store.setCurrentView({
-            view: Views.book,
+            view: Views.read,
             link: b.link, 
             page: 1})
           } 

@@ -33,8 +33,10 @@ autorun(() => {
   const path = store.currentPath;
   if (path !== history.location.pathname + history.location.search) {
     if (history.location.pathname === '/find/' && history.location.search.length === 0) {
+      console.log('replace', path);
       history.replace(path);
     } else {
+      console.log('push', path);
       history.push(path);
     }
   }

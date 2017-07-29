@@ -7,7 +7,7 @@ import { Messages, fetchMessages } from './Messages';
 
 export const enum Views {
   home = 'home',
-  book = 'book',
+  read = 'read',
   find = 'find',
   choose = 'choose',
   yourbooks = 'your-books',
@@ -19,7 +19,7 @@ interface HomeView {
 }
 
 export interface BookView {
-  view: Views.book;
+  view: Views.read;
   link: string;
   page: number;
 }
@@ -321,13 +321,13 @@ export class Store {
   @action.bound setCurrentView(v: View) {
     console.log('setCurrentView', v);
     switch (v.view) {
-      case Views.book:
+      case Views.read:
         if (this.currentView === Views.choose) {
           this.preBookView = Views.choose;
         } else {
           this.preBookView = Views.find;
         }
-        this.currentView = Views.book;
+        this.currentView = Views.read;
         this.bs.setView(v);
         break;
       case Views.find:
@@ -360,7 +360,7 @@ export class Store {
 
   // map the state to a url
   @computed get currentPath() {
-    if (this.currentView === Views.book) {
+    if (this.currentView === Views.read) {
       return `${this.bs.link}` + (this.bs.pageno > 1 ? `${this.bs.pageno}` : '');
     } else if (this.currentView === Views.find) {
       return '/find/?' + this.fs.queryString;
@@ -378,7 +378,7 @@ export class Store {
       pattern: /^\/your-books\// },
     { view: Views.choose,
       pattern: /^\/choose\// },
-    { view: Views.book,
+    { view: Views.read,
       pattern: /^(\/\d+\/\d+\/\d+\/[^/]+\/)(\d+)?$/ },
     { view: Views.home,
       pattern: /^\/$/ },
@@ -403,12 +403,12 @@ export class Store {
   // initialize the state from the pattern match and query string
   @action.bound setRoute(view: Views, match: string[], query: {}) {
     switch (view) {
-      case Views.book:
+      case Views.read:
         this.preBookView = Views.find;
         const link = match[0];
         const page = match[1] ? +match[1] : 1;
         this.bs.setView({
-          view: Views.book,
+          view: Views.read,
           link: link,
           page: page
         });

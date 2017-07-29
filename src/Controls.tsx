@@ -29,7 +29,7 @@ class Controls extends React.Component<{store: Store}, {}> {
     const voiceOptions = voices.map((voice, i) => {
       voiceMap[voice.voiceURI] = voice;
       return <option key={voice.voiceURI} value={voice.voiceURI}>{voice.name}</option>; });
-    const lang = store.currentView === Views.book ? store.bs.book.language : store.ms.locale;
+    const lang = store.currentView === Views.read ? store.bs.book.language : store.ms.locale;
 
     return (
       <div>
