@@ -34,7 +34,7 @@ interface ChooseView {
   query?: { favorites?: string, name?: string };
 }
 
-interface YourFavoritesView {
+interface YourBooksView {
   view: Views.yourbooks;
 }
 
@@ -42,7 +42,7 @@ interface ErrorView {
   view: Views.error;
 }
 
-export type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView | ErrorView;
+export type View = HomeView | BookView | FindView | ChooseView | YourBooksView | ErrorView;
 
 export const enum Questions {
   what = 'what',
@@ -379,7 +379,7 @@ export class Store {
     { view: Views.choose,
       pattern: /^\/choose\// },
     { view: Views.book,
-      pattern: /^\/(\d+)\/(\d+)\/(\d+)\/([^/]+)\/(\d+)?/ },
+      pattern: /^(\/\d+\/\d+\/\d+\/[^/]+\/)(\d+)?$/ },
     { view: Views.home,
       pattern: /^\/$/ },
     { view: Views.find,
@@ -400,13 +400,13 @@ export class Store {
     }
     this.setCurrentView({view: Views.home});
   }
-
+  // initialize the state from the pattern match and query string
   @action.bound setRoute(view: Views, match: string[], query: {}) {
     switch (view) {
       case Views.book:
         this.preBookView = Views.find;
-        const link = `/${match[0]}/${match[1]}/${match[2]}/${match[3]}/`;
-        const page = match[4] ? +match[4] : 1;
+        const link = match[0];
+        const page = match[1] ? +match[1] : 1;
         this.bs.setView({
           view: Views.book,
           link: link,
