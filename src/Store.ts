@@ -1,16 +1,10 @@
-import { observable, computed, action, extendObservable, toJS, ObservableMap, autorun, createTransformer } from 'mobx';
+import { observable, computed, action, ObservableMap, autorun, createTransformer } from 'mobx';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
 import { Book, fetchBook } from './Book';
 import { FindResult, fetchFind, fetchChoose } from './FindResult';
 import { NavButtonStyle, navButtonStyles } from './Styles';
 import { Messages, fetchMessages } from './Messages';
 import * as queryString from 'query-string';
-
-// Simple routing table
-interface Route {
-  pattern: RegExp;
-  action: (matches: string[], query: {}) => void;
-}
 
 export const enum Views {
   home = 'home',
@@ -47,10 +41,6 @@ interface YourFavoritesView {
 
 interface ErrorView {
   view: Views.error;
-}
-
-interface SettingsView {
-  view: 'settings';
 }
 
 export type View = HomeView | BookView | FindView | ChooseView | YourFavoritesView | ErrorView;
@@ -159,12 +149,6 @@ class BookStore {
   }
 }
 
-function parseQueryString(query: string) {
-  return JSON.parse('{"' +
-    decodeURI(query).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') +
-    '"}');
-}
-
 class FindStore {
   // Find related variables
   @observable query = {
@@ -210,11 +194,9 @@ class FindStore {
   // set the find view
   @action.bound setView(v: FindView) {
     const query = v.query || {};
-    if (v.hasOwnProperty('query') && v.query) {
-      for (var p in v.query) {
-        if (this.query.hasOwnProperty(p)) {
-          this.query[p] = v.query[p];
-        }
+    for (var p in query) {
+      if (this.query.hasOwnProperty(p)) {
+        this.query[p] = query[p];
       }
     }
     console.log('set view', this.queryString);

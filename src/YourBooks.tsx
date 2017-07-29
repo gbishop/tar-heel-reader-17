@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
 
+@observer
 class YourBooks extends React.Component<{store: Store}, {}> {
   render() {
     const store = this.props.store;

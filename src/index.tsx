@@ -1,26 +1,22 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-import { Store, Views } from './Store';
+import Store from './Store';
 // import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
 // https://github.com/flatiron/director/issues/349 explains
 // why I need the strange path.
 import createHistory from 'history/createBrowserHistory';
-import { Location } from 'history';
-import * as queryString from 'query-string';
 
 import { autorun, useStrict } from 'mobx';
 useStrict(true);
-
-const baseUrl = process.env.PUBLIC_URL;
 
 // create the store
 const store = new Store();
 
 // create the history object
-const history = createHistory({ basename: baseUrl});
+const history = createHistory({ basename: process.env.PUBLIC_URL});
 
 // route based on the initial url
 store.doRoute(history.location.pathname, history.location.search);
