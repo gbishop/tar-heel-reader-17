@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import Store from './Store';
+import Menu from './Menu';
 
 @observer
 class YourBooks extends React.Component<{store: Store}, {}> {
@@ -21,6 +22,7 @@ class YourBooks extends React.Component<{store: Store}, {}> {
     });
     return (
       <div className="YourFavorites">
+        <Menu store={store} />
         <h1>Your Favorites</h1>
         {items}
       </div>
