@@ -143,9 +143,9 @@ class Favorite extends React.Component<{store: Store, bid: number}, {}> {
     const isFav = store.cs.list.indexOf(bid) >= 0;
     function toggleFavorite(e: React.ChangeEvent<HTMLInputElement>) {
       if (e.target.checked) {
-        store.cs.addFavorite(e.target.name);
+        store.cs.addFavorite('Favorites', e.target.name);
       } else {
-        store.cs.removeFavorite(e.target.name);
+        store.cs.removeFavorite('Favorites', e.target.name);
       }
     }
     const src = isFav ? FavoriteYesIcon : FavoriteNoIcon;

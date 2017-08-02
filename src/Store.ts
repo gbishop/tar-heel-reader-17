@@ -238,14 +238,22 @@ class ChooseStore {
       this.selected += this.list.length;
     }
   }
-  @action.bound addFavorite(id: string) {
-    this.lists.set(this.currentListName, [...this.list, id]);
-  }
-  @action.bound removeFavorite(id: string) {
-    const index = this.list.indexOf(id);
-    if (index >= 0) {
-      this.list.splice(index, 1);
+  @action.bound addFavorite(name: string, id: string) {
+    const ids = this.lists.get(name) || [];
+    if (ids.indexOf(id) === -1) {
+      this.lists.set(name, [...ids, id]);
     }
+  }
+  @action.bound removeFavorite(name: string, id: string) {
+    const ids = this.lists.get(name) || [];
+    const index = ids.indexOf(id);
+    if (index >= 0) {
+      ids.splice(index, 1);
+    }
+  }
+  isFavorite(name: string, id: string) {
+    const ids = this.lists.get(name) || [];
+    return ids.indexOf(id) !== -1;
   }
   // index of the first visible book
   @observable visible: number = 0;

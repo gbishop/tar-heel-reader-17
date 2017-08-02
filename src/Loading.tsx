@@ -19,7 +19,7 @@ export function loading(promise: IPromiseBasedObservable<any>) {
   if (promise.state === 'rejected') {
     return <ErrorMsg error={promise.value.message} />;
   } else if (promise.state === 'pending') {
-    return <p className="loading" />;
+    return <p className="loading" >Loading...</p>;
   } else {
     return false;
   }
