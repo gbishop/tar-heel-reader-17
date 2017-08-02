@@ -22,6 +22,50 @@ interface YourBooksProps {
   store: Store;
 }
 
+interface FavoriteProps {
+  store: Store;
+  name: string;
+}
+
+@observer
+class Favorite extends React.Component<FavoriteProps, {}> {
+  @observable open = false;
+  @action.bound toggleOpen() {
+    this.open = !this.open;
+  }
+  @computed  get promise() {
+    const ids = this.props.store.cs.lists.get(this.props.name)!;
+    return fromPromise(fetchChoose(ids)) as IPromiseBasedObservable<FindResult>
+  }
+  @observable selected: ObservableMap<boolean> = observable.map();
+  isSelected = (id: string) => this.selected.has(id) && this.selected.get(id);
+  @action.bound toggleSelected(id: string) {
+    this.selected.set(id, !this.isSelected(id));
+  }
+  render() {
+    const { store, name } = this.props;
+    var body = null;
+    if (this.open) {
+      const ids = store.cs.lists.get(name) || [];
+      if (this.promise.state === 'fulfilled') {
+        body = ids.map((id) => {
+          const book = this.promise.value;
+        }
+      }
+    }
+
+    return (
+      <h2>
+        <input
+          type="checkbox"
+          checked={this.open}
+          onChange=(() => this.toggleOpen()}
+        >
+        {name}
+      </h2>
+
+}
+
 @observer
 class YourBooks extends React.Component<YourBooksProps, {}> {
   @observable status: ObservableMap<FavList> = observable.map();
@@ -48,7 +92,6 @@ class YourBooks extends React.Component<YourBooksProps, {}> {
     const key = this.key(name, id);
     this.selected.set(key, !this.selected.get(key));
     console.log('toggle selected', key, this.selected.get(key));
-    this.openCount += 1;
   }
   @observable forEachSelected(f: (name: string, id: string) => void) {
     this.props.store.cs.lists.forEach((ids, name) => {
@@ -80,7 +123,7 @@ class YourBooks extends React.Component<YourBooksProps, {}> {
         if (!fav.promise) {
           const ids = store.cs.lists.get(name) || [];
           console.log('fetch fav');
-          fav.promise = fromPromise(fetchChoose(ids)) as IPromiseBasedObservable<FindResult>;
+          fav.promise = ;
         }
         console.log('fav.promise.state', fav.promise.state);
         if (fav.promise.state === 'fulfilled') {
