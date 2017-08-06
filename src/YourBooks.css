@@ -1,0 +1,31 @@
+.YourBooks select {
+  padding: 1px 6px;
+}
+
+.YourBooks-Book {
+  margin: 4px;
+}
+
+.YourBooks-Book > label > input[type="checkbox"] {
+    clip: rect(0 0 0 0);
+    height: 1px;
+    position: absolute;
+    position: fixed;
+    width: 1px;
+    z-index: -1;
+  }
+
+.YourBooks-Book > input[type="checkbox"] + label:after {
+  content: "▶";
+  padding: 2px;
+}
+
+.YourBooks-Modal label {
+  display: block;
+  margin-right: 1em;
+}
+
+.YourBooks-Modal input, .YourBooks-Modal select {
+  margin-left: 1em;
+}
+
