@@ -50,7 +50,7 @@ export const enum Questions {
   thanks = 'thanks'
 }
 
-function promiseValue<T>(p: IPromiseBasedObservable<T>): T {
+export function promiseValue<T>(p: IPromiseBasedObservable<T>): T {
   if (p.state === 'fulfilled') {
     return p.value;
   } else {

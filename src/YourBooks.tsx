@@ -4,8 +4,14 @@ import { observable, ObservableMap, createTransformer, action, computed, transac
 import { IPromiseBasedObservable, fromPromise } from 'mobx-utils';
 import { FindResult, fetchChoose } from './FindResult';
 import loading from './Loading';
-import Store from './Store';
+import { Store, promiseValue, Views } from './Store';
 import Menu from './Menu';
+import { Icons, Icon } from './Icons';
+import { Creatable } from 'react-select';
+
+import 'react-select/dist/react-select.css';
+
+import './YourBooks.css';
 
 class FavList {
   @observable open: boolean;
@@ -27,6 +33,11 @@ interface FavoriteProps {
   name: string;
 }
 
+interface Option {
+    label: string;
+    value: string;
+}
+
 @observer
 class Favorite extends React.Component<FavoriteProps, {}> {
   @observable open = false;
@@ -34,141 +45,135 @@ class Favorite extends React.Component<FavoriteProps, {}> {
     this.open = !this.open;
   }
   @computed  get promise() {
-    const ids = this.props.store.cs.lists.get(this.props.name)!;
-    return fromPromise(fetchChoose(ids)) as IPromiseBasedObservable<FindResult>
+    return fromPromise(fetchChoose(this.ids)) as IPromiseBasedObservable<FindResult>;
   }
   @observable selected: ObservableMap<boolean> = observable.map();
   isSelected = (id: string) => this.selected.has(id) && this.selected.get(id);
   @action.bound toggleSelected(id: string) {
     this.selected.set(id, !this.isSelected(id));
   }
+  @computed get ids() { return this.props.store.cs.lists.get(this.props.name) || []; }
+
+  @computed get allSelected() {
+    const ids = this.props.store.cs.lists.get(this.props.name) || [];
+    return ids.filter(id => this.selected.get(id) || false);
+  }
+  @computed get numberSelected() {
+    return this.allSelected.length;
+  }
+  @action.bound cleanupLists() {
+    const store = this.props.store;
+    const lists = store.cs.lists.keys();
+    lists.forEach(name => {
+      if (name !== 'Favorites') {
+        const ids = store.cs.lists.get(name);
+        if (!ids || ids.length === 0) {
+          store.cs.lists.delete(name);
+        }
+      }
+    });
+  }
+  @action.bound dropBooks() {
+    this.allSelected.forEach(id => this.props.store.cs.removeFavorite(this.props.name, id));
+    this.cleanupLists();
+  }
+  @observable copyName: string = '';
+  @action.bound setCopyName(o: Option) {
+    this.copyName = o.value;
+  }
+  @action.bound copyBooks(name: string) {
+    this.allSelected.forEach(id => this.props.store.cs.addFavorite(name, id));
+    this.showCopySelect = false;
+  }
+  @observable showCopySelect = false;
+  @action.bound toggleShowCopySelect() {
+    this.showCopySelect = !this.showCopySelect;
+  }
   render() {
     const { store, name } = this.props;
     var body = null;
     if (this.open) {
-      const ids = store.cs.lists.get(name) || [];
+      var bookList = [];
       if (this.promise.state === 'fulfilled') {
-        body = ids.map((id) => {
-          const book = this.promise.value;
+        const books = promiseValue(this.promise).books;
+        for (var i = 0; i < this.ids.length; i++) {
+          const id = this.ids[i];
+          const book = books.find((b) => '' + b.ID === id);
+          if (book) {
+            bookList.push(
+              <li key={book.ID}>
+                <input
+                  type="checkbox"
+                  checked={this.isSelected(id)}
+                  onChange={() => this.toggleSelected(id)}
+                />
+                {book.title}
+              </li>);
+          }
         }
       }
+      const options: Option[] = store.cs.lists.keys().filter(k => k !== this.props.name)
+        .map(k => { return {value: k, label: k};});
+      body = (
+        <div>
+          <button
+            disabled={this.numberSelected === 0}
+            onClick={() => this.dropBooks()}
+          >
+            Drop
+          </button>
+          <button
+            disabled={this.numberSelected === 0}
+            onClick={this.toggleShowCopySelect}
+          >
+            Copy
+          </button>
+          { this.showCopySelect && 
+            <Creatable
+              options={options}
+              onChange={(e: Option) => e && this.copyBooks(e.value)}
+              openOnFocus={true}
+              autofocus={true}
+              promptTextCreator={(s) => `Create list "${s}"`}
+              placeholder="Select a list"
+              clearable={false}
+            />
+          }
+          <ul>{bookList}</ul>
+        </div>
+      );
     }
 
     return (
-      <h2>
-        <input
-          type="checkbox"
-          checked={this.open}
-          onChange=(() => this.toggleOpen()}
+      <div className="YourBooks-Book">
+        <button
+          className="YourBooks-Edit"
+          onClick={this.toggleOpen}
         >
-        {name}
-      </h2>
-
+          <Icon icon={Icons.pencil} size={16} color="black" />
+        </button>
+        <button
+          className="YourBooks-Name"
+          onClick={e => store.setCurrentView({ view: Views.choose, query: {name: name}})}
+        >
+          {name} ({this.ids.length})
+        </button>
+        {body}
+      </div>);
+  }
 }
 
 @observer
 class YourBooks extends React.Component<YourBooksProps, {}> {
-  @observable status: ObservableMap<FavList> = observable.map();
-  @observable selected: ObservableMap<boolean> = observable.map();
-  @observable openCount = 0;
-
-  isOpen(name: string) {
-    const stat = this.status.get(name);
-    return stat && stat.open || false;
-  }
-  @action.bound toggleOpen(name: string) {
-    const stat = this.status.get(name) || new FavList();
-    stat.open = !stat.open;
-    this.status.set(name, stat);
-    console.log('stat', stat);
-  }
-  key(name: string, id: string | number) {
-    return name + '-' + id;
-  }
-  @observable isSelected(name: string, id: string | number) { 
-    return this.selected.get(this.key(name, id)) && this.props.store.cs.isFavorite(name, '' + id);
-  } 
-  @action.bound toggleSelected(name: string, id: string | number) {
-    const key = this.key(name, id);
-    this.selected.set(key, !this.selected.get(key));
-    console.log('toggle selected', key, this.selected.get(key));
-  }
-  @observable forEachSelected(f: (name: string, id: string) => void) {
-    this.props.store.cs.lists.forEach((ids, name) => {
-      ids.forEach((id) => {
-        if (this.isSelected(name, id)) {
-          f(name, id);
-        }
-      });
-    });
-  }
-  @computed get selectedCount() {
-    var count = 0;
-    this.forEachSelected((name, id) => count += 1);
-    console.log('selectedCount', count);
-    return count;
-  }
-  constructor() {
-    super();
-    autorun(() => console.log('selected', this.selected.keys()));
-  }
-
   render() {
     const store = this.props.store;
-    const items = store.cs.lists.keys().map(name => {
-      let fav = this.status.get(name);
-      let list = null;
-      console.log('fav', fav, name);
-      if (fav && fav.open) {
-        if (!fav.promise) {
-          const ids = store.cs.lists.get(name) || [];
-          console.log('fetch fav');
-          fav.promise = ;
-        }
-        console.log('fav.promise.state', fav.promise.state);
-        if (fav.promise.state === 'fulfilled') {
-          const books = fav.promise.value.books.map(b => (
-            <li key={b.ID}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.isSelected(name, '' + b.ID)}
-                  onChange={(e) => this.toggleSelected(name, '' + b.ID)}
-                />
-                {b.title}
-              </label>
-            </li>));
-          list = <ul>{books}</ul>;
-        } else {
-          list = loading(fav.promise);
-        }
-      }
-      return (
-        <div key={name}>
-          <h2>
-            <input
-              type="checkbox"
-              checked={this.isOpen(name)}
-              onChange={() => this.toggleOpen(name)}
-            />
-
-            {name}
-          </h2>
-          {list}
-        </div>);
-    });
-    console.log('items', items);
+    const favs = store.cs.lists.keys().sort().map(name => (
+      <Favorite key={name} store={store} name={name} />));
     return (
-      <div className="YourFavorites">
+      <div className="YourBooks">
         <Menu store={store} />
         <h1>Your Favorites</h1>
-        <button
-          disabled={this.selectedCount === 0}
-          onClick={() => this.forEachSelected((name, id) => store.cs.removeFavorite(name, id))}
-        >
-          Drop
-        </button>
-        {items}
+        {favs}
       </div>
     );
   }
