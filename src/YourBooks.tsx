@@ -52,14 +52,18 @@ class Favorite extends React.Component<FavoriteProps, {}> {
   @action.bound toggleSelected(id: string) {
     this.selected.set(id, !this.isSelected(id));
   }
+  @action.bound setAllSelected(value: boolean) {
+    console.log('setAllSelected', value, this.selected.keys().slice(0));
+    this.ids.map(key => this.selected.set(key, value));
+  }
   @computed get ids() { return this.props.store.cs.lists.get(this.props.name) || []; }
 
-  @computed get allSelected() {
+  @computed get getSelected() {
     const ids = this.props.store.cs.lists.get(this.props.name) || [];
     return ids.filter(id => this.selected.get(id) || false);
   }
   @computed get numberSelected() {
-    return this.allSelected.length;
+    return this.getSelected.length;
   }
   @action.bound cleanupLists() {
     const store = this.props.store;
@@ -74,7 +78,7 @@ class Favorite extends React.Component<FavoriteProps, {}> {
     });
   }
   @action.bound dropBooks() {
-    this.allSelected.forEach(id => this.props.store.cs.removeFavorite(this.props.name, id));
+    this.getSelected.forEach(id => this.props.store.cs.removeFavorite(this.props.name, id));
     this.cleanupLists();
   }
   @observable copyName: string = '';
@@ -82,12 +86,18 @@ class Favorite extends React.Component<FavoriteProps, {}> {
     this.copyName = o.value;
   }
   @action.bound copyBooks(name: string) {
-    this.allSelected.forEach(id => this.props.store.cs.addFavorite(name, id));
+    console.log('copy books', name);
+    this.getSelected.forEach(id => this.props.store.cs.addFavorite(name, id));
     this.showCopySelect = false;
   }
   @observable showCopySelect = false;
   @action.bound toggleShowCopySelect() {
     this.showCopySelect = !this.showCopySelect;
+    console.log('toggle copy', this.showCopySelect);
+  }
+  @action.bound clearShowCopySelect() {
+    this.showCopySelect = false;
+    console.log('clear copy', this.showCopySelect);
   }
   render() {
     const { store, name } = this.props;
@@ -113,20 +123,21 @@ class Favorite extends React.Component<FavoriteProps, {}> {
         }
       }
       const options: Option[] = store.cs.lists.keys().filter(k => k !== this.props.name)
-        .map(k => { return {value: k, label: k};});
+        .map(k => { return {value: k, label: k}; });
       body = (
-        <div>
+        <div className="YourBooks-EditControls">
           <button
             disabled={this.numberSelected === 0}
             onClick={() => this.dropBooks()}
           >
-            Drop
+            Drop selected
           </button>
+          <div className="YourBooks-Copy">
           <button
             disabled={this.numberSelected === 0}
             onClick={this.toggleShowCopySelect}
           >
-            Copy
+            Copy selected
           </button>
           { this.showCopySelect && 
             <Creatable
@@ -137,9 +148,21 @@ class Favorite extends React.Component<FavoriteProps, {}> {
               promptTextCreator={(s) => `Create list "${s}"`}
               placeholder="Select a list"
               clearable={false}
+              className="YourBooks-Select"
+              onClose={this.clearShowCopySelect}
             />
           }
-          <ul>{bookList}</ul>
+        </div>
+        <ul className="YourBooks-List">
+          <li>
+            <input
+              type="checkbox"
+              onChange={e => this.setAllSelected(e.target.checked)}
+            />
+            <Icon icon={Icons.caretDown} size={16} color="black" />
+          </li>
+          {bookList}
+        </ul>
         </div>
       );
     }
@@ -149,6 +172,7 @@ class Favorite extends React.Component<FavoriteProps, {}> {
         <button
           className="YourBooks-Edit"
           onClick={this.toggleOpen}
+          title="Edit"
         >
           <Icon icon={Icons.pencil} size={16} color="black" />
         </button>
