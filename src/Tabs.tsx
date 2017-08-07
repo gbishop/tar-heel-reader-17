@@ -1,4 +1,9 @@
+/* Adapted from Creating an accessible tab component with React by Andreas McDermott
+ * https://medium.com/@andreasmcd/creating-an-accessible-tab-component-with-react-24ed30fde86a
+ */
 import * as React from 'react';
+import { observer } from 'mobx-react';
+import { action, observable } from 'mobx';
 
 export class Tab extends React.Component<{title: string, index?: number, isSelected?: () => boolean}, {}> {
   render() {
@@ -66,7 +71,7 @@ export class Tabs extends React.Component<{}, {}> {
       <div>
         <ul role="tablist">
           {this.tabs.map((tab: Tab, i) => (
-            <li role="presentation">
+            <li key={tab.props.title} role="presentation">
               <a
                 id={`tab_${i}`}
                 href={`#tabpanel_${i}`}
@@ -88,6 +93,7 @@ export class Tabs extends React.Component<{}, {}> {
           // what is the correct type here?
           // tslint:disable-next-line:no-any
           React.cloneElement(tab as any, {
+            key: tab.props.title,
             index: i,
             isSelected: () => tab === this.state.selected
           })
