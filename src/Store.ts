@@ -462,6 +462,18 @@ export class Store {
     return w;
   }
 
+  // colors
+  @observable textColor: string = '#000';
+  @action.bound setTextColor(v: string) {
+    this.textColor = v;
+    console.log('textColor', this.textColor);
+  }
+  @observable pageColor: string = '#fff';
+  @action.bound setPageColor(v: string) {
+    this.pageColor = v;
+    console.log('pageColor', this.pageColor);
+  }
+
   // speech
   @observable speak: boolean = false;
   @action.bound toggleSpeak() {
@@ -528,7 +540,7 @@ export class Store {
     this.screen.height = window.innerHeight;
   }
   // persistence version
-  readonly persistVersion = 6;
+  readonly persistVersion = 7;
   // json string to persist the state
   @computed get persist(): string {
     const json = JSON.stringify({
@@ -542,7 +554,9 @@ export class Store {
       voice: this.preferredVoice.toJS(),
       rate: this.speechRate,
       pitch: this.speechPitch,
-      locale: this.ms.locale
+      locale: this.ms.locale,
+      pageColor: this.pageColor,
+      textColor: this.textColor
     });
     console.log('set persist', json);
     return json;
@@ -574,6 +588,8 @@ export class Store {
       this.speechRate = v.rate;
       this.speechPitch = v.pitch;
       this.ms.locale = v.locale;
+      this.textColor = v.textColor;
+      this.pageColor = v.pageColor;
     }
   }
 

@@ -34,7 +34,10 @@ class Reader extends React.Component<{store: Store}, {}> {
     }
 
     return (
-      <div className="Reader">
+      <div
+        className="Reader"
+        style={{backgroundColor: store.pageColor, color: store.textColor}}
+      >
         <Menu store={store} modifiers="gray discrete" />
         {page}
         <Controls store={store} />

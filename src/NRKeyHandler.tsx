@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import KeyHandler from 'react-key-handler';
+import Store from './Store';
 
 interface NRKeyHandlerProps {
   keyValue: string | string[];
   onKeyHandle: (e: Event) => void;
+  store: Store;
 }
 
 @observer
@@ -37,7 +39,7 @@ class NRKeyHandler extends React.Component<NRKeyHandlerProps, {}> {
         />
       </div>)
     );
-    return <div>{handlers}</div>;
+    return !this.props.store.controlsVisible && <div>{handlers}</div>;
   }
 }
 

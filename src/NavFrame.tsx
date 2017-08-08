@@ -64,10 +64,12 @@ class NavFrame extends React.Component<NavFrameProps, {}> {
           { mover && <NRKeyHandler
             keyValue={'ArrowRight'}
             onKeyHandle={mover}
+            store={store}
           /> }
           { chooser && <NRKeyHandler
             keyValue={'ArrowLeft'}
             onKeyHandle={chooser}
+            store={store}
           /> }
       </Swipe>
     );

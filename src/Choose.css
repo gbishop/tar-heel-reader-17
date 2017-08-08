@@ -26,6 +26,7 @@
   object-fit: contain;
   background: inherit;
   font-size: inherit;
+  color: inherit;
 }
 
 .Choose_Picture {

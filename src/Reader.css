@@ -65,4 +65,7 @@
   max-height: 25vh;
   overflow: hidden;
   z-index: 10;
+  background-color: inherit;
+  color: inherit;
+  border-width: 0.5em;
 }

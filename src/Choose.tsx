@@ -132,6 +132,7 @@ class Choose extends React.Component<{store: Store}, {}> {
     return (
       <div
         className="Choose"
+        style={{backgroundColor: store.pageColor, color: store.textColor}}
       >
         <Menu store={store} modifiers="discrete gray"/>
         <NavFrame
