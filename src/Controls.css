@@ -1,11 +1,13 @@
 .Controls {
   font-size: 1rem;
+  min-width: 20em;
+  min-height: 16em;
 }
 
 .Controls h1 {
   font-size: 1em;
   margin-top: 2px;
-  background-color: #ccc;
+  background-color: #ddd;
   position: relative;
   padding: 3px;
 }
@@ -26,7 +28,7 @@
   right: 0;
   padding: 2px;
   border: none;
-  background-color: #ccc;
+  background-color: #ddd;
 }
 
 [role="tablist"] {
@@ -45,9 +47,12 @@
   border: 1px solid #ccc;
   border-radius: 3px 3px 0 0;
   color: #000;
+  background-color: #ddd;
 }
 [role="tab"][aria-selected="true"] {
   border-bottom-color: #fff;
+  box-shadow: 3px 0px lightgray;
+  background-color: #fff;
 }
 [role="tabpanel"] {
   padding: 0 0.5em;
