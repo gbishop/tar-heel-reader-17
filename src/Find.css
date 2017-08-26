@@ -61,6 +61,9 @@
 }
 
 .Find-Favorite input {
+  opacity: 0;
+  width: 0;
+  margin: 0;
   vertical-align: middle;
 }
 
@@ -68,6 +71,10 @@
   height: 1em;
   width: 1em;
   vertical-align: middle;
+}
+
+.Find-Favorite input:focus + label {
+  outline: 1px solid blue;
 }
 
 .Find-Pages {
@@ -107,4 +114,3 @@
   transition: all 0.25s ease-in;
   font-size: inherit;
 }
-
