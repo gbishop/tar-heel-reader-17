@@ -140,7 +140,8 @@ class Favorite extends React.Component<{store: Store, bid: number}, {}> {
   render() {
     const store = this.props.store;
     const bid = String(this.props.bid);
-    const isFav = store.cs.list.indexOf(bid) >= 0;
+    const favs = store.cs.lists.get('Favorites') || [];
+    const isFav = favs.indexOf(bid) >= 0;
     function toggleFavorite(e: React.ChangeEvent<HTMLInputElement>) {
       if (e.target.checked) {
         store.cs.addFavorite('Favorites', e.target.name);
