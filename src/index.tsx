@@ -4,7 +4,7 @@ import App from './App';
 import Store from './Store';
 // import registerServiceWorker from './registerServiceWorker';
 import './index.css';
-import DevTools from 'mobx-react-devtools';
+// import DevTools from 'mobx-react-devtools';
 
 // https://github.com/flatiron/director/issues/349 explains
 // why I need the strange path.
@@ -60,7 +60,7 @@ window.addEventListener('resize', store.resize);
 ReactDOM.render(
   <div>
     <App store={store} />
-    <DevTools />
+    {/*<DevTools />*/}
   </div>,
   document.getElementById('root') as HTMLElement
 );
