@@ -12,6 +12,7 @@ export const enum Views {
   choose = 'choose',
   yourbooks = 'your-books',
   error = 'error',
+  login = 'login',
 }
     
 interface HomeView {
@@ -42,7 +43,11 @@ interface ErrorView {
   view: Views.error;
 }
 
-export type View = HomeView | BookView | FindView | ChooseView | YourBooksView | ErrorView;
+interface LoginView {
+  view: Views.login;
+}
+
+export type View = HomeView | BookView | FindView | ChooseView | YourBooksView | ErrorView | LoginView;
 
 export const enum Questions {
   what = 'what',
@@ -349,6 +354,7 @@ export class Store {
       case Views.yourbooks:
       case Views.error:
       case Views.home:
+      case Views.login:
         this.currentView = v.view;
         break;
     }
@@ -376,6 +382,8 @@ export class Store {
       return this.cs.path;
     } else if (this.currentView === Views.yourbooks) {
       return '/your-books/';
+    } else if (this.currentView === Views.login) {
+      return '/login/';
     } else {
       return '/';
     }
@@ -392,6 +400,8 @@ export class Store {
       pattern: /^\/$/ },
     { view: Views.find,
       pattern: /^\/find\// },
+    { view: Views.login,
+      pattern: /^\/login\// },
   ];
   // history listener matches path to routes above
   @action.bound doRoute(pathname: string, search: string) {

@@ -21,8 +21,15 @@ class Home extends React.Component<{store: Store}, {}> {
         <h2>{M.welcome}</h2>
         <p>{M.welcomeTo}</p>
         <p>
+          {M.explanation}
+        </p>
+        <p>
+          <b>{M.usageChanges}</b>&emsp;
+          <a href="">{M.rationale}</a>
+        </p>
+        <p>
           <a href="https://goo.gl/forms/YTHCLvzHNIRVsy653" target="_blank">
-            Please take our design survey.
+            {M.survey}
           </a>
         </p>
         <p>{M.otherLangs}</p>

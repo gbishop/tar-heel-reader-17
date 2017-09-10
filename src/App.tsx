@@ -6,6 +6,7 @@ import Reader from './Reader';
 import Find from './Find';
 import Choose from './Choose';
 import YourBooks from './YourBooks';
+import Login from './Login';
 import { loading } from './Loading';
 
 @observer
@@ -32,6 +33,9 @@ class App extends React.Component<{store: Store}, {}> {
 
       case Views.yourbooks:
         return <YourBooks store={store} />;
+
+      case Views.login:
+        return <Login store={store} />;
 
       case Views.error:
         return <h1>Bad URL</h1>;

@@ -1,0 +1,16 @@
+.Login {
+  max-width: 50em;
+  margin: 0 auto;
+}
+
+.Login h1 {
+}
+
+.Login label {
+  display: block;
+  margin-bottom: 1em;
+}
+
+.Login input {
+  margin-left: 1em;
+}

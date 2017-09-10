@@ -3,8 +3,11 @@ const enMessages = {
   home: 'Home page',
   welcome: 'Welcome',
   welcomeTo: 'Welcome to the Tar Heel Reader, a collection of free, easy-to-read, and accessible books on a wide range of topics. Each book can be speech enabled and accessed using multiple interfaces, including touch screens, the IntelliKeys with custom overlays, and 1 to 3 switches.',
+  explanation: 'This is a rough prototype for the new version of Tar Heel Reader. You are free to use it with the understanding that it might change or break as we work on it. It supports big fonts, improved eye gaze access, and better speech in a design that takes advantage of the capabilities of modern web browsers.',
+  usageChanges: 'The usage model has changed significantly.',
+  rationale: 'We invite you to read and comment on our rationale for the new design.',
+  survey: 'Please take our design survey.',
   otherLangs: 'This site is also available in other languages. To help with translation, contact us.',
-  prototype: 'This is a prototype for a new version of Tar Heel Reader. We would appreciate your feedback on how well it works for your students.',
   find: 'Find books',
   choose: 'Choose a book',
   settings: 'Settings',
@@ -89,6 +92,12 @@ const enMessages = {
   Rate1: '1 star',
   Rate2: '2 stars',
   Rate3: '3 stars',
+  loginMessage: 'Log in to Tar Heel Reader',
+  username: 'Username',
+  password: 'Password',
+  remember: 'Remember Me',
+  login: 'Log In',
+  logout: 'Log Out',
 };
 
 export type Messages = typeof enMessages;
