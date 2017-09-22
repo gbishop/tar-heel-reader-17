@@ -33,7 +33,7 @@ class LayoutPanel extends React.Component<{store: Store}, {}> {
         </label>
         <label>{M.ButtonSize}:&nbsp;
           <select
-            value={store.baseFontSize}
+            value={store.pageTurnSize}
             onChange={e => store.setPageTurnSize(e.target.value)}
           >
             <option value="normal">{M.normal}</option>
